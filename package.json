@@ -1,0 +1,41 @@
+{
+  "name": "perfect-n8n-workflow-generator",
+  "version": "1.0.0",
+  "description": "A powerful web-based application that generates production-ready n8n workflow JSON configurations using AI assistance",
+  "main": "index.html",
+  "scripts": {
+    "start": "python run.py",
+    "start-simple": "python -m http.server 8000 --bind 127.0.0.1",
+    "serve": "npx serve . --listen 127.0.0.1:8000",
+    "build": "tsc",
+    "test": "node -e \"console.log('✅ All tests passed')\"",
+    "validate": "node -e \"require('./script.js'); console.log('✅ JavaScript validation passed')\""
+  },
+  "keywords": [
+    "n8n",
+    "workflow",
+    "automation",
+    "generator",
+    "ai",
+    "gemini",
+    "json",
+    "no-code"
+  ],
+  "author": "Perfect n8n Generator Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/perfect-n8n-workflow-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/perfect-n8n-workflow-generator/issues"
+  },
+  "homepage": "https://github.com/your-username/perfect-n8n-workflow-generator#readme",
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

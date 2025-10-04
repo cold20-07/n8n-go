@@ -1,0 +1,45 @@
+{
+  "total_workflows": 97,
+  "node_statistics": {
+    "total_nodes": "2152",
+    "avg_nodes_per_workflow": 22.185567010309278,
+    "max_nodes": "61",
+    "min_nodes": "4"
+  },
+  "ai_usage": {
+    "workflows_with_ai": "89",
+    "ai_adoption_rate": 91.75257731958763,
+    "openai_usage": "73",
+    "langchain_usage": "83"
+  },
+  "service_usage": {
+    "google_services": "29",
+    "slack_integration": "12",
+    "webhook_usage": "15",
+    "scheduled_workflows": "18"
+  },
+  "complexity_distribution": {
+    "simple_workflows": "9",
+    "medium_workflows": "50",
+    "complex_workflows": "38"
+  },
+  "most_common_nodes": {
+    "n8n-nodes-base.stickyNote": 631,
+    "n8n-nodes-base.set": 174,
+    "n8n-nodes-base.httpRequest": 147,
+    "@n8n/n8n-nodes-langchain.lmChatOpenAi": 74,
+    "n8n-nodes-base.if": 47,
+    "@n8n/n8n-nodes-langchain.openAi": 43,
+    "n8n-nodes-base.manualTrigger": 40,
+    "n8n-nodes-base.splitOut": 39,
+    "n8n-nodes-base.code": 37,
+    "n8n-nodes-base.merge": 37
+  },
+  "workflow_categories": {
+    "AI/ML": 29,
+    "General Automation": 41,
+    "Content Management": 5,
+    "Data Processing": 2,
+    "Communication": 20
+  }
+}

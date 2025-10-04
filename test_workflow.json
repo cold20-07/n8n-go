@@ -1,0 +1,209 @@
+{
+  "id": "enhanced_workflow_854663",
+  "name": "Create Scheduled Workflow",
+  "nodes": [
+    {
+      "id": "node_3627",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_3371",
+      "name": "RSS Feed Reader",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "url": "https://feeds.example.com/rss.xml"
+      }
+    },
+    {
+      "id": "node_7308",
+      "name": "Content Generator",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "parameters": {
+        "options": {
+          "systemMessage": "Generate engaging social media posts based on the provided content."
+        }
+      }
+    },
+    {
+      "id": "node_8752",
+      "name": "Content Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "parameters": {
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "post": {
+              "type": "string",
+              "description": "Social media post content"
+            },
+            "hashtags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_9489",
+      "name": "Twitter Post",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        300
+      ],
+      "parameters": {
+        "operation": "tweet",
+        "text": "={{ $json.post }} {{ $json.hashtags.join(\" \") }}"
+      }
+    },
+    {
+      "id": "node_6075",
+      "name": "LinkedIn Post",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        300
+      ],
+      "parameters": {
+        "operation": "post",
+        "text": "={{ $json.post }}",
+        "visibility": "public"
+      }
+    },
+    {
+      "id": "node_5548",
+      "name": "Analytics Tracking",
+      "type": "n8n-nodes-base.googleAnalytics",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ],
+      "parameters": {
+        "operation": "track",
+        "event": "content_posted",
+        "properties": {
+          "platform": "={{ $json.platform }}",
+          "content_type": "social_media_post"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Reader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Reader": {
+      "main": [
+        [
+          {
+            "node": "Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Content Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Parser": {
+      "main": [
+        [
+          {
+            "node": "Twitter Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twitter Post": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "Analytics Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "generated_by": "n8n-workflow-generator",
+    "generation_timestamp": "2025-01-01T00:00:00.000Z",
+    "version": "1.0"
+  },
+  "staticData": null,
+  "tags": [
+    "generated"
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

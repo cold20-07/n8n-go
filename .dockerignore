@@ -1,0 +1,86 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Node modules
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv
+venv/
+env/
+.env
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+.env.production
+.env.local
+
+# Kiro specific
+.kiro/cache/
+.kiro/temp/
+
+# Examples and tests
+examples/
+tests/
+test/
+
+# Deployment specific
+.wrangler/
+wasmer.toml
+wrangler.toml
+app.yaml

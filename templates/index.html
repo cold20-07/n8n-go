@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N8N Go - Effortless JSON Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">N8N Go</a>
+                <ul class="nav-links">
+                    <li><a href="#features" class="active">Features</a></li>
+                    <li><a href="/pricing">Pricing</a></li>
+                    <li><a href="/documentation">Documentation</a></li>
+                </ul>
+                <a href="#json-generator" class="cta-button">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Effortless JSON Generation with n8n</h1>
+                        <p>Build, preview, and automate your JSON data structures instantly</p>
+                        <a href="#json-generator" class="hero-cta">Start Generating →</a>
+                    </div>
+                    <div class="network-viz">
+                        <div class="node">Email Client</div>
+                        <div class="node">Repository</div>
+                        <div class="node">Webhook</div>
+                        <div class="node">Validation Unit</div>
+                        <div class="node">Processing System</div>
+                        <div class="node">Output Schema</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="json-generator" id="json-generator">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Generate Your n8n Workflow</h2>
+                    <p>Transform your automation ideas into production-ready JSON workflows</p>
+                </div>
+                
+                <div class="generator-layout">
+                    <div class="generator-form-container">
+                        <div class="form-card">
+                            <form id="workflowForm">
+                                <div class="form-group">
+                                    <label for="description">
+                                        <span class="label-text">Describe Your Workflow</span>
+                                        <span class="label-hint">What do you want to automate?</span>
+                                    </label>
+                                    <textarea 
+                                        id="description" 
+                                        name="description" 
+                                        placeholder="Example: Process incoming leads from webhook, validate email addresses, send notifications to Slack, and store valid leads in database"
+                                        required
+                                    ></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="triggerType">
+                                        <span class="label-text">Trigger Type</span>
+                                        <span class="label-hint">How should your workflow be triggered?</span>
+                                    </label>
+                                    <select id="triggerType" name="triggerType">
+                                        <option value="webhook">🔗 Webhook</option>
+                                        <option value="schedule">⏰ Schedule</option>
+                                        <option value="manual">👆 Manual</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="generate-button">
+                                    <span class="btn-content">
+                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-text">Generate Workflow</span>
+                                    </span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <span class="spinner"></span>
+                                        Generating...
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="generator-output-container">
+                        <div class="output-placeholder" id="outputPlaceholder">
+                            <div class="placeholder-content">
+                                <div class="placeholder-icon">📄</div>
+                                <h3>Your Workflow Will Appear Here</h3>
+                                <p>Fill out the form and click generate to see your n8n workflow JSON</p>
+                                <div class="placeholder-features">
+                                    <div class="feature-item">✨ Production-ready JSON</div>
+                                    <div class="feature-item">🔧 Customizable nodes</div>
+                                    <div class="feature-item">📋 One-click copy</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="output-card" id="output" style="display: none;">
+                            <div class="output-header">
+                                <div class="output-title">
+                                    <h3>Generated Workflow</h3>
+                                    <span class="workflow-badge">Ready to Import</span>
+                                </div>
+                                <div class="output-actions">
+                                    <button id="copyBtn" class="action-btn primary">
+                                        <span class="btn-icon">📋</span>
+                                        Copy JSON
+                                    </button>
+                                    <button id="downloadBtn" class="action-btn secondary">
+                                        <span class="btn-icon">💾</span>
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="json-container">
+                                <div class="json-header">
+                                    <span class="json-label">n8n Workflow JSON</span>
+                                    <span class="json-size" id="jsonSize"></span>
+                                </div>
+                                <div class="json-preview">
+                                    <pre><code id="jsonOutput"></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Visual Workflow Builder</h3>
+                        <p>Intuitive drag-and-drop interface for creating complex JSON workflows without coding</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Real-time Preview & Validation</h3>
+                        <p>See your JSON output instantly with built-in validation and error detection</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">☁️</div>
+                        <h3>Seamless Integration</h3>
+                        <p>Connect with popular APIs, databases, and services with pre-built connectors</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content" style="text-align: center; padding: 20px 0;">
+                <p style="margin: 0;">Made with ❤️ by NXT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

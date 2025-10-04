@@ -1,0 +1,64 @@
+{
+  "name": "Simple Webhook Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "webhook-endpoint",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming data\nconst inputData = $input.all();\nconst processedData = inputData.map(item => ({\n  ...item.json,\n  processed: true,\n  timestamp: new Date().toISOString()\n}));\n\nreturn processedData;"
+      },
+      "id": "process-data",
+      "name": "Process Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [600, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "tags": ["example", "simple", "webhook"]
+}

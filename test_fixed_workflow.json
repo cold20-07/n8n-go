@@ -1,0 +1,107 @@
+{
+  "name": "RSS to Twitter Content Pipeline",
+  "nodes": [
+    {
+      "id": "rss_reader_1",
+      "name": "RSS Feed Reader",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "url": "https://feeds.feedburner.com/TechCrunch"
+      }
+    },
+    {
+      "id": "content_gen_2",
+      "name": "Content Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        300
+      ],
+      "parameters": {
+        "jsCode": "\n// Generate content from RSS feed\nconst items = $input.all();\nconst processedItems = [];\n\nfor (const item of items) {\n    const data = item.json;\n    \n    // Extract and enhance content\n    const enhancedContent = {\n        title: data.title || 'No title',\n        summary: data.description ? data.description.substring(0, 200) + '...' : 'No description',\n        url: data.link || '',\n        publishDate: data.pubDate || new Date().toISOString(),\n        hashtags: ['#tech', '#news'],\n        generated_at: new Date().toISOString()\n    };\n    \n    processedItems.push({ json: enhancedContent });\n}\n\nreturn processedItems;\n                    "
+      }
+    },
+    {
+      "id": "content_parser_3",
+      "name": "Content Parser",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        300
+      ],
+      "parameters": {
+        "jsCode": "\n// Parse and format content for Twitter\nconst items = $input.all();\nconst parsedItems = [];\n\nfor (const item of items) {\n    const data = item.json;\n    \n    // Format for Twitter (280 character limit)\n    let tweetText = data.title;\n    \n    if (tweetText.length > 200) {\n        tweetText = tweetText.substring(0, 197) + '...';\n    }\n    \n    // Add hashtags and URL\n    const hashtags = data.hashtags ? data.hashtags.join(' ') : '';\n    const finalTweet = `${tweetText}\\n\\n${hashtags}\\n${data.url}`;\n    \n    const parsedContent = {\n        tweet_text: finalTweet,\n        original_title: data.title,\n        url: data.url,\n        character_count: finalTweet.length,\n        ready_to_post: finalTweet.length <= 280\n    };\n    \n    parsedItems.push({ json: parsedContent });\n}\n\nreturn parsedItems;\n                    "
+      }
+    },
+    {
+      "id": "twitter_post_4",
+      "name": "Twitter Post",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "resource": "tweet",
+        "operation": "create",
+        "text": "={{ $json.tweet_text }}",
+        "additionalFields": {}
+      }
+    }
+  ],
+  "connections": {
+    "RSS Feed Reader": {
+      "main": [
+        [
+          {
+            "node": "Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Content Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Parser": {
+      "main": [
+        [
+          {
+            "node": "Twitter Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "rss",
+    "twitter",
+    "content",
+    "automation"
+  ]
+}

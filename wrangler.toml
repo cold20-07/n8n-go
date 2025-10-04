@@ -1,0 +1,76 @@
+name = "n8n-workflow-generator"
+main = "src/index.js"
+compatibility_date = "2023-10-01"
+
+[env.production]
+name = "n8n-workflow-generator-prod"
+
+[env.staging]
+name = "n8n-workflow-generator-staging"
+
+# Variables
+[vars]
+ENVIRONMENT = "production"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "WORKFLOWS"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# R2 Buckets (for file storage)
+[[r2_buckets]]
+binding = "WORKFLOW_STORAGE"
+bucket_name = "n8n-workflows"
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "WORKFLOW_GENERATOR"
+class_name = "WorkflowGenerator"
+
+# Routes
+[[routes]]
+pattern = "n8n-generator.your-domain.com/*"
+zone_name = "your-domain.com"
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "."
+
+[build.upload]
+format = "service-worker"
+
+# Triggers
+[[triggers.crons]]
+cron = "0 0 * * *"  # Daily cleanup
+
+# Compatibility flags
+compatibility_flags = ["nodejs_compat"]
+
+# Node.js compatibility
+node_compat = true
+
+# Environment variables for different stages
+[env.production.vars]
+API_BASE_URL = "https://api.production.com"
+LOG_LEVEL = "info"
+
+[env.staging.vars]
+API_BASE_URL = "https://api.staging.com"
+LOG_LEVEL = "debug"
+
+# Secrets (set via wrangler secret put)
+# GEMINI_API_KEY
+# DATABASE_URL
+# JWT_SECRET
+
+# Analytics
+[analytics_engine_datasets]
+[[analytics_engine_datasets.bindings]]
+name = "WORKFLOW_ANALYTICS"
+dataset = "workflow_usage"
+
+# Placement
+[placement]
+mode = "smart"

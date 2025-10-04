@@ -1,0 +1,41 @@
+[package]
+name = "n8n-workflow-generator"
+version = "1.0.0"
+description = "Perfect n8n Workflow Generator - AI-powered workflow creation"
+license = "MIT"
+readme = "README.md"
+
+[[module]]
+name = "n8n-workflow-generator"
+source = "app.py"
+abi = "wasi"
+
+[fs]
+"/app" = "."
+"/static" = "./static"
+"/templates" = "./templates"
+
+[dependencies]
+python = "3.11"
+
+[build-dependencies]
+python = "3.11"
+
+[[command]]
+name = "start"
+module = "n8n-workflow-generator"
+runner = "https://webc.org/runner/python"
+
+[build]
+command = ["python", "-m", "pip", "install", "-r", "requirements.txt"]
+
+[package.metadata]
+author = "n8n Workflow Generator Team"
+homepage = "https://github.com/your-username/n8n-workflow-generator"
+repository = "https://github.com/your-username/n8n-workflow-generator"
+keywords = ["n8n", "workflow", "automation", "generator", "ai"]
+
+[env]
+FLASK_APP = "app.py"
+FLASK_ENV = "production"
+PORT = "5000"

@@ -1,0 +1,5128 @@
+[
+  {
+    "workflow_name": "AI-Powered Information Monitoring with OpenAI, Google Sheets, Jina AI and Slack",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.textClassifier",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "parameters": [
+          "options",
+          "inputText",
+          "categories"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "chrome extension backend with AI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "modelId",
+          "options",
+          "resource",
+          "inputType",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.chatTrigger"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "dataType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "mode",
+          "options",
+          "pineconeIndex"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Auto categorize wordpress template",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Auto-Tag Blog Posts in WordPress with AI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.informationExtractor"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Automate Content Generator for WordPress with DeepSeek R1",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "resource"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "source",
+          "description",
+          "workflowJson",
+          "requestOptions"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "source",
+          "description",
+          "workflowJson",
+          "requestOptions"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options",
+          "requestOptions"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema",
+          "requestOptions"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "@n8n/n8n-nodes-langchain.outputParserItemList",
+      "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainSummarization",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserItemList",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainSummarization",
+        "parameters": [
+          "options",
+          "chunkSize"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "qdrantCollection"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "public",
+          "options",
+          "initialMessages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "workflowId",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "workflowId",
+          "description",
+          "jsonSchemaExample",
+          "specifyInputSchema"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Building RAG Chatbot for Movie Recommendations with Qdrant and Open AI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Chat with GitHub OpenAPI Specification using RAG (Pinecone and OpenAI)",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "mode",
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+        "parameters": [
+          "name",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "dataType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "mode",
+          "topK",
+          "prompt",
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "mode",
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.wait"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Google Analytics: Weekly Report",
+    "ai_nodes": [
+      "n8n-nodes-base.emailSend",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.toolCalculator",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "html",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType",
+          "contextWindowLength"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.informationExtractor"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "jsonSchemaExample"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.gmail"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "piepdrive-test",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "returnAll",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "workflowId",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "workflowId",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "options",
+          "resource",
+          "imageUrls",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "agent",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "prompt",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "fields",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "agent",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "modelId",
+          "options",
+          "resource",
+          "imageUrls",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Image to license plate number",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatOpenRouter"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Extract text from PDF and image using Vertex AI (Gemini) into CSV",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "agent",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "HN Who is Hiring Scrape",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "n8n-nodes-base.airtable"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Hacker News to Video Template - AlexK1919",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.agent",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+        "parameters": [
+          "url",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit",
+          "amount"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "resource",
+          "imageUrls",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit",
+          "amount"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Intelligent Web Query and Semantic Re-Ranking Flow",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "n8n-nodes-base.gmailTrigger",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "n8n-nodes-base.gmail"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTrigger",
+        "parameters": [
+          "simple",
+          "filters",
+          "options",
+          "pollTimes"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "labelIds",
+          "messageId",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "labelId",
+          "resource",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType",
+          "contextWindowLength"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "workflowId",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "n8n-nodes-base.emailSend"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "html",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Make OpenAI Citation for File Retrieval RAG",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "assistantId"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Open Deep Research - AI-Powered Autonomous Research Workflow",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolWikipedia"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType",
+          "contextWindowLength"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType",
+          "contextWindowLength"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.toolCode",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.toolCode",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolCode",
+        "parameters": [
+          "name",
+          "jsCode",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolCode",
+        "parameters": [
+          "name",
+          "jsCode",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "News Extraction",
+    "ai_nodes": [
+      "n8n-nodes-base.openAi",
+      "n8n-nodes-base.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "model",
+          "prompt",
+          "options",
+          "resource"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "model",
+          "prompt",
+          "options",
+          "resource"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.chainSummarization"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainSummarization",
+        "parameters": [
+          "options",
+          "operationMode"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Scrape Trustpilot Reviews with DeepSeek, Analyze Sentiment with OpenAI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+        "parameters": [
+          "options",
+          "inputText"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtableTrigger"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTrigger",
+        "parameters": [
+          "baseId",
+          "tableId",
+          "pollTimes",
+          "triggerField",
+          "authentication",
+          "additionalFields"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "My workflow 6",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "RAG & GenAI App With WordPress Content",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.vectorStoreSupabase"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+        "parameters": [
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "parameters": [
+          "tableName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+        "parameters": [
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "parameters": [
+          "mode",
+          "options",
+          "tableName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "mode",
+          "public",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "parameters": [
+          "mode",
+          "prompt",
+          "options",
+          "tableName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "agent",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "parameters": [
+          "mode",
+          "options",
+          "tableName"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Write a WordPress post with AI (starting from a few keywords)",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "resource"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "n8n-nodes-base.gmailTool",
+      "n8n-nodes-base.airtable"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "agent",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "schemaType",
+          "workflowId",
+          "description",
+          "inputSchema",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTool",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject",
+          "emailType",
+          "descriptionType",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "AI Email processing autoresponder with approval (Yes/No)",
+    "ai_nodes": [
+      "n8n-nodes-base.emailReadImap",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.emailSend",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.chainSummarization",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.gmail"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.emailReadImap",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "html",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "toolName",
+          "toolDescription",
+          "qdrantCollection",
+          "includeDocumentMetadata"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainSummarization",
+        "parameters": [
+          "options",
+          "operationMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject",
+          "operation",
+          "approvalOptions"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "AI-Powered Information Monitoring with OpenAI, Google Sheets, Jina AI and Slack",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.textClassifier",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "parameters": [
+          "options",
+          "inputText",
+          "categories"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Blog Automation TEMPLATE",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Auto-Tag Blog Posts in WordPress with AI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.informationExtractor"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Automate Content Generator for WordPress with DeepSeek R1",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "resource"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Automate LinkedIn Posts with AI",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "prompt",
+          "options",
+          "resource",
+          "assistantId"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "simple",
+          "options",
+          "messageId",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "limit",
+          "filters",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "inputType",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "BambooHR AI-Powered Company Policies and Benefits Chatbot",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "@n8n/n8n-nodes-langchain.textClassifier",
+      "@n8n/n8n-nodes-langchain.informationExtractor",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "dataType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+        "parameters": [
+          "name",
+          "topK",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "parameters": [
+          "name",
+          "workflowId",
+          "description",
+          "jsonSchemaExample",
+          "specifyInputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "parameters": [
+          "mode",
+          "options",
+          "tableName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "parameters": [
+          "options",
+          "tableName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "parameters": [
+          "options",
+          "inputText",
+          "categories"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.gmailTrigger",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.gmailTool",
+      "n8n-nodes-base.gmailTool",
+      "n8n-nodes-base.gmailTool",
+      "n8n-nodes-base.gmailTool",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "n8n-nodes-base.wait"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.gmailTrigger",
+        "parameters": [
+          "filters",
+          "pollTimes"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTool",
+        "parameters": [
+          "resource",
+          "returnAll",
+          "descriptionType",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTool",
+        "parameters": [
+          "messageId",
+          "operation",
+          "descriptionType",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTool",
+        "parameters": [
+          "labelIds",
+          "messageId",
+          "operation",
+          "descriptionType",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTool",
+        "parameters": [
+          "name",
+          "options",
+          "resource",
+          "operation",
+          "descriptionType",
+          "toolDescription"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Build an OpenAI Assistant with Google Drive Integration",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.chatTrigger",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "name",
+          "modelId",
+          "options",
+          "resource",
+          "operation",
+          "description",
+          "instructions"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "binaryPropertyName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "operation",
+          "assistantId"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "assistantId"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+        "parameters": [
+          "name",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+        "parameters": [
+          "memoryKey"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+        "parameters": [
+          "mode",
+          "memoryKey",
+          "clearStore"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+        "parameters": [
+          "name",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+        "parameters": [
+          "memoryKey"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+        "parameters": [
+          "mode",
+          "memoryKey",
+          "clearStore"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.memoryManager",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatGroq"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryManager",
+        "parameters": [
+          "mode",
+          "deleteMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Create, update, and get a profile in Humantic AI",
+    "ai_nodes": [
+      "n8n-nodes-base.humanticAi",
+      "n8n-nodes-base.humanticAi",
+      "n8n-nodes-base.humanticAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.humanticAi",
+        "parameters": [
+          "userId"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.humanticAi",
+        "parameters": [
+          "userId",
+          "operation",
+          "sendResume"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.humanticAi",
+        "parameters": [
+          "userId",
+          "options",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Discord AI bot",
+    "ai_nodes": [
+      "n8n-nodes-base.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "model",
+          "prompt",
+          "options",
+          "resource"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Effortless Email Management with AI",
+    "ai_nodes": [
+      "n8n-nodes-base.emailReadImap",
+      "n8n-nodes-base.emailSend",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.chainSummarization",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.textClassifier",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.emailReadImap",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "html",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "toolName",
+          "toolDescription",
+          "qdrantCollection",
+          "includeDocumentMetadata"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainSummarization",
+        "parameters": [
+          "options",
+          "operationMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject",
+          "operation",
+          "responseType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "parameters": [
+          "options",
+          "inputText",
+          "categories"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "dataType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+        "parameters": [
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+        "parameters": [
+          "mode",
+          "options",
+          "qdrantCollection"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.gmail",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.gmail"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "resource"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Email Summary Agent",
+    "ai_nodes": [
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.gmail"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "filters",
+          "operation",
+          "returnAll"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "sendTo",
+          "message",
+          "options",
+          "subject"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Extract spend details (template)",
+    "ai_nodes": [
+      "n8n-nodes-base.gmailTrigger",
+      "n8n-nodes-base.gmailTrigger",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.gmailTrigger",
+        "parameters": [
+          "simple",
+          "filters",
+          "options",
+          "pollTimes"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmailTrigger",
+        "parameters": [
+          "simple",
+          "filters",
+          "options",
+          "pollTimes"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Generate Instagram Content from Top Trends with AI Image Generation",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "modelId",
+          "options",
+          "resource",
+          "imageUrls",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Gmail AI auto-responder: create draft replies to incoming emails",
+    "ai_nodes": [
+      "n8n-nodes-base.gmailTrigger",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.gmail",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.gmailTrigger",
+        "parameters": [
+          "simple",
+          "filters",
+          "options",
+          "pollTimes"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.gmail",
+        "parameters": [
+          "message",
+          "options",
+          "subject",
+          "resource",
+          "emailType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "prompt",
+          "messages"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.textClassifier",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.chainLlm"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "parameters": [
+          "options",
+          "inputText",
+          "categories"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "HR & IT Helpdesk Chatbot with Audio Transcription",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+        "parameters": [
+          "mode",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "jsonData",
+          "jsonMode"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "options",
+          "resource",
+          "operation",
+          "binaryPropertyName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+        "parameters": [
+          "name",
+          "description"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "HR Job Posting and Evaluation with AI",
+    "ai_nodes": [
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.agent",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "n8n-nodes-base.airtableTool",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtableTool",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtableTool",
+      "n8n-nodes-base.airtableTool",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.emailSend",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "n8n-nodes-base.airtableTool",
+      "n8n-nodes-base.airtableTool",
+      "n8n-nodes-base.airtable"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "id",
+          "base",
+          "table",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "text",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail",
+          "emailFormat"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtableTool",
+        "parameters": [
+          "id",
+          "base",
+          "table",
+          "options"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Microsoft Outlook AI Email Assistant",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.agent",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "schemaType",
+          "inputSchema"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.airtable"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "table",
+          "options",
+          "operation",
+          "application"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Post New YouTube Videos to X",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "n8n-nodes-base.openAi",
+      "n8n-nodes-base.openAi",
+      "n8n-nodes-base.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "input",
+          "options",
+          "operation",
+          "instruction"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "simplifyOutput"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.openAi",
+        "parameters": [
+          "prompt",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "n8n-nodes-base.wait",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.agent"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "parameters": [
+          "sessionKey",
+          "sessionIdType"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "amount"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "parameters": [
+          "options",
+          "modelName"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.agent",
+        "parameters": [
+          "text",
+          "options",
+          "promptType"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.informationExtractor"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "modelId",
+          "options",
+          "resource",
+          "imageUrls",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.informationExtractor",
+        "parameters": [
+          "text",
+          "options",
+          "attributes"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "YouTube Videos with AI Summaries on Discord",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "My workflow 6",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "@n8n/n8n-nodes-langchain.chainLlm",
+      "n8n-nodes-base.emailSend"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "parameters": [
+          "jsonSchemaExample"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "parameters": [
+          "text",
+          "messages",
+          "promptType",
+          "hasOutputParser"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.emailSend",
+        "parameters": [
+          "html",
+          "options",
+          "subject",
+          "toEmail",
+          "fromEmail"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Google Doc Summarizer to Google Sheets",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "@n8n/n8n-nodes-langchain.toolCalculator",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Telegram RAG pdf",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "@n8n/n8n-nodes-langchain.vectorStorePinecone"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "parameters": [
+          "options",
+          "dataType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "parameters": [
+          "options",
+          "chunkSize",
+          "chunkOverlap"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+        "parameters": [
+          "text",
+          "promptType"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "options",
+          "pineconeIndex"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "parameters": [
+          "model",
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "parameters": [
+          "options"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "parameters": [
+          "mode",
+          "options",
+          "pineconeIndex"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Play with Spotify from Telegram",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "OpenAI Assistant for Hubspot Chat",
+    "ai_nodes": [
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.wait",
+      "n8n-nodes-base.airtable",
+      "n8n-nodes-base.airtable",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.wait",
+        "parameters": [
+          "unit"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "options",
+          "operation",
+          "filterByFormula"
+        ]
+      },
+      {
+        "node_type": "n8n-nodes-base.airtable",
+        "parameters": [
+          "base",
+          "table",
+          "columns",
+          "options",
+          "operation"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "text",
+          "prompt",
+          "options",
+          "resource",
+          "assistantId"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  },
+  {
+    "workflow_name": "Write a WordPress post with AI (starting from a few keywords)",
+    "ai_nodes": [
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "@n8n/n8n-nodes-langchain.openAi",
+      "@n8n/n8n-nodes-langchain.openAi"
+    ],
+    "ai_parameters": [
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "prompt",
+          "options",
+          "resource"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages",
+          "jsonOutput"
+        ]
+      },
+      {
+        "node_type": "@n8n/n8n-nodes-langchain.openAi",
+        "parameters": [
+          "modelId",
+          "options",
+          "messages"
+        ]
+      }
+    ],
+    "input_sources": [],
+    "output_destinations": []
+  }
+]

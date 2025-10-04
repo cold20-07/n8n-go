@@ -1,0 +1,268 @@
+{
+  "name": "Enhanced Lead Processing Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "lead-intake",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-001",
+      "name": "Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate and sanitize incoming lead data\nconst inputData = $input.all();\nconst processedLeads = [];\n\nfor (const item of inputData) {\n  const lead = item.json;\n  \n  // Validation rules\n  const errors = [];\n  \n  if (!lead.email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(lead.email)) {\n    errors.push('Invalid email format');\n  }\n  \n  if (!lead.name || lead.name.trim().length < 2) {\n    errors.push('Name must be at least 2 characters');\n  }\n  \n  if (!lead.company || lead.company.trim().length < 1) {\n    errors.push('Company name is required');\n  }\n  \n  // Sanitize data\n  const sanitizedLead = {\n    id: lead.id || `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n    name: lead.name ? lead.name.trim() : '',\n    email: lead.email ? lead.email.toLowerCase().trim() : '',\n    company: lead.company ? lead.company.trim() : '',\n    phone: lead.phone ? lead.phone.replace(/[^\\d+\\-\\s()]/g, '') : '',\n    source: lead.source || 'unknown',\n    timestamp: new Date().toISOString(),\n    validation_errors: errors,\n    is_valid: errors.length === 0\n  };\n  \n  processedLeads.push(sanitizedLead);\n}\n\nreturn processedLeads;"
+      },
+      "id": "validation-node-002",
+      "name": "Validate Lead Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.is_valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "condition-node-003",
+      "name": "Check Valid Lead",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.clearbit.com/v2/people/find",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "httpMethod": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000,
+          "retry": {
+            "enabled": true,
+            "maxRetries": 3
+          },
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "enrichment-node-004",
+      "name": "Enrich Lead Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Score lead based on enriched data and criteria\nconst inputData = $input.all();\nconst scoredLeads = [];\n\nfor (const item of inputData) {\n  const lead = item.json;\n  let score = 0;\n  const scoringFactors = [];\n  \n  // Company size scoring\n  if (lead.company_size) {\n    if (lead.company_size > 1000) {\n      score += 30;\n      scoringFactors.push('Large company (+30)');\n    } else if (lead.company_size > 100) {\n      score += 20;\n      scoringFactors.push('Medium company (+20)');\n    } else {\n      score += 10;\n      scoringFactors.push('Small company (+10)');\n    }\n  }\n  \n  // Industry scoring\n  const highValueIndustries = ['technology', 'finance', 'healthcare', 'manufacturing'];\n  if (lead.industry && highValueIndustries.includes(lead.industry.toLowerCase())) {\n    score += 25;\n    scoringFactors.push('High-value industry (+25)');\n  }\n  \n  // Job title scoring\n  const decisionMakerTitles = ['ceo', 'cto', 'vp', 'director', 'manager', 'head'];\n  if (lead.job_title) {\n    const titleLower = lead.job_title.toLowerCase();\n    if (decisionMakerTitles.some(title => titleLower.includes(title))) {\n      score += 20;\n      scoringFactors.push('Decision maker title (+20)');\n    }\n  }\n  \n  // Source scoring\n  const sourceScores = {\n    'website': 15,\n    'referral': 25,\n    'linkedin': 20,\n    'email_campaign': 10,\n    'webinar': 18\n  };\n  \n  if (lead.source && sourceScores[lead.source]) {\n    score += sourceScores[lead.source];\n    scoringFactors.push(`Source: ${lead.source} (+${sourceScores[lead.source]})`);\n  }\n  \n  // Determine priority\n  let priority = 'low';\n  if (score >= 70) {\n    priority = 'high';\n  } else if (score >= 40) {\n    priority = 'medium';\n  }\n  \n  const scoredLead = {\n    ...lead,\n    lead_score: score,\n    priority: priority,\n    scoring_factors: scoringFactors,\n    scored_at: new Date().toISOString()\n  };\n  \n  scoredLeads.push(scoredLead);\n}\n\nreturn scoredLeads;"
+      },
+      "id": "scoring-node-005",
+      "name": "Score Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#sales-leads",
+        "text": "🎯 New High-Priority Lead Alert!\n\n**Lead Details:**\n• Name: {{ $json.name }}\n• Company: {{ $json.company }}\n• Email: {{ $json.email }}\n• Score: {{ $json.lead_score }}/100\n• Priority: {{ $json.priority }}\n\n**Scoring Factors:**\n{{ $json.scoring_factors.join('\\n') }}\n\n**Next Steps:**\n• Follow up within 1 hour for high-priority leads\n• Assign to appropriate sales rep\n• Add to CRM pipeline\n\n*Generated by n8n Lead Processing Workflow*",
+        "otherOptions": {
+          "mrkdwn": true
+        },
+        "attachments": []
+      },
+      "id": "slack-notification-006",
+      "name": "Notify Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1500, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://api.hubspot.com/crm/v3/objects/contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "httpMethod": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "{\n  \"properties\": {\n    \"email\": \"{{ $json.email }}\",\n    \"firstname\": \"{{ $json.name.split(' ')[0] }}\",\n    \"lastname\": \"{{ $json.name.split(' ').slice(1).join(' ') }}\",\n    \"company\": \"{{ $json.company }}\",\n    \"phone\": \"{{ $json.phone }}\",\n    \"lead_source\": \"{{ $json.source }}\",\n    \"lead_score\": \"{{ $json.lead_score }}\",\n    \"lead_priority\": \"{{ $json.priority }}\"\n  }\n}",
+        "options": {
+          "timeout": 15000,
+          "retry": {
+            "enabled": true,
+            "maxRetries": 3
+          }
+        }
+      },
+      "id": "crm-integration-007",
+      "name": "Add to CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1800, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Lead processed successfully\",\n  \"lead_id\": \"{{ $('Validate Lead Data').item.json.id }}\",\n  \"lead_score\": \"{{ $('Score Lead').item.json.lead_score }}\",\n  \"priority\": \"{{ $('Score Lead').item.json.priority }}\",\n  \"processed_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "webhook-response-008",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2100, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\",\n  \"message\": \"Lead validation failed\",\n  \"errors\": \"{{ $('Validate Lead Data').item.json.validation_errors }}\",\n  \"lead_id\": \"{{ $('Validate Lead Data').item.json.id }}\",\n  \"processed_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "responseCode": 400,
+        "options": {}
+      },
+      "id": "error-response-009",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 400]
+    }
+  ],
+  "connections": {
+    "Lead Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Lead": {
+      "main": [
+        [
+          {
+            "node": "Enrich Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Lead": {
+      "main": [
+        [
+          {
+            "node": "Notify Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Sales Team": {
+      "main": [
+        [
+          {
+            "node": "Add to CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to CRM": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "lead-processing",
+    "sales",
+    "automation",
+    "crm",
+    "validation"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "enhanced-lead-processing-001",
+  "versionId": "1.0.0"
+}

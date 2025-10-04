@@ -1,0 +1,110 @@
+{
+  "id": "enhanced_workflow_880494",
+  "name": "Create Workflow Sends",
+  "nodes": [
+    {
+      "id": "node_8965",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "slack-alert-6980",
+        "options": {
+          "noResponseBody": false
+        },
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "id": "node_4353",
+      "name": "Format Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment_871",
+              "name": "message",
+              "value": "={{ $json.message || \"Webhook notification received\" }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment_931",
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment_922",
+              "name": "originalData",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_1788",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "parameters": {
+        "operation": "post",
+        "channel": "#general",
+        "text": "\ud83d\udea8 Webhook Alert!\n\n\ud83d\udcdd Message: {{ $json.message || \"Webhook triggered\" }}\n\u23f0 Time: {{ new Date().toLocaleString() }}\n\ud83d\udcca Data: {{ JSON.stringify($json, null, 2) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "generated_by": "n8n-workflow-generator",
+    "generation_timestamp": "2025-01-01T00:00:00.000Z",
+    "version": "1.0"
+  },
+  "staticData": null,
+  "tags": [
+    "generated"
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
