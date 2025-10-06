@@ -802,6 +802,42 @@ return [{ json: errorLog }];`
   };
 }
 
+// Template definitions
+const TEMPLATES = {
+  'rss_to_social': {
+    id: 'rss_to_social',
+    name: 'RSS to Social Media',
+    description: 'Monitor RSS feeds and automatically post new articles to social media platforms like Twitter and LinkedIn',
+    category: 'social_media',
+    complexity: 'medium',
+    use_cases: ['Content automation', 'Social media management', 'Blog promotion']
+  },
+  'email_processing': {
+    id: 'email_processing',
+    name: 'Email Processing',
+    description: 'Process incoming emails, extract attachments, validate content, and route to appropriate team members',
+    category: 'communication',
+    complexity: 'medium',
+    use_cases: ['Customer support', 'Document processing', 'Email automation']
+  },
+  'data_backup': {
+    id: 'data_backup',
+    name: 'Data Backup',
+    description: 'Automatically backup files from Google Drive to Dropbox and send confirmation emails',
+    category: 'storage',
+    complexity: 'simple',
+    use_cases: ['Data protection', 'Cloud storage sync', 'Automated backups']
+  },
+  'ecommerce_orders': {
+    id: 'ecommerce_orders',
+    name: 'E-commerce Orders',
+    description: 'Process new Shopify orders, update inventory, send confirmation emails, and create shipping labels',
+    category: 'ecommerce',
+    complexity: 'complex',
+    use_cases: ['Order fulfillment', 'Inventory management', 'Customer communication']
+  }
+};
+
 module.exports = async (req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -814,6 +850,43 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // Handle template requests
+    if (req.url.startsWith('/api/templates/')) {
+      const templateId = req.url.split('/').pop();
+      
+      if (templateId === 'suggestions' && req.method === 'POST') {
+        const body = JSON.parse(req.body || '{}');
+        const description = body.description?.toLowerCase() || '';
+        
+        // Simple template suggestion logic
+        const suggestions = Object.values(TEMPLATES).filter(template => {
+          return template.description.toLowerCase().includes(description) ||
+                 template.category.includes(description) ||
+                 template.use_cases.some(useCase => useCase.toLowerCase().includes(description));
+        }).slice(0, 3);
+        
+        res.status(200).json({
+          success: true,
+          suggestions: suggestions
+        });
+        return;
+      }
+      
+      if (TEMPLATES[templateId]) {
+        res.status(200).json({
+          success: true,
+          template: TEMPLATES[templateId]
+        });
+        return;
+      } else {
+        res.status(404).json({
+          success: false,
+          error: 'Template not found'
+        });
+        return;
+      }
+    }
+
     if (req.url === '/health') {
       res.status(200).json({
         status: 'healthy',

@@ -3,211 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N8N Workflow Generator</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            font-size: 16px;
-        }
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            width: 100%;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-        }
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            display: none;
-        }
-        .result pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-        }
-        .loading {
-            text-align: center;
-            padding: 20px;
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid white;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <title>N8N Go - Effortless JSON Generation</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/favicon.ico">
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 N8N Workflow Generator</h1>
-        <p style="text-align: center; margin-bottom: 30px;">
-            Generate production-ready n8n workflows with AI assistance
-        </p>
-        
-        <form id="workflowForm">
-            <div class="form-group">
-                <label for="description">Workflow Description:</label>
-                <textarea 
-                    id="description" 
-                    name="description" 
-                    placeholder="Describe what you want your workflow to do... e.g., 'Process customer orders and send email notifications'"
-                    required
-                ></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="triggerType">Trigger Type:</label>
-                <select id="triggerType" name="triggerType">
-                    <option value="webhook">Webhook</option>
-                    <option value="schedule">Schedule</option>
-                    <option value="manual">Manual</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="complexity">Complexity:</label>
-                <select id="complexity" name="complexity">
-                    <option value="simple">Simple</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="complex">Complex</option>
-                </select>
-            </div>
-            
-            <button type="submit">Generate Workflow</button>
-        </form>
-        
-        <div id="loading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <p>Generating your workflow...</p>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">N8N Go</a>
+                <ul class="nav-links">
+                    <li><a href="#features" class="active">Features</a></li>
+                    <li><a href="/pricing">Pricing</a></li>
+                    <li><a href="/documentation">Documentation</a></li>
+                </ul>
+                <a href="#json-generator" class="cta-button">Get Started</a>
+            </nav>
         </div>
-        
-        <div id="result" class="result">
-            <h3>Generated Workflow</h3>
-            <div id="workflowInfo"></div>
-            <h4>JSON Output:</h4>
-            <pre id="workflowJson"></pre>
-        </div>
-    </div>
+    </header>
 
-    <script>
-        document.getElementById('workflowForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = {
-                description: formData.get('description'),
-                triggerType: formData.get('triggerType'),
-                complexity: formData.get('complexity')
-            };
-            
-            // Show loading
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('result').style.display = 'none';
-            
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Effortless JSON Generation with n8n</h1>
+                        <p>Build, preview, and automate your JSON data structures instantly</p>
+                        <a href="#json-generator" class="hero-cta">Start Generating →</a>
+                    </div>
+                    <div class="network-viz">
+                        <div class="node">Email Client</div>
+                        <div class="node">Repository</div>
+                        <div class="node">Webhook</div>
+                        <div class="node">Validation Unit</div>
+                        <div class="node">Processing System</div>
+                        <div class="node">Output Schema</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="json-generator" id="json-generator">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Generate Your n8n Workflow</h2>
+                    <p>Transform your automation ideas into production-ready JSON workflows</p>
+                    
+                    <!-- Template Quick Start -->
+                    <div class="template-quick-start">
+                        <h3>🚀 Quick Start with Templates</h3>
+                        <div class="template-buttons">
+                            <button class="template-btn" onclick="loadTemplate('rss_to_social')">
+                                📡 RSS to Social Media
+                            </button>
+                            <button class="template-btn" onclick="loadTemplate('email_processing')">
+                                📧 Email Processing
+                            </button>
+                            <button class="template-btn" onclick="loadTemplate('data_backup')">
+                                💾 Data Backup
+                            </button>
+                            <button class="template-btn" onclick="loadTemplate('ecommerce_orders')">
+                                🛒 E-commerce Orders
+                            </button>
+                        </div>
+                        <p class="template-hint">Or describe your automation below for a custom workflow</p>
+                    </div>
+                </div>
                 
-                const result = await response.json();
-                
-                // Hide loading
-                document.getElementById('loading').style.display = 'none';
-                
-                if (result.success) {
-                    // Show result
-                    document.getElementById('workflowInfo').innerHTML = `
-                        <p><strong>Name:</strong> ${result.workflow_name}</p>
-                        <p><strong>Nodes:</strong> ${result.node_count}</p>
-                        <p><strong>Type:</strong> ${result.workflow_type}</p>
-                        <p><strong>Description:</strong> ${result.description}</p>
-                    `;
-                    document.getElementById('workflowJson').textContent = result.formatted_json;
-                    document.getElementById('result').style.display = 'block';
-                } else {
-                    alert('Error generating workflow: ' + result.error);
-                }
-            } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                alert('Error: ' + error.message);
-            }
-        });
-        
-        // Test API connection on load
-        fetch('/health')
-            .then(response => response.json())
-            .then(data => {
-                console.log('API Status:', data);
-            })
-            .catch(error => {
-                console.error('API connection error:', error);
-            });
-    </script>
+                <div class="generator-layout">
+                    <div class="generator-form-container">
+                        <div class="form-card">
+                            <form id="workflowForm">
+                                <div class="form-group">
+                                    <label for="description">
+                                        <span class="label-text">Describe Your Workflow</span>
+                                        <span class="label-hint">What do you want to automate?</span>
+                                    </label>
+                                    <textarea 
+                                        id="description" 
+                                        name="description" 
+                                        placeholder="Example: Process incoming leads from webhook, validate email addresses, send notifications to Slack, and store valid leads in database"
+                                        required
+                                    ></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="triggerType">
+                                        <span class="label-text">Trigger Type</span>
+                                        <span class="label-hint">How should your workflow be triggered?</span>
+                                    </label>
+                                    <select id="triggerType" name="triggerType">
+                                        <option value="webhook">🔗 Webhook</option>
+                                        <option value="schedule">⏰ Schedule</option>
+                                        <option value="manual">👆 Manual</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="generate-button">
+                                    <span class="btn-content">
+                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-text">Generate Workflow</span>
+                                    </span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <span class="spinner"></span>
+                                        Generating...
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="generator-output-container">
+                        <div class="output-placeholder" id="outputPlaceholder">
+                            <div class="placeholder-content">
+                                <div class="placeholder-icon">📄</div>
+                                <h3>Your Workflow Will Appear Here</h3>
+                                <p>Fill out the form and click generate to see your n8n workflow JSON</p>
+                                <div class="placeholder-features">
+                                    <div class="feature-item">✨ Production-ready JSON</div>
+                                    <div class="feature-item">🔧 Customizable nodes</div>
+                                    <div class="feature-item">📋 One-click copy</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="output-card" id="output" style="display: none;">
+                            <div class="output-header">
+                                <div class="output-title">
+                                    <h3>Generated Workflow</h3>
+                                    <span class="workflow-badge">Ready to Import</span>
+                                </div>
+                                <div class="output-actions">
+                                    <button id="copyBtn" class="action-btn primary">
+                                        <span class="btn-icon">📋</span>
+                                        Copy JSON
+                                    </button>
+                                    <button id="downloadBtn" class="action-btn secondary">
+                                        <span class="btn-icon">💾</span>
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="json-container">
+                                <div class="json-header">
+                                    <span class="json-label">n8n Workflow JSON</span>
+                                    <span class="json-size" id="jsonSize"></span>
+                                </div>
+                                <div class="json-preview">
+                                    <pre><code id="jsonOutput"></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Visual Workflow Builder</h3>
+                        <p>Intuitive drag-and-drop interface for creating complex JSON workflows without coding</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Real-time Preview & Validation</h3>
+                        <p>See your JSON output instantly with built-in validation and error detection</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">☁️</div>
+                        <h3>Seamless Integration</h3>
+                        <p>Connect with popular APIs, databases, and services with pre-built connectors</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content" style="text-align: center; padding: 20px 0;">
+                <p style="margin: 0;">Made with ❤️ by NXT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
