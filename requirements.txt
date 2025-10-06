@@ -23,6 +23,6 @@ pydantic==2.4.2
 
 # Development & Testing
 pytest==7.4.3
-black==23.9.1
+black==25.9.0
 flake8==6.1.0
 isort==5.12.0
