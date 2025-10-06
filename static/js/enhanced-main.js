@@ -1,4 +1,4 @@
-// Enhanced N8N Workflow Generator - UX Improvements
+// Enhanced n8n Workflow Generator - UX Improvements
 // Real-time validation, accessibility, and micro-animations
 
 class EnhancedWorkflowGenerator {

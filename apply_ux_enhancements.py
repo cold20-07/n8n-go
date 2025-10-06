@@ -60,14 +60,14 @@ def create_additional_assets():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessibility Statement - N8N Go</title>
+    <title>Accessibility Statement - n8n go</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
         <div class="container">
             <nav>
-                <a href="/" class="logo">N8N Go</a>
+                <a href="/" class="logo">n8n go</a>
                 <ul class="nav-links">
                     <li><a href="/">Home</a></li>
                     <li><a href="/accessibility" class="active">Accessibility</a></li>
@@ -79,10 +79,10 @@ def create_additional_assets():
     <main class="container" style="padding: 60px 20px;">
         <h1>Accessibility Statement</h1>
         
-        <p>N8N Go is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.</p>
+        <p>n8n go is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.</p>
         
         <h2>Conformance Status</h2>
-        <p>The Web Content Accessibility Guidelines (WCAG) defines requirements for designers and developers to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. N8N Go is fully conformant with WCAG 2.1 level AA.</p>
+        <p>The Web Content Accessibility Guidelines (WCAG) defines requirements for designers and developers to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. n8n go is fully conformant with WCAG 2.1 level AA.</p>
         
         <h2>Accessibility Features</h2>
         <ul>
@@ -97,7 +97,7 @@ def create_additional_assets():
         </ul>
         
         <h2>Feedback</h2>
-        <p>We welcome your feedback on the accessibility of N8N Go. Please let us know if you encounter accessibility barriers:</p>
+        <p>We welcome your feedback on the accessibility of n8n go. Please let us know if you encounter accessibility barriers:</p>
         <ul>
             <li>Email: accessibility@n8ngo.com</li>
             <li>Phone: +1 (555) 123-4567</li>
@@ -106,7 +106,7 @@ def create_additional_assets():
         <p>We try to respond to feedback within 2 business days.</p>
         
         <h2>Technical Specifications</h2>
-        <p>Accessibility of N8N Go relies on the following technologies to work with the particular combination of web browser and any assistive technologies or plugins installed on your computer:</p>
+        <p>Accessibility of n8n go relies on the following technologies to work with the particular combination of web browser and any assistive technologies or plugins installed on your computer:</p>
         <ul>
             <li>HTML</li>
             <li>WAI-ARIA</li>
@@ -133,7 +133,7 @@ def create_additional_assets():
     print("   ✅ Created accessibility statement page")
     
     # Create service worker for offline support
-    sw_content = """// Service Worker for N8N Go - Enhanced UX
+    sw_content = """// Service Worker for n8n go - Enhanced UX
 const CACHE_NAME = 'n8n-go-v1';
 const urlsToCache = [
     '/',
@@ -234,7 +234,7 @@ def run_tests():
 
 def main():
     """Main execution function"""
-    print("🎨 N8N Workflow Generator - UX Enhancement Application")
+    print("🎨 n8n Workflow Generator - UX Enhancement Application")
     print("=" * 60)
     
     # Check if we're in the right directory

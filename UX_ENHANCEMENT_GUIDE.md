@@ -1,8 +1,8 @@
-# UX Enhancement Guide - N8N Workflow Generator
+# UX Enhancement Guide - n8n Workflow Generator
 
 ## Overview
 
-This guide documents the comprehensive UX improvements implemented for the N8N Workflow Generator, focusing on accessibility, real-time validation, mobile responsiveness, and enhanced user interactions.
+This guide documents the comprehensive UX improvements implemented for the n8n Workflow Generator, focusing on accessibility, real-time validation, mobile responsiveness, and enhanced user interactions.
 
 ## 🎯 Key Improvements Implemented
 
@@ -378,4 +378,4 @@ window.DEBUG_UX = true;
 
 ---
 
-This enhanced UX implementation provides a modern, accessible, and user-friendly experience while maintaining the core functionality of the N8N workflow generator. The improvements focus on real-world usability, accessibility compliance, and performance optimization across all devices and user capabilities.
+This enhanced UX implementation provides a modern, accessible, and user-friendly experience while maintaining the core functionality of the n8n workflow generator. The improvements focus on real-world usability, accessibility compliance, and performance optimization across all devices and user capabilities.
