@@ -730,8 +730,7 @@ footer {
         text-align: center;
     }
 }
-/* P
-rompt Assistance Styles */
+/* Prompt Assistance Styles */
 .prompt-help-overlay {
     position: fixed;
     top: 0;
@@ -868,6 +867,24 @@ rompt Assistance Styles */
     box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
 }
 
+.suggestion-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 5px 5px 5px 0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.suggestion-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+}
+
 /* Quick Help Tooltip */
 .quick-help-tooltip {
     position: absolute;
@@ -934,8 +951,102 @@ rompt Assistance Styles */
         text-align: center;
     }
 }
-/
-* Connection Validation Styles */
+/*
+ Template Quick Start Styles */
+.template-quick-start {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.template-quick-start h3 {
+    color: #ffffff;
+    margin-bottom: 16px;
+    font-size: 18px;
+}
+
+.template-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.template-btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.template-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+.template-hint {
+    color: #cccccc;
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+}
+
+/* Template Suggestions */
+.template-suggestions {
+    display: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.template-suggestion {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.template-suggestion:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(79, 70, 229, 0.5);
+    transform: translateX(4px);
+}
+
+.template-suggestion h4 {
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.template-suggestion p {
+    color: #cccccc;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.template-category {
+    background: rgba(79, 70, 229, 0.2);
+    color: #a78bfa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+/* Connection Validation Styles */
 .validation-info {
     background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
     border: 1px solid #4caf50;
@@ -1112,100 +1223,6 @@ rompt Assistance Styles */
         margin: 4px 0;
     }
 }
-/*
- Template Quick Start Styles */
-.template-quick-start {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 24px;
-    margin: 24px 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.template-quick-start h3 {
-    color: #ffffff;
-    margin-bottom: 16px;
-    font-size: 18px;
-}
-
-.template-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.template-btn {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
-    border: none;
-    padding: 12px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    text-align: left;
-}
-
-.template-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-}
-
-.template-hint {
-    color: #cccccc;
-    font-size: 14px;
-    text-align: center;
-    margin: 0;
-}
-
-/* Template Suggestions */
-.template-suggestions {
-    display: none;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 20px;
-    margin: 16px 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.template-suggestion {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.template-suggestion:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(79, 70, 229, 0.5);
-    transform: translateX(4px);
-}
-
-.template-suggestion h4 {
-    color: #ffffff;
-    margin-bottom: 8px;
-    font-size: 16px;
-}
-
-.template-suggestion p {
-    color: #cccccc;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-.template-category {
-    background: rgba(79, 70, 229, 0.2);
-    color: #a78bfa;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    text-transform: capitalize;
-}
 
 /* Validation Results */
 .validation-results {
@@ -1346,9 +1363,15 @@ rompt Assistance Styles */
         flex-direction: column;
         align-items: center;
     }
+    
+    .suggestion-btn {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+        text-align: center;
+    }
 }
-/* Prici
-ng Page Styles */
+/* Pricing Page Styles */
 .pricing-hero {
     padding: 80px 0 60px;
     text-align: center;
