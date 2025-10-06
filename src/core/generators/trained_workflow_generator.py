@@ -39,7 +39,7 @@ class TrainedWorkflowGenerator:
             with open("training_data/statistics.json", 'r') as f:
                 self.statistics = json.load(f)
             
-            print("✅ Loaded trained workflow data successfully")
+            print("[OK] Loaded trained workflow data successfully")
             
         except Exception as e:
             print(f"⚠️ Could not load trained data: {e}")
@@ -64,9 +64,9 @@ class TrainedWorkflowGenerator:
                 with open(model_dir / "robust_classifier_scaler.pkl", 'rb') as f:
                     self.scalers['classifier'] = pickle.load(f)
                 
-                print("✅ Loaded trained models successfully")
+                print("[OK] Loaded trained models successfully")
             else:
-                print("⚠️ No trained models found")
+                print("[WARN] No trained models found")
                 
         except Exception as e:
             print(f"⚠️ Could not load trained models: {e}")
@@ -466,11 +466,11 @@ def generate_trained_workflow(description: str, trigger_type: str = 'webhook',
         generator = TrainedWorkflowGenerator()
         workflow = generator.generate_realistic_workflow(description, trigger_type, complexity)
         
-        print(f"✅ Generated workflow with {len(workflow.get('nodes', []))} nodes")
+        print(f"[OK] Generated workflow with {len(workflow.get('nodes', []))} nodes")
         return workflow
         
     except Exception as e:
-        print(f"❌ Trained generation failed: {e}")
+        print(f"[ERROR] Trained generation failed: {e}")
         # Fallback to basic generation
         return create_basic_fallback(description, trigger_type, complexity)
 

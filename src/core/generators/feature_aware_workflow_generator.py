@@ -263,7 +263,7 @@ class FeatureAwareGenerator:
         
         # Step 1: Detect required features
         required_features = self.feature_map.detect_features_in_text(description)
-        print(f"🔍 Detected features: {list(required_features.keys())}")
+        print(f"Feature Detection: Detected features: {list(required_features.keys())}")
         
         # Step 2: Find matching templates
         matching_templates = self.find_matching_templates(required_features, description)

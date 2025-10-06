@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "generated": "2025-10-06T05:44:24.101379",
+    "description": "Comprehensive n8n workflow training dataset",
+    "total_examples": 53,
+    "categories": [
+      "workflow_patterns",
+      "node_types",
+      "common_structures",
+      "best_practices",
+      "example_workflows",
+      "error_handling_patterns",
+      "performance_optimization",
+      "api_integration_patterns",
+      "real_world_examples"
+    ]
+  },
+  "workflow_patterns": [
+    {
+      "pattern_name": "Real-Time Information Capture",
+      "description": "Captures information as it happens and processes it immediately",
+      "trigger_types": ["webhook", "form_submission", "app_event"],
+      "use_cases": ["Lead capture", "Order processing", "Support tickets"],
+      "structure": {
+        "trigger": "webhook/form/app_event",
+        "processing": "data_transformation",
+        "action": "store/notify/route"
+      }
+    },
+    {
+      "pattern_name": "Scheduled Batch Processing",
+      "description": "Runs on schedule to process multiple items at once",
+      "trigger_types": ["cron", "schedule"],
+      "use_cases": ["Daily reports", "Data sync", "Cleanup tasks"],
+      "structure": {
+        "trigger": "schedule",
+        "data_collection": "fetch_multiple_items",
+        "processing": "batch_operations",
+        "output": "reports/notifications"
+      }
+    },
+    {
+      "pattern_name": "System Synchronization",
+      "description": "Keeps different systems in sync by transferring data between them",
+      "trigger_types": ["webhook", "polling"],
+      "use_cases": ["CRM sync", "Inventory sync", "User management"],
+      "structure": {
+        "trigger": "data_change_event",
+        "validation": "data_quality_check",
+        "transformation": "format_conversion",
+        "sync": "update_target_system"
+      }
+    },
+    {
+      "pattern_name": "AI-Enhanced Manual Processes",
+      "description": "Uses AI to automate tasks requiring judgment or creativity",
+      "trigger_types": ["webhook", "manual", "schedule"],
+      "use_cases": ["Content generation", "Data analysis", "Decision support"],
+      "structure": {
+        "trigger": "input_data",
+        "ai_processing": "llm_analysis",
+        "human_review": "optional_approval",
+        "action": "automated_response"
+      }
+    }
+  ],
+  "node_types": [
+    {
+      "category": "triggers",
+      "nodes": [
+        {"name": "Webhook", "purpose": "Receive HTTP requests", "common_use": "API endpoints"},
+        {"name": "Cron", "purpose": "Schedule-based triggering", "common_use": "Regular tasks"},
+        {"name": "Manual", "purpose": "Manual execution", "common_use": "Testing"},
+        {"name": "Email Trigger", "purpose": "Email-based triggers", "common_use": "Email processing"},
+        {"name": "Form Trigger", "purpose": "Web form submissions", "common_use": "Lead capture"}
+      ]
+    },
+    {
+      "category": "data_processing",
+      "nodes": [
+        {"name": "Set", "purpose": "Transform/set data fields", "common_use": "Data mapping"},
+        {"name": "Code", "purpose": "Custom JavaScript logic", "common_use": "Complex transformations"},
+        {"name": "IF", "purpose": "Conditional branching", "common_use": "Decision logic"},
+        {"name": "Switch", "purpose": "Multiple condition routing", "common_use": "Complex routing"},
+        {"name": "Merge", "purpose": "Combine data streams", "common_use": "Data consolidation"}
+      ]
+    },
+    {
+      "category": "integrations",
+      "nodes": [
+        {"name": "HTTP Request", "purpose": "Make API calls", "common_use": "External API integration"},
+        {"name": "Google Sheets", "purpose": "Spreadsheet operations", "common_use": "Data storage/retrieval"},
+        {"name": "Gmail", "purpose": "Email operations", "common_use": "Email automation"},
+        {"name": "Slack", "purpose": "Team communication", "common_use": "Notifications"},
+        {"name": "Airtable", "purpose": "Database operations", "common_use": "CRM/data management"}
+      ]
+    },
+    {
+      "category": "ai_nodes",
+      "nodes": [
+        {"name": "OpenAI", "purpose": "AI text processing", "common_use": "Content generation"},
+        {"name": "Anthropic Claude", "purpose": "AI analysis", "common_use": "Data analysis"},
+        {"name": "Google Gemini", "purpose": "AI processing", "common_use": "Smart automation"},
+        {"name": "Embeddings", "purpose": "Vector generation", "common_use": "Semantic search"},
+        {"name": "Vector Store", "purpose": "Vector storage", "common_use": "RAG systems"}
+      ]
+    }
+  ],
+  "best_practices": [
+    {
+      "category": "Error Handling",
+      "practices": [
+        "Always include error trigger nodes",
+        "Implement retry logic for critical operations",
+        "Set appropriate timeout values",
+        "Log errors to external systems",
+        "Include notification systems for failures"
+      ]
+    },
+    {
+      "category": "Data Processing",
+      "practices": [
+        "Validate input data before processing",
+        "Use consistent data formatting",
+        "Implement data quality checks",
+        "Handle edge cases gracefully",
+        "Document data transformations"
+      ]
+    },
+    {
+      "category": "Security",
+      "practices": [
+        "Use webhook authentication",
+        "Validate input parameters",
+        "Store credentials securely",
+        "Implement rate limiting",
+        "Audit workflow access"
+      ]
+    },
+    {
+      "category": "Performance",
+      "practices": [
+        "Minimize unnecessary node operations",
+        "Use batch processing where possible",
+        "Implement caching for repeated operations",
+        "Monitor execution times",
+        "Optimize data flow paths"
+      ]
+    },
+    {
+      "category": "Maintenance",
+      "practices": [
+        "Use descriptive node names",
+        "Document complex logic",
+        "Version control workflow exports",
+        "Test workflows thoroughly",
+        "Monitor workflow health"
+      ]
+    }
+  ],
+  "error_handling_patterns": {
+    "error_handling_strategies": [
+      {
+        "pattern": "Centralized Error Workflow",
+        "description": "Single error workflow that handles all failures across multiple workflows",
+        "implementation": {
+          "setup": "Create dedicated error workflow with Error Trigger node",
+          "connection": "Link all workflows to central error workflow via settings",
+          "benefits": ["Centralized monitoring", "Consistent error handling", "Reduced duplication"]
+        }
+      },
+      {
+        "pattern": "Exponential Backoff Retry",
+        "description": "Intelligent retry mechanism with increasing delays",
+        "implementation": {
+          "logic": "Wait increasing intervals: 1s, 2s, 4s, 8s, 16s",
+          "use_cases": ["API rate limiting", "Temporary network issues", "Service overload"],
+          "max_retries": "5-7 attempts recommended"
+        }
+      },
+      {
+        "pattern": "Fallback LLM Strategy",
+        "description": "Multiple AI model fallbacks for reliability",
+        "implementation": {
+          "primary": "OpenAI GPT-4",
+          "fallbacks": ["Anthropic Claude", "Google Gemini", "Open source models"],
+          "routing": "Auto-switch on primary failure"
+        }
+      }
+    ]
+  },
+  "real_world_examples": [
+    {
+      "name": "E-commerce Order Processing with Error Handling",
+      "description": "Complete order workflow with retry logic and fallback mechanisms",
+      "category": "ecommerce_advanced",
+      "complexity": "expert",
+      "features": ["Error handling", "Retry logic", "Fallback systems", "Notifications"],
+      "json_structure": {
+        "name": "E-commerce Order Processing",
+        "active": true,
+        "settings": {"errorWorkflow": "error-handler-workflow-id"},
+        "nodes": [
+          {
+            "parameters": {
+              "path": "order-webhook",
+              "httpMethod": "POST",
+              "authentication": "headerAuth",
+              "options": {"allowedOrigins": "https://shop.example.com"}
+            },
+            "id": "order_webhook",
+            "name": "Order Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [240, 300],
+            "onError": "continueRegularOutput"
+          },
+          {
+            "parameters": {
+              "conditions": {
+                "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+                "conditions": [
+                  {"leftValue": "={{ $json.body.order_id }}", "rightValue": "", "operator": {"type": "string", "operation": "exists"}},
+                  {"leftValue": "={{ $json.body.customer.email }}", "rightValue": "", "operator": {"type": "string", "operation": "exists"}}
+                ],
+                "combinator": "and"
+              }
+            },
+            "id": "validate_order",
+            "name": "Validate Order Data",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2,
+            "position": [460, 300]
+          }
+        ],
+        "connections": {
+          "Order Webhook": {"main": [[{"node": "Validate Order Data", "type": "main", "index": 0}]]}
+        }
+      }
+    }
+  ]
+}

@@ -3,74 +3,189 @@ import json
 import os
 import re
 import html
+import time
+import warnings
 from werkzeug.exceptions import BadRequest
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_cors import CORS
 
+# Suppress Flask-Limiter warning about in-memory storage in development
+warnings.filterwarnings('ignore', 
+                      message='Using the in-memory storage for tracking rate limits',
+                      category=UserWarning,
+                      module='flask_limiter._extension')
+
+# Import configuration and logging
+try:
+    from config import config, validate_config
+    from logger import setup_app_logging
+    from exceptions import *
+    
+    # Setup logging
+    logger = setup_app_logging(debug=config.DEBUG)
+    validate_config()
+    
+except ImportError as e:
+    print(f"Warning: Configuration modules not available: {e}")
+    import logging
+    logger = logging.getLogger(__name__)
+
+# Import enhancement modules
 try:
     from n8n_workflow_research import N8nWorkflowResearcher
     from enhance_workflow_output import WorkflowOutputEnhancer
     ENHANCER_AVAILABLE = True
 except ImportError as e:
-    print(f"Warning: Enhancement modules not available: {e}")
+    logger.warning(f"Enhancement modules not available: {e}")
     ENHANCER_AVAILABLE = False
 
+# Import AI enhancement system
 try:
-    from enhanced_input_validation import validate_workflow_request, validator
-    ENHANCED_VALIDATION_AVAILABLE = True
-    print("✅ Enhanced input validation loaded successfully")
+    from ai_enhancements import AIOrchestrator, GeminiProvider, OpenAIProvider, AIProvider, generate_enhanced_workflow
+    AI_ENHANCEMENTS_AVAILABLE = True
+    logger.info("[OK] AI Enhancement system loaded successfully")
 except ImportError as e:
-    print(f"Warning: Enhanced validation not available: {e}")
+    logger.warning(f"AI Enhancement system not available: {e}")
+    AI_ENHANCEMENTS_AVAILABLE = False
+
+# Import template system
+try:
+    from src.templates.workflow_templates import template_manager, TemplateCategory
+    TEMPLATES_AVAILABLE = True
+    logger.info("[OK] Workflow template system loaded successfully")
+except ImportError as e:
+    logger.warning(f"Template system not available: {e}")
+    TEMPLATES_AVAILABLE = False
+
+# Import validation system
+try:
+    from src.validators.workflow_validator import workflow_validator
+    WORKFLOW_VALIDATOR_AVAILABLE = True
+    logger.info("[OK] Workflow validation system loaded successfully")
+except ImportError as e:
+    logger.warning(f"Workflow validation system not available: {e}")
+    WORKFLOW_VALIDATOR_AVAILABLE = False
+
+# Import market-leading generator
+try:
+    from src.core.generators.market_leading_workflow_generator import generate_market_leading_workflow
+    MARKET_LEADING_GENERATOR_AVAILABLE = True
+    logger.info("[OK] Market-leading workflow generator loaded successfully")
+except ImportError as e:
+    logger.warning(f"Market-leading generator not available: {e}")
+    MARKET_LEADING_GENERATOR_AVAILABLE = False
+
+# Import validation modules with new paths
+try:
+    from src.core.validators.enhanced_input_validation import validate_workflow_request, validator
+    ENHANCED_VALIDATION_AVAILABLE = True
+    logger.info("[OK] Enhanced input validation loaded successfully")
+except ImportError as e:
+    logger.warning(f"Enhanced validation not available: {e}")
     ENHANCED_VALIDATION_AVAILABLE = False
 
+# Import utility modules with new paths
 try:
-    from prompt_helper import enhance_workflow_generation, PromptHelper
+    from src.utils.prompt_helper import enhance_workflow_generation, PromptHelper
     PROMPT_HELPER_AVAILABLE = True
-    print("✅ Prompt helper loaded successfully")
+    logger.info("[OK] Prompt helper loaded successfully")
 except ImportError as e:
-    print(f"Warning: Prompt helper not available: {e}")
+    logger.warning(f"Prompt helper not available: {e}")
     PROMPT_HELPER_AVAILABLE = False
 
+# Import generator modules with new paths
 try:
-    from trained_workflow_generator import generate_trained_workflow, TrainedWorkflowGenerator
+    from src.core.generators.trained_workflow_generator import generate_trained_workflow, TrainedWorkflowGenerator
     TRAINED_GENERATOR_AVAILABLE = True
-    print("✅ Trained workflow generator loaded successfully")
+    logger.info("[OK] Trained workflow generator loaded successfully")
 except ImportError as e:
-    print(f"Warning: Trained generator not available: {e}")
+    logger.warning(f"Trained generator not available: {e}")
     TRAINED_GENERATOR_AVAILABLE = False
 
 try:
-    from feature_aware_workflow_generator import generate_feature_aware_workflow, FeatureAwareGenerator
+    from src.core.generators.feature_aware_workflow_generator import generate_feature_aware_workflow, FeatureAwareGenerator
     FEATURE_AWARE_GENERATOR_AVAILABLE = True
-    print("✅ Feature-aware workflow generator loaded successfully")
+    logger.info("[OK] Feature-aware workflow generator loaded successfully")
 except ImportError as e:
-    print(f"Warning: Feature-aware generator not available: {e}")
+    logger.warning(f"Feature-aware generator not available: {e}")
     FEATURE_AWARE_GENERATOR_AVAILABLE = False
 
 try:
-    from enhanced_workflow_generator import generate_enhanced_workflow, EnhancedWorkflowGenerator
+    from src.core.generators.enhanced_workflow_generator import generate_enhanced_workflow, EnhancedWorkflowGenerator
     ENHANCED_GENERATOR_AVAILABLE = True
-    print("✅ Enhanced workflow generator loaded successfully")
+    logger.info("[OK] Enhanced workflow generator loaded successfully")
 except ImportError as e:
-    print(f"Warning: Enhanced generator not available: {e}")
+    logger.warning(f"Enhanced generator not available: {e}")
     ENHANCED_GENERATOR_AVAILABLE = False
 
+# Import validator modules with new paths
 try:
-    from connection_validator import ConnectionValidator
-    from workflow_accuracy_validator import WorkflowAccuracyValidator
+    from src.core.validators.connection_validator import ConnectionValidator
+    from src.core.validators.workflow_accuracy_validator import WorkflowAccuracyValidator
     CONNECTION_VALIDATOR_AVAILABLE = True
-    print("✅ Connection validator loaded successfully")
+    logger.info("[OK] Connection validator loaded successfully")
 except ImportError as e:
-    print(f"Warning: Connection validator not available: {e}")
+    logger.warning(f"Connection validator not available: {e}")
     CONNECTION_VALIDATOR_AVAILABLE = False
 
 try:
-    from simple_connection_fixer import validate_and_fix_connections
+    from src.core.validators.simple_connection_fixer import validate_and_fix_connections
     SIMPLE_FIXER_AVAILABLE = True
-    print("✅ Simple connection fixer loaded successfully")
+    logger.info("[OK] Simple connection fixer loaded successfully")
 except ImportError as e:
-    print(f"Warning: Simple connection fixer not available: {e}")
+    logger.warning(f"Simple connection fixer not available: {e}")
     SIMPLE_FIXER_AVAILABLE = False
 
 app = Flask(__name__)
+
+# Configure Flask app with advanced configuration system
+try:
+    # Basic Flask configuration
+    app.config.update({
+        'SECRET_KEY': config.SECRET_KEY,
+        'DEBUG': config.DEBUG,
+        'TESTING': config.is_testing(),
+        'MAX_CONTENT_LENGTH': 16 * 1024 * 1024,  # 16MB max file size
+        'JSON_SORT_KEYS': False,
+        'JSONIFY_PRETTYPRINT_REGULAR': config.DEBUG
+    })
+    
+    # Setup CORS with advanced configuration
+    CORS(app, 
+         origins=config.get_cors_origins(),
+         supports_credentials=True,
+         max_age=3600)
+    
+    # Setup rate limiting with endpoint-specific limits
+    limiter = Limiter(
+        app=app,
+        key_func=get_remote_address,
+        default_limits=[f"{config.RATE_LIMIT_PER_HOUR} per hour"],
+        storage_uri=config.REDIS_URL if config.ENABLE_CACHING else None,
+        strategy="fixed-window"
+    )
+    
+    # Register configuration API blueprint
+    try:
+        from config_api import config_bp
+        app.register_blueprint(config_bp)
+        logger.info("[OK] Configuration API registered")
+    except ImportError as e:
+        logger.warning(f"Configuration API not available: {e}")
+    
+    logger.info(f"[OK] Flask app configured successfully")
+    logger.info(f"   Environment: {config.FLASK_ENV}")
+    logger.info(f"   Debug: {config.DEBUG}")
+    logger.info(f"   Rate limiting: {config.RATE_LIMIT_PER_HOUR}/hour")
+    logger.info(f"   Features enabled: {sum(1 for v in config.get_feature_flags().values() if v)}")
+    
+except Exception as e:
+    logger.error(f"Failed to configure Flask app: {e}")
+    # Fallback to basic configuration
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'fallback-key'
+    limiter = None
 
 def sanitize_input(text):
     """Legacy sanitize function - kept for backward compatibility"""
@@ -116,7 +231,7 @@ else:
 if CONNECTION_VALIDATOR_AVAILABLE:
     connection_validator = ConnectionValidator()
     accuracy_validator = WorkflowAccuracyValidator()
-    print("✅ Connection validation system initialized")
+    print("[OK] Connection validation system initialized")
 else:
     connection_validator = None
     accuracy_validator = None
@@ -171,6 +286,7 @@ def documentation():
     return render_template('documentation.html')
 
 @app.route('/prompt-help', methods=['POST'])
+@limiter.limit(config.PROMPT_HELP_RATE_LIMIT) if limiter else lambda f: f
 def get_prompt_help():
     """Provide interactive prompt assistance for unclear requests"""
     try:
@@ -232,6 +348,7 @@ Tell me what you want to automate. For example:
         return jsonify({'success': False, 'error': f'Prompt help error: {str(e)}'}), 500
 
 @app.route('/generate', methods=['POST'])
+@limiter.limit(config.GENERATE_RATE_LIMIT) if limiter else lambda f: f
 def generate_workflow():
     try:
         # Handle missing content-type header
@@ -283,20 +400,72 @@ def generate_workflow():
             # Use legacy validation
             description, trigger_type, complexity, advanced_options, template, validation_metadata = legacy_validation(data)
         
-        # Generate workflow using enhanced system (best) or fallback options
+        # Generate workflow using enhanced AI system first, then fallback options
         workflow = None
         generation_error = None
         
-        if ENHANCED_GENERATOR_AVAILABLE:
+        # Try Market-Leading Generator first (best quality)
+        if MARKET_LEADING_GENERATOR_AVAILABLE:
             try:
-                print("🎯 Using enhanced workflow generator with comprehensive feature detection and improved template matching")
+                print("Market-Leading: Using comprehensive training dataset for best-in-market quality")
+                workflow = generate_market_leading_workflow(description, trigger_type, complexity)
+                
+                # Validate the generated workflow
+                nodes = workflow.get('nodes', [])
+                connections = workflow.get('connections', {})
+                
+                print(f"Market-Leading: System succeeded:")
+                print(f"   Nodes: {len(nodes)}")
+                print(f"   Connections: {len(connections)}")
+                
+                # Log node details
+                for i, node in enumerate(nodes, 1):
+                    print(f"   {i}. {node.get('name')} ({node.get('type')})")
+                
+            except Exception as e:
+                print(f"Market-Leading: System failed: {e}")
+                import traceback
+                traceback.print_exc()
+                generation_error = str(e)
+                workflow = None
+        
+        # Fallback to AI Enhancement system
+        if not workflow and AI_ENHANCEMENTS_AVAILABLE:
+            try:
+                print("AI Enhancement: Using AI Enhancement system with multi-provider support")
+                from ai_enhancements import generate_enhanced_workflow as ai_generate_workflow
+                workflow = ai_generate_workflow(description, trigger_type, complexity)
+                
+                # Validate the generated workflow
+                nodes = workflow.get('nodes', [])
+                connections = workflow.get('connections', {})
+                
+                print(f"AI Enhancement: System succeeded:")
+                print(f"   Nodes: {len(nodes)}")
+                print(f"   Connections: {len(connections)}")
+                
+                # Log node details
+                for i, node in enumerate(nodes, 1):
+                    print(f"   {i}. {node.get('name')} ({node.get('type')})")
+                
+            except Exception as e:
+                print(f"AI Enhancement: System failed: {e}")
+                import traceback
+                traceback.print_exc()
+                generation_error = str(e)
+                workflow = None
+        
+        # Fallback to enhanced generator if AI system failed
+        if not workflow and ENHANCED_GENERATOR_AVAILABLE:
+            try:
+                print("Enhanced Generator: Using enhanced workflow generator with comprehensive feature detection")
                 workflow = generate_enhanced_workflow(description, trigger_type, complexity)
                 
                 # Validate the generated workflow
                 nodes = workflow.get('nodes', [])
                 connections = workflow.get('connections', {})
                 
-                print(f"✅ Enhanced generator succeeded:")
+                print(f"Enhanced Generator: Succeeded:")
                 print(f"   Nodes: {len(nodes)}")
                 print(f"   Connections: {len(connections)}")
                 
@@ -310,19 +479,19 @@ def generate_workflow():
                         for group in conn_data['main']:
                             for conn in group:
                                 target = conn.get('node', 'unknown')
-                                print(f"   🔗 {source} → {target}")
+                                print(f"   [CONNECT] {source} -> {target}")
                 
                 # Validate all nodes are properly connected
                 node_names = [node.get('name') for node in nodes]
                 expected_connections = len(nodes) - 1 if len(nodes) > 1 else 0
                 
                 if len(connections) == expected_connections:
-                    print(f"✅ All {expected_connections} connections validated")
+                    print(f"[OK] All {expected_connections} connections validated")
                 else:
-                    print(f"⚠️ Connection mismatch: expected {expected_connections}, got {len(connections)}")
+                    print(f"[WARN] Connection mismatch: expected {expected_connections}, got {len(connections)}")
                 
             except Exception as e:
-                print(f"❌ Enhanced generator failed: {e}")
+                print(f"[ERROR] Enhanced generator failed: {e}")
                 import traceback
                 traceback.print_exc()
                 generation_error = str(e)
@@ -330,44 +499,44 @@ def generate_workflow():
         
         if not workflow and FEATURE_AWARE_GENERATOR_AVAILABLE:
             try:
-                print("🎯 Using feature-aware workflow generator with comprehensive feature detection")
+                print("Feature-Aware: Using feature-aware workflow generator with comprehensive feature detection")
                 workflow = generate_feature_aware_workflow(description, trigger_type, complexity)
-                print(f"✅ Feature-aware generator succeeded: {len(workflow.get('nodes', []))} nodes")
+                print(f"Feature-Aware: Generator succeeded: {len(workflow.get('nodes', []))} nodes")
             except Exception as e:
-                print(f"❌ Feature-aware generator failed: {e}")
+                print(f"Feature-Aware: Generator failed: {e}")
                 generation_error = str(e)
                 workflow = None
         
         if not workflow and TRAINED_GENERATOR_AVAILABLE:
             try:
-                print("🎯 Using trained workflow generator with real n8n patterns")
+                print("Trained: Using trained workflow generator with real n8n patterns")
                 workflow = generate_trained_workflow(description, trigger_type, complexity)
-                print(f"✅ Trained generator succeeded: {len(workflow.get('nodes', []))} nodes")
+                print(f"Trained: Generator succeeded: {len(workflow.get('nodes', []))} nodes")
             except Exception as e:
-                print(f"❌ Trained generator failed: {e}")
+                print(f"Trained: Generator failed: {e}")
                 generation_error = str(e)
                 workflow = None
         
         if not workflow:
-            print("⚠️ All advanced generators failed, falling back to basic workflow generation")
+            print("[WARN] All advanced generators failed, falling back to basic workflow generation")
             if generation_error:
                 print(f"   Last error: {generation_error}")
             workflow = create_basic_workflow(description, trigger_type, complexity, template, advanced_options)
-            print(f"✅ Basic generator succeeded: {len(workflow.get('nodes', []))} nodes")
+            print(f"Basic: Generator succeeded: {len(workflow.get('nodes', []))} nodes")
         
         # Apply connection fixing - try simple fixer first, then advanced if needed
         if workflow:
             if SIMPLE_FIXER_AVAILABLE:
-                print("🔧 Applying simple connection fixes...")
+                print("Connection Fix: Applying simple connection fixes...")
                 try:
                     workflow = validate_and_fix_connections(workflow)
                 except Exception as e:
-                    print(f"⚠️ Simple connection fixer failed: {e}")
+                    print(f"Connection Fix: Simple connection fixer failed: {e}")
                     # Continue to try advanced validator
             
             # Also try advanced connection validation if available
             if CONNECTION_VALIDATOR_AVAILABLE:
-                print("🔧 Applying advanced connection validation and fixes...")
+                print("Advanced Validation: Applying advanced connection validation and fixes...")
                 
                 try:
                     # Validate and fix connections
@@ -379,7 +548,7 @@ def generate_workflow():
                     fixes_applied = validation_report.get('fixes_applied', [])
                     improvements = validation_report.get('connection_improvements', [])
                     
-                    print(f"🔍 Advanced Connection Validation Results:")
+                    print(f"Advanced Validation: Connection Validation Results:")
                     print(f"   Original workflow valid: {original_valid}")
                     if original_errors:
                         print(f"   Original errors: {len(original_errors)}")
@@ -389,7 +558,7 @@ def generate_workflow():
                     if fixes_applied:
                         print(f"   Fixes applied: {len(fixes_applied)}")
                         for fix in fixes_applied:
-                            print(f"     ✅ {fix}")
+                            print(f"     [OK] {fix}")
                     
                     if improvements:
                         print(f"   Improvements made: {len(improvements)}")
@@ -403,17 +572,17 @@ def generate_workflow():
                     if 'post_fix_validation' in validation_report:
                         post_fix_valid = validation_report['post_fix_validation']['is_valid']
                         post_fix_errors = validation_report['post_fix_validation']['errors']
-                        print(f"   Post-fix validation: {'✅ Valid' if post_fix_valid else '❌ Still has issues'}")
+                        print(f"   Post-fix validation: {'[OK] Valid' if post_fix_valid else '[ERROR] Still has issues'}")
                         if post_fix_errors:
                             print(f"   Remaining errors: {len(post_fix_errors)}")
                             
                 except Exception as e:
-                    print(f"⚠️ Advanced connection validator failed: {e}")
+                    print(f"[WARN] Advanced connection validator failed: {e}")
                     # Continue with workflow as-is
             
             # Final fallback: basic connection fixing if nothing else worked
             if not workflow.get('connections'):
-                print("🔧 Applying basic fallback connection fixes...")
+                print("Fallback: Applying basic fallback connection fixes...")
                 nodes = workflow.get('nodes', [])
                 if len(nodes) > 1:
                     connections = {}
@@ -425,7 +594,7 @@ def generate_workflow():
                                 'main': [[{'node': next_name, 'type': 'main', 'index': 0}]]
                             }
                     workflow['connections'] = connections
-                    print(f"   ✅ Created {len(connections)} basic fallback connections")
+                    print(f"   [OK] Created {len(connections)} basic fallback connections")
 
         
         # Final validation before returning
@@ -433,7 +602,7 @@ def generate_workflow():
             nodes = workflow.get('nodes', [])
             connections = workflow.get('connections', {})
             
-            print(f"🔍 Final workflow summary:")
+            print(f"Summary: Final workflow summary:")
             print(f"   Workflow name: {workflow.get('name')}")
             print(f"   Final node count: {len(nodes)}")
             print(f"   Final connection count: {len(connections)}")
@@ -447,7 +616,7 @@ def generate_workflow():
                             for conn in group:
                                 if isinstance(conn, dict):
                                     target = conn.get('node', 'unknown')
-                                    print(f"   🔗 {source} → {target}")
+                                    print(f"   [CONNECT] {source} -> {target}")
                                     connection_count += 1
             
             print(f"   Total connections established: {connection_count}")
@@ -456,11 +625,11 @@ def generate_workflow():
             missing_fields_count = 0
             for node in nodes:
                 if not all(field in node for field in ['id', 'name', 'type', 'position', 'parameters']):
-                    print(f"⚠️ Node missing required fields: {node.get('name')}")
+                    print(f"[WARN] Node missing required fields: {node.get('name')}")
                     missing_fields_count += 1
             
             if missing_fields_count == 0:
-                print("   ✅ All nodes have required fields")
+                print("   [OK] All nodes have required fields")
             
             # Check for proper data flow patterns
             try:
@@ -471,13 +640,13 @@ def generate_workflow():
                 parser_nodes = [n for n in nodes if 'parse' in n.get('name', '').lower() or 'process' in n.get('name', '').lower()]
                 
                 if rss_nodes and twitter_nodes:
-                    print("   📡 RSS to Twitter workflow detected")
+                    print("   [INFO] RSS to Twitter workflow detected")
                 if content_nodes:
-                    print("   🤖 Content generation nodes found")
+                    print("   [INFO] Content generation nodes found")
                 if parser_nodes:
-                    print("   🔧 Content parsing nodes found")
+                    print("   [INFO] Content parsing nodes found")
             except Exception as e:
-                print(f"   ⚠️ Pattern detection failed: {e}")
+                print(f"   [WARN] Pattern detection failed: {e}")
         
         # Skip enhancer for simple workflows to prevent extra nodes
         enhanced_workflow = workflow
@@ -510,49 +679,568 @@ def generate_workflow():
         return jsonify(response_data)
         
     except Exception as e:
+        logger.error(f"Workflow generation failed: {e}")
         return jsonify({
             'success': False,
             'error': str(e)
         }), 500
 
 @app.route('/validate', methods=['POST'])
+@limiter.limit(config.VALIDATE_RATE_LIMIT) if limiter else lambda f: f
 def validate_workflow():
-    """Validate and fix workflow connections"""
+    """Validate a workflow structure"""
     try:
         if not request.is_json:
             return jsonify({'success': False, 'error': 'Content-Type must be application/json'}), 415
             
         data = request.get_json()
         
-        if not data or 'workflow' not in data:
-            return jsonify({'success': False, 'error': 'Missing workflow data'}), 400
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
         
-        workflow = data['workflow']
+        # Check if workflow data is provided
+        workflow = data.get('workflow')
+        if not workflow:
+            return jsonify({'success': False, 'error': 'No workflow data provided'}), 400
         
-        if not CONNECTION_VALIDATOR_AVAILABLE:
-            return jsonify({
-                'success': False,
-                'error': 'Connection validator not available'
-            }), 500
+        # Basic workflow structure validation
+        validation_errors = []
+        validation_warnings = []
         
-        # Validate and fix the workflow
-        fixed_workflow, validation_report = connection_validator.validate_and_fix_connections(workflow)
+        # Check required fields
+        required_fields = ['nodes', 'connections']
+        for field in required_fields:
+            if field not in workflow:
+                validation_errors.append(f"Missing required field: {field}")
+        
+        # Validate nodes
+        nodes = workflow.get('nodes', [])
+        if not nodes:
+            validation_errors.append("Workflow must have at least one node")
+        else:
+            for i, node in enumerate(nodes):
+                node_errors = []
+                
+                # Check required node fields
+                required_node_fields = ['id', 'name', 'type']
+                for field in required_node_fields:
+                    if field not in node:
+                        node_errors.append(f"Node {i}: Missing required field '{field}'")
+                
+                # Check node type format
+                node_type = node.get('type', '')
+                if node_type and not node_type.startswith('n8n-nodes-'):
+                    validation_warnings.append(f"Node {i} ({node.get('name', 'unnamed')}): Unusual node type '{node_type}'")
+                
+                validation_errors.extend(node_errors)
+        
+        # Validate connections
+        connections = workflow.get('connections', {})
+        if connections:
+            node_names = [node.get('name') for node in nodes]
+            
+            for source, conn_data in connections.items():
+                if source not in node_names:
+                    validation_errors.append(f"Connection source '{source}' not found in nodes")
+                
+                if 'main' in conn_data:
+                    for group in conn_data['main']:
+                        if isinstance(group, list):
+                            for conn in group:
+                                if isinstance(conn, dict):
+                                    target = conn.get('node')
+                                    if target and target not in node_names:
+                                        validation_errors.append(f"Connection target '{target}' not found in nodes")
+        
+        # Use workflow validator if available
+        validation_score = 85  # Default score
+        detailed_validation = {}
+        
+        if WORKFLOW_VALIDATOR_AVAILABLE:
+            try:
+                validation_result = workflow_validator.validate_workflow(workflow)
+                validation_score = validation_result.get('score', 85)
+                detailed_validation = validation_result.get('details', {})
+                
+                # Add detailed validation errors/warnings
+                if 'errors' in detailed_validation:
+                    validation_errors.extend(detailed_validation['errors'])
+                if 'warnings' in detailed_validation:
+                    validation_warnings.extend(detailed_validation['warnings'])
+                    
+            except Exception as e:
+                validation_warnings.append(f"Advanced validation failed: {str(e)}")
+        
+        # Determine overall validation status
+        is_valid = len(validation_errors) == 0
+        
+        # Calculate quality metrics
+        quality_metrics = {
+            'node_count': len(nodes),
+            'connection_count': len(connections),
+            'has_error_handling': any('error' in node.get('name', '').lower() for node in nodes),
+            'has_validation': any('valid' in node.get('name', '').lower() for node in nodes),
+            'has_monitoring': any('monitor' in node.get('name', '').lower() for node in nodes),
+            'validation_score': validation_score
+        }
         
         return jsonify({
             'success': True,
-            'original_workflow': workflow,
-            'fixed_workflow': fixed_workflow,
-            'validation_report': validation_report,
-            'fixes_applied': len(validation_report.get('fixes_applied', [])) > 0
+            'valid': is_valid,
+            'validation_score': validation_score,
+            'errors': validation_errors,
+            'warnings': validation_warnings,
+            'quality_metrics': quality_metrics,
+            'detailed_validation': detailed_validation,
+            'workflow_summary': {
+                'name': workflow.get('name', 'Unnamed Workflow'),
+                'node_count': len(nodes),
+                'connection_count': len(connections),
+                'has_settings': 'settings' in workflow
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Workflow validation failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# Rate limiting and security error handlers
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    """Handle rate limit exceeded errors"""
+    logger.warning(f"Rate limit exceeded for {request.remote_addr}: {e}")
+    return jsonify({
+        'success': False,
+        'error': 'RATE_LIMIT_EXCEEDED',
+        'message': 'Too many requests. Please try again later.',
+        'retry_after': getattr(e, 'retry_after', 60)
+    }), 429
+
+@app.errorhandler(400)
+def bad_request_handler(e):
+    """Handle bad request errors"""
+    logger.warning(f"Bad request from {request.remote_addr}: {e}")
+    return jsonify({
+        'success': False,
+        'error': 'BAD_REQUEST',
+        'message': str(e.description) if hasattr(e, 'description') else 'Invalid request'
+    }), 400
+
+@app.errorhandler(500)
+def internal_error_handler(e):
+    """Handle internal server errors"""
+    logger.error(f"Internal server error: {e}")
+    return jsonify({
+        'success': False,
+        'error': 'INTERNAL_ERROR',
+        'message': 'An internal error occurred. Please try again later.'
+    }), 500
+
+# Security headers
+@app.after_request
+def after_request(response):
+    """Add security headers to all responses"""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    
+    # Log request completion
+    if hasattr(request, 'start_time'):
+        execution_time = time.time() - request.start_time
+        from logger import log_request
+        log_request(request, response.status_code, execution_time)
+    
+    return response
+
+# Request timing middleware
+@app.before_request
+def before_request():
+    """Track request start time for logging"""
+    request.start_time = time.time()
+
+# Health check endpoint (no rate limiting)
+@app.route('/health')
+def health_check():
+    """Health check endpoint for monitoring"""
+    return jsonify({
+        'status': 'healthy',
+        'version': '2.0.0',
+        'timestamp': time.time(),
+        'services': {
+            'market_leading_generator': MARKET_LEADING_GENERATOR_AVAILABLE,
+            'ai_enhancements': AI_ENHANCEMENTS_AVAILABLE,
+            'templates': TEMPLATES_AVAILABLE,
+            'workflow_validator': WORKFLOW_VALIDATOR_AVAILABLE,
+            'enhanced_generator': ENHANCED_GENERATOR_AVAILABLE,
+            'feature_aware_generator': FEATURE_AWARE_GENERATOR_AVAILABLE,
+            'trained_generator': TRAINED_GENERATOR_AVAILABLE,
+            'connection_validator': CONNECTION_VALIDATOR_AVAILABLE,
+            'enhancer': ENHANCER_AVAILABLE,
+            'rate_limiter': limiter is not None
+        },
+        'features': {
+            'market_leading_quality': MARKET_LEADING_GENERATOR_AVAILABLE,
+            'comprehensive_training_data': MARKET_LEADING_GENERATOR_AVAILABLE,
+            'production_ready_workflows': MARKET_LEADING_GENERATOR_AVAILABLE,
+            'multi_ai_providers': AI_ENHANCEMENTS_AVAILABLE,
+            'template_library': TEMPLATES_AVAILABLE,
+            'workflow_validation': WORKFLOW_VALIDATOR_AVAILABLE,
+            'intelligent_fallbacks': True,
+            'rate_limiting': limiter is not None,
+            'caching': config.ENABLE_CACHING if 'config' in globals() else False
+        }
+    })
+
+# Rate limiting info endpoint
+@app.route('/api/rate-limits')
+def rate_limit_info():
+    """Get rate limiting information"""
+    try:
+        from rate_limiting import get_rate_limit_info
+        return jsonify(get_rate_limit_info())
+    except ImportError:
+        return jsonify({
+            'rate_limits': {
+                'generate': '10 per minute',
+                'prompt-help': '20 per minute',
+                'validate': '30 per minute',
+                'preview': '50 per minute'
+            },
+            'global_limit': '100 per hour'
+        })
+
+# Rate limiting statistics endpoint (admin only)
+@app.route('/api/rate-limit-stats')
+@limiter.limit("5 per minute") if limiter else lambda f: f
+def rate_limit_stats():
+    """Get rate limiting statistics for monitoring"""
+    try:
+        from rate_limiting import get_rate_limit_stats
+        stats = get_rate_limit_stats()
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except ImportError:
+        return jsonify({
+            'success': False,
+            'error': 'Rate limiting monitoring not available'
         })
         
     except Exception as e:
         return jsonify({
             'success': False,
             'error': str(e)
+        })
+
+# Template System API Endpoints
+@app.route('/api/templates')
+@limiter.limit("30 per minute") if limiter else lambda f: f
+def get_templates():
+    """Get all available workflow templates"""
+    if not TEMPLATES_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Template system not available'
+        }), 503
+    
+    try:
+        category = request.args.get('category')
+        search = request.args.get('search')
+        
+        if category:
+            try:
+                cat_enum = TemplateCategory(category)
+                templates = template_manager.get_templates_by_category(cat_enum)
+            except ValueError:
+                return jsonify({
+                    'success': False,
+                    'error': f'Invalid category: {category}'
+                }), 400
+        elif search:
+            templates = template_manager.search_templates(search)
+        else:
+            templates = template_manager.get_all_templates()
+        
+        # Convert templates to JSON-serializable format
+        template_data = []
+        for template in templates:
+            template_data.append({
+                'id': template.id,
+                'name': template.name,
+                'description': template.description,
+                'category': template.category.value,
+                'complexity': template.complexity,
+                'tags': template.tags,
+                'use_cases': template.use_cases,
+                'required_services': template.required_services,
+                'node_count': len(template.workflow_json.get('nodes', []))
+            })
+        
+        return jsonify({
+            'success': True,
+            'templates': template_data,
+            'total': len(template_data)
+        })
+        
+    except Exception as e:
+        logger.error(f"Template listing failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/templates/<template_id>')
+@limiter.limit("20 per minute") if limiter else lambda f: f
+def get_template(template_id):
+    """Get a specific template by ID"""
+    if not TEMPLATES_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Template system not available'
+        }), 503
+    
+    try:
+        template = template_manager.get_template(template_id)
+        if not template:
+            return jsonify({
+                'success': False,
+                'error': f'Template {template_id} not found'
+            }), 404
+        
+        return jsonify({
+            'success': True,
+            'template': {
+                'id': template.id,
+                'name': template.name,
+                'description': template.description,
+                'category': template.category.value,
+                'complexity': template.complexity,
+                'tags': template.tags,
+                'use_cases': template.use_cases,
+                'required_services': template.required_services,
+                'workflow': template.workflow_json,
+                'node_count': len(template.workflow_json.get('nodes', []))
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Template retrieval failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/templates/suggestions', methods=['POST'])
+@limiter.limit("15 per minute") if limiter else lambda f: f
+def get_template_suggestions():
+    """Get template suggestions based on user description"""
+    if not TEMPLATES_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Template system not available'
+        }), 503
+    
+    try:
+        if not request.is_json:
+            return jsonify({
+                'success': False,
+                'error': 'Content-Type must be application/json'
+            }), 415
+        
+        data = request.get_json()
+        description = data.get('description', '').strip()
+        
+        if not description:
+            return jsonify({
+                'success': False,
+                'error': 'Description is required'
+            }), 400
+        
+        suggestions = template_manager.get_template_suggestions(description)
+        
+        suggestion_data = []
+        for template in suggestions:
+            suggestion_data.append({
+                'id': template.id,
+                'name': template.name,
+                'description': template.description,
+                'category': template.category.value,
+                'complexity': template.complexity,
+                'tags': template.tags,
+                'use_cases': template.use_cases,
+                'match_reason': f"Matches your request for: {description}"
+            })
+        
+        return jsonify({
+            'success': True,
+            'suggestions': suggestion_data,
+            'total': len(suggestion_data)
+        })
+        
+    except Exception as e:
+        logger.error(f"Template suggestions failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/templates/<template_id>/customize', methods=['POST'])
+@limiter.limit("10 per minute") if limiter else lambda f: f
+def customize_template(template_id):
+    """Customize a template with user-specific parameters"""
+    if not TEMPLATES_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Template system not available'
+        }), 503
+    
+    try:
+        if not request.is_json:
+            return jsonify({
+                'success': False,
+                'error': 'Content-Type must be application/json'
+            }), 415
+        
+        data = request.get_json()
+        customizations = data.get('customizations', {})
+        
+        workflow = template_manager.customize_template(template_id, customizations)
+        
+        # Apply connection fixing if available
+        if SIMPLE_FIXER_AVAILABLE:
+            try:
+                workflow = validate_and_fix_connections(workflow)
+            except Exception as e:
+                logger.warning(f"Connection fixing failed: {e}")
+        
+        return jsonify({
+            'success': True,
+            'workflow': workflow,
+            'workflow_name': workflow.get('name', 'Customized Workflow'),
+            'description': f"Customized template: {template_id}",
+            'filename': f"{workflow.get('name', 'workflow').replace(' ', '_').lower()}.json",
+            'formatted_json': json.dumps(workflow, indent=2),
+            'node_count': len(workflow.get('nodes', [])),
+            'workflow_type': 'template_based',
+            'template_id': template_id
+        })
+        
+    except ValueError as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 404
+    except Exception as e:
+        logger.error(f"Template customization failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/categories')
+@limiter.limit("50 per minute") if limiter else lambda f: f
+def get_categories():
+    """Get all available template categories"""
+    if not TEMPLATES_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Template system not available'
+        }), 503
+    
+    try:
+        categories = []
+        for category in TemplateCategory:
+            templates_in_category = template_manager.get_templates_by_category(category)
+            categories.append({
+                'id': category.value,
+                'name': category.value.replace('_', ' ').title(),
+                'template_count': len(templates_in_category)
+            })
+        
+        return jsonify({
+            'success': True,
+            'categories': categories
+        })
+        
+    except Exception as e:
+        logger.error(f"Category listing failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# Workflow Validation API Endpoint
+@app.route('/api/validate', methods=['POST'])
+@limiter.limit("20 per minute") if limiter else lambda f: f
+def api_validate_workflow():
+    """Validate a workflow for correctness and best practices"""
+    if not WORKFLOW_VALIDATOR_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Workflow validation system not available'
+        }), 503
+    
+    try:
+        if not request.is_json:
+            return jsonify({
+                'success': False,
+                'error': 'Content-Type must be application/json'
+            }), 415
+        
+        data = request.get_json()
+        workflow = data.get('workflow')
+        
+        if not workflow:
+            return jsonify({
+                'success': False,
+                'error': 'Workflow data is required'
+            }), 400
+        
+        # Perform validation
+        validation_report = workflow_validator.validate_workflow(workflow)
+        
+        # Convert issues to JSON-serializable format
+        issues_data = []
+        for issue in validation_report.issues:
+            issues_data.append({
+                'level': issue.level.value,
+                'category': issue.category,
+                'message': issue.message,
+                'node_id': issue.node_id,
+                'suggestion': issue.suggestion
+            })
+        
+        return jsonify({
+            'success': True,
+            'validation': {
+                'is_valid': validation_report.is_valid,
+                'score': validation_report.score,
+                'issues': issues_data,
+                'summary': validation_report.summary,
+                'recommendations': validation_report.recommendations
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Workflow validation failed: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+        return jsonify({
+            'success': False,
+            'error': str(e)
         }), 500
 
 @app.route('/preview', methods=['POST'])
+@limiter.limit(config.PREVIEW_RATE_LIMIT) if limiter else lambda f: f
 def generate_preview():
     """Generate visual preview data for workflow"""
     try:
@@ -803,7 +1491,19 @@ return processedData;'''
         'name': config.get('name', 'Process Data'),
         'type': 'n8n-nodes-base.code',
         'typeVersion': 2,
-        'position': [x_position, 300]
+        'position': [x_position, 300],
+        'parameters': {
+            'jsCode': '''// Process incoming data
+const inputData = $input.all();
+const processedData = inputData.map(item => ({
+  ...item.json,
+  processed: true,
+  timestamp: new Date().toISOString(),
+  step: 'Process Data'
+}));
+
+return processedData;'''
+        }
     }
 
 def create_validation_node(node_id, x_position, config):
@@ -846,7 +1546,39 @@ return validatedData;'''
         'name': config.get('name', 'Validate Data'),
         'type': 'n8n-nodes-base.code',
         'typeVersion': 2,
-        'position': [x_position, 300]
+        'position': [x_position, 300],
+        'parameters': {
+            'jsCode': '''// Validate and sanitize incoming data
+const inputData = $input.all();
+const validatedData = [];
+
+for (const item of inputData) {
+  const data = item.json;
+  const errors = [];
+  
+  // Basic validation
+  if (!data.email || !data.email.includes('@')) {
+    errors.push('Valid email is required');
+  }
+  if (!data.name || data.name.length < 2) {
+    errors.push('Name must be at least 2 characters');
+  }
+  
+  // Sanitize data
+  const sanitizedData = {
+    ...data,
+    email: data.email ? data.email.toLowerCase().trim() : '',
+    name: data.name ? data.name.trim() : '',
+    validation_errors: errors,
+    is_valid: errors.length === 0,
+    validated_at: new Date().toISOString()
+  };
+  
+  validatedData.push(sanitizedData);
+}
+
+return validatedData;'''
+        }
     }
 
 def create_conditional_node(node_id, x_position, config):
@@ -969,7 +1701,46 @@ return processedData;'''
         'name': config.get('name', 'Handle Errors'),
         'type': 'n8n-nodes-base.code',
         'typeVersion': 2,
-        'position': [x_position, 300]
+        'position': [x_position, 300],
+        'parameters': {
+            'jsCode': '''// Error handling and retry logic
+const inputData = $input.all();
+const processedData = [];
+
+for (const item of inputData) {
+  try {
+    const data = item.json;
+    
+    // Check for errors
+    if (data.validation_errors && data.validation_errors.length > 0) {
+      // Handle validation errors
+      processedData.push({
+        ...data,
+        error_handled: true,
+        error_type: 'validation',
+        handled_at: new Date().toISOString()
+      });
+    } else {
+      // No errors, pass through
+      processedData.push({
+        ...data,
+        error_checked: true,
+        checked_at: new Date().toISOString()
+      });
+    }
+  } catch (error) {
+    // Handle processing errors
+    processedData.push({
+      error: error.message,
+      error_handled: true,
+      error_type: 'processing',
+      handled_at: new Date().toISOString()
+    });
+  }
+}
+
+return processedData;'''
+        }
     }
 
 def create_transformation_node(node_id, x_position, config):
@@ -1000,7 +1771,29 @@ return transformedData;'''
         'name': config.get('name', 'Transform Data'),
         'type': 'n8n-nodes-base.code',
         'typeVersion': 2,
-        'position': [x_position, 300]
+        'position': [x_position, 300],
+        'parameters': {
+            'jsCode': '''// Transform and format data
+const inputData = $input.all();
+const transformedData = inputData.map(item => {
+  const data = item.json;
+  
+  return {
+    id: data.id || Math.random().toString(36).substr(2, 9),
+    name: data.name ? data.name.trim() : 'Unknown',
+    email: data.email ? data.email.toLowerCase() : '',
+    status: data.is_valid ? 'valid' : 'invalid',
+    processed_at: new Date().toISOString(),
+    source: 'n8n_workflow',
+    metadata: {
+      original_data: data,
+      transformation_applied: true
+    }
+  };
+});
+
+return transformedData;'''
+        }
     }
 
 def create_notification_node(node_id, x_position, config):
@@ -1028,7 +1821,34 @@ return notifications;'''
         'name': config.get('name', 'Send Notification'),
         'type': 'n8n-nodes-base.code',
         'typeVersion': 2,
-        'position': [x_position, 300]
+        'position': [x_position, 300],
+        'parameters': {
+            'jsCode': '''// Send notification with processed data
+const inputData = $input.all();
+const notifications = [];
+
+for (const item of inputData) {
+  const data = item.json;
+  
+  const notification = {
+    to: data.email || 'admin@example.com',
+    subject: 'Workflow Processing Complete',
+    message: `Data processed successfully for ${data.name || 'Unknown'}`,
+    data: {
+      status: data.status || 'processed',
+      timestamp: new Date().toISOString(),
+      workflow_id: 'n8n_workflow',
+      processed_items: 1
+    },
+    notification_sent: true,
+    sent_at: new Date().toISOString()
+  };
+  
+  notifications.push(notification);
+}
+
+return notifications;'''
+        }
     }
 
 def create_sheets_node(node_id, x_position, config):
@@ -2685,6 +3505,46 @@ def create_dynamic_node(node_config, position_index, x_offset=0):
     # Create the node
     node = creator_func(node_id, x_position, node_config)
     
+    # Ensure code nodes have JavaScript parameters
+    if isinstance(node, dict) and node.get('type') == 'n8n-nodes-base.code':
+        if 'parameters' not in node or not node['parameters'].get('jsCode'):
+            # Add default JavaScript code based on node name
+            node_name = node.get('name', 'Process Data')
+            if 'route' in node_name.lower() or 'router' in node_name.lower():
+                js_code = '''// Route data based on conditions
+const inputData = $input.all();
+const routedData = inputData.map(item => ({
+  ...item.json,
+  routed: true,
+  route_applied: new Date().toISOString(),
+  routing_logic: 'conditional'
+}));
+return routedData;'''
+            elif 'email' in node_name.lower() or 'notification' in node_name.lower():
+                js_code = '''// Prepare email notification data
+const inputData = $input.all();
+const emailData = inputData.map(item => ({
+  ...item.json,
+  email_prepared: true,
+  notification_type: 'email',
+  prepared_at: new Date().toISOString(),
+  recipient: item.json.email || 'admin@example.com'
+}));
+return emailData;'''
+            else:
+                js_code = '''// Process data
+const inputData = $input.all();
+const processedData = inputData.map(item => ({
+  ...item.json,
+  processed: true,
+  processed_at: new Date().toISOString()
+}));
+return processedData;'''
+            
+            if 'parameters' not in node:
+                node['parameters'] = {}
+            node['parameters']['jsCode'] = js_code
+    
     # Preserve metadata from original config
     if isinstance(node, dict):
         if 'purpose' in node_config:
@@ -2702,10 +3562,14 @@ def get_n8n_node_type(node_type):
         'database': 'n8n-nodes-base.mysql',
         'sheets': 'n8n-nodes-base.googleSheets',
         'http': 'n8n-nodes-base.httpRequest',
+        'file': 'n8n-nodes-base.readBinaryFile',
+        'conditional': 'n8n-nodes-base.if',
         'validation': 'n8n-nodes-base.code',
         'transformation': 'n8n-nodes-base.code',
         'processing': 'n8n-nodes-base.code',
-        'conditional': 'n8n-nodes-base.if'
+        'monitoring': 'n8n-nodes-base.code',
+        'error_handling': 'n8n-nodes-base.code',
+        'additional_processing': 'n8n-nodes-base.code'
     }
     return type_mapping.get(node_type, 'n8n-nodes-base.code')
 

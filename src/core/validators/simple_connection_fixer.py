@@ -15,7 +15,7 @@ def fix_workflow_connections_simple(workflow):
     if len(nodes) < 2:
         return workflow
     
-    print(f"🔧 Fixing connections for {len(nodes)} nodes...")
+    print(f"Connection Fix: Fixing connections for {len(nodes)} nodes...")
     
     # Create sequential connections
     connections = {}
@@ -35,10 +35,10 @@ def fix_workflow_connections_simple(workflow):
                     'index': 0
                 }]]
             }
-            print(f"   🔗 Connected: {current_name} → {next_name}")
+            print(f"   [CONNECT] Connected: {current_name} -> {next_name}")
     
     workflow['connections'] = connections
-    print(f"✅ Created {len(connections)} connections")
+    print(f"[OK] Created {len(connections)} connections")
     
     return workflow
 
@@ -113,7 +113,7 @@ def validate_and_fix_connections(workflow):
     if not workflow:
         return workflow
     
-    print("🔍 Validating workflow connections...")
+    print("Validation: Validating workflow connections...")
     
     # Step 1: Ensure proper node flow
     workflow = ensure_proper_node_flow(workflow)
@@ -125,7 +125,7 @@ def validate_and_fix_connections(workflow):
     nodes = workflow.get('nodes', [])
     connections = workflow.get('connections', {})
     
-    print(f"📊 Validation Results:")
+    print(f"Validation: Results:")
     print(f"   Nodes: {len(nodes)}")
     print(f"   Connections: {len(connections)}")
     
@@ -155,9 +155,9 @@ def validate_and_fix_connections(workflow):
             unconnected_count += 1
     
     if unconnected_count == 0:
-        print("   ✅ All nodes properly connected")
+        print("   [OK] All nodes properly connected")
     else:
-        print(f"   ❌ {unconnected_count} nodes still unconnected")
+        print(f"   [ERROR] {unconnected_count} nodes still unconnected")
     
     return workflow
 

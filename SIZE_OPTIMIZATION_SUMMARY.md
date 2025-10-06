@@ -3,8 +3,8 @@
 ## 🎯 Goal Achieved: Under 100MB
 
 **Before:** 221.42 MB  
-**After:** 3.66 MB  
-**Reduction:** 98.3% smaller!
+**After:** 3.17 MB  
+**Reduction:** 98.6% smaller!
 
 ## 🗂️ What Was Removed
 
@@ -22,6 +22,12 @@
 - Various `*_result.json` files
 - `drive-download-*` directories
 - `training_analysis_report.json`
+
+### Documentation & Test Files (1.5MB saved)
+- 76 test files (`test_*.py`)
+- 30+ documentation files (`*_SUMMARY.md`, `*_REPORT.md`)
+- Build and deployment files
+- Demo and analysis files
 
 ## 🔧 What's Still Included
 

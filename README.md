@@ -1,6 +1,6 @@
-# Perfect n8n Workflow Generator
+# N8N Workflow Generator 2.0 🚀
 
-A powerful web-based application that generates production-ready n8n workflow JSON configurations using AI assistance and intelligent fallback mechanisms.
+A comprehensive, AI-powered web application that generates production-ready n8n workflow JSON configurations with multi-provider AI support, workflow templates, and advanced validation.
 
 ## 📦 Size Optimized
 
@@ -10,14 +10,42 @@ This project has been optimized to stay under 100MB by:
 - Excluding test result files and temporary data
 - Using fallback mechanisms when models aren't available
 
-## Features
+## ✨ What's New in 2.0
 
-- **AI-Powered Generation**: Uses Google's Gemini 2.5 API for intelligent workflow creation
-- **Fallback System**: Reliable local generation when AI services are unavailable
-- **Multiple Trigger Types**: Support for webhook, schedule, and manual triggers
+### 🤖 **Enhanced AI System**
+- **Multi-provider support**: Gemini, OpenAI, Claude, Ollama
+- **Intelligent fallbacks**: Automatic provider switching
+- **Response caching**: Improved performance
+- **Cost optimization**: Usage tracking and thresholds
+
+### 📚 **Workflow Template Library**
+- **Pre-built templates**: RSS to Social, Email Processing, Data Backup, E-commerce
+- **Smart suggestions**: AI-powered template recommendations
+- **Easy customization**: One-click template loading
+- **Category organization**: Templates organized by use case
+
+### 🔍 **Advanced Validation System**
+- **Comprehensive checks**: Structure, connections, security, performance
+- **Scoring system**: 0-100 validation score
+- **Best practices**: Industry standard recommendations
+- **Detailed reports**: Issue categorization and suggestions
+
+### 🎯 **Quick Wins Implemented**
+- **Enhanced error handling**: Custom exception classes
+- **Rate limiting**: Per-endpoint limits with Redis support
+- **Security hardening**: Input validation and CORS
+- **Performance optimization**: Caching and connection pooling
+
+## 🚀 Features
+
+- **AI-Powered Generation**: Multi-provider AI with intelligent fallbacks
+- **Template Library**: 4+ pre-built templates for common scenarios
+- **Advanced Validation**: Comprehensive workflow analysis and scoring
+- **Multiple Trigger Types**: Webhook, schedule, manual, and email triggers
 - **Complexity Levels**: Simple (2-3 nodes), Medium (4-6 nodes), Complex (7+ nodes)
-- **Pre-built Templates**: Common automation scenarios ready to use
 - **Real-time Validation**: Ensures generated workflows are n8n-compatible
+- **Rate Limiting**: Prevents abuse with configurable limits
+- **Caching**: Redis-based caching for improved performance
 - **Export Options**: Copy to clipboard or download as JSON file
 - **Responsive Design**: Works on desktop and mobile devices
 

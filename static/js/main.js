@@ -47,6 +47,151 @@ document.querySelectorAll('.feature-card').forEach(card => {
     observer.observe(card);
 });
 
+// Template functionality
+async function loadTemplate(templateId) {
+    try {
+        showLoading('Loading template...');
+        
+        const response = await fetch(`/api/templates/${templateId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const template = data.template;
+            
+            // Fill in the description field with template info
+            const descriptionField = document.getElementById('description');
+            descriptionField.value = `${template.description}\n\nUse case: ${template.use_cases[0]}`;
+            
+            // Set complexity
+            const complexityField = document.getElementById('complexity');
+            if (complexityField) {
+                complexityField.value = template.complexity;
+            }
+            
+            // Show template info
+            showMessage(`Template loaded: ${template.name}`, 'success');
+            
+            // Scroll to form
+            document.getElementById('workflowForm').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+            
+        } else {
+            showMessage(`Failed to load template: ${data.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Template loading error:', error);
+        showMessage('Failed to load template. Please try again.', 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Template suggestions
+async function getTemplateSuggestions(description) {
+    try {
+        const response = await fetch('/api/templates/suggestions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.suggestions.length > 0) {
+            showTemplateSuggestions(data.suggestions);
+        }
+    } catch (error) {
+        console.error('Template suggestions error:', error);
+    }
+}
+
+function showTemplateSuggestions(suggestions) {
+    const suggestionsHtml = suggestions.map(template => `
+        <div class="template-suggestion" onclick="loadTemplate('${template.id}')">
+            <h4>${template.name}</h4>
+            <p>${template.description}</p>
+            <span class="template-category">${template.category.replace('_', ' ')}</span>
+        </div>
+    `).join('');
+    
+    const suggestionsContainer = document.getElementById('template-suggestions');
+    if (suggestionsContainer) {
+        suggestionsContainer.innerHTML = suggestionsHtml;
+        suggestionsContainer.style.display = 'block';
+    }
+}
+
+// Workflow validation
+async function validateWorkflow(workflow) {
+    try {
+        const response = await fetch('/api/validate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ workflow })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showValidationResults(data.validation);
+        } else {
+            showMessage(`Validation failed: ${data.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Validation error:', error);
+        showMessage('Validation failed. Please try again.', 'error');
+    }
+}
+
+function showValidationResults(validation) {
+    const resultsHtml = `
+        <div class="validation-results">
+            <div class="validation-score ${validation.is_valid ? 'valid' : 'invalid'}">
+                <h3>Validation Score: ${validation.score}/100</h3>
+                <p>${validation.is_valid ? '✅ Workflow is valid' : '❌ Workflow has issues'}</p>
+            </div>
+            
+            <div class="validation-summary">
+                <span class="error-count">Errors: ${validation.summary.errors}</span>
+                <span class="warning-count">Warnings: ${validation.summary.warnings}</span>
+                <span class="info-count">Info: ${validation.summary.info}</span>
+            </div>
+            
+            ${validation.issues.length > 0 ? `
+                <div class="validation-issues">
+                    <h4>Issues Found:</h4>
+                    ${validation.issues.map(issue => `
+                        <div class="issue ${issue.level}">
+                            <strong>${issue.category}:</strong> ${issue.message}
+                            ${issue.suggestion ? `<br><em>Suggestion: ${issue.suggestion}</em>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+            
+            ${validation.recommendations.length > 0 ? `
+                <div class="validation-recommendations">
+                    <h4>Recommendations:</h4>
+                    <ul>
+                        ${validation.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    const resultsContainer = document.getElementById('validation-results');
+    if (resultsContainer) {
+        resultsContainer.innerHTML = resultsHtml;
+        resultsContainer.style.display = 'block';
+    }
+}
+
 // Prompt assistance functionality
 let promptAssistanceActive = false;
 let currentStep = 0;

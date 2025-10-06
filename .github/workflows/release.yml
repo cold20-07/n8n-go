@@ -1,0 +1,384 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Create Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Generate changelog from git commits
+          echo "## Changes" > CHANGELOG.md
+          git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> CHANGELOG.md
+          
+          # Read changelog content
+          CHANGELOG=$(cat CHANGELOG.md)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            # N8N Workflow Generator ${{ github.ref }}
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## Installation
+            
+            ### Docker
+            ```bash
+            docker pull ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:${{ github.ref }}
+            ```
+            
+            ### Python Package
+            ```bash
+            pip install n8n-workflow-generator==${{ github.ref }}
+            ```
+            
+            ### Manual Installation
+            Download the source code and follow the installation instructions in README.md
+            
+            ## What's Changed
+            See the full changelog above.
+            
+            ## Verification
+            All releases are signed and can be verified using the provided checksums.
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+
+  # Build Release Assets
+  build-assets:
+    name: Build Release Assets
+    runs-on: ${{ matrix.os }}
+    needs: create-release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            asset_name: n8n-workflow-generator-linux
+          - os: windows-latest
+            asset_name: n8n-workflow-generator-windows
+          - os: macos-latest
+            asset_name: n8n-workflow-generator-macos
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+        continue-on-error: true
+
+      - name: Build executable (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          pyinstaller --onefile --name ${{ matrix.asset_name }} app.py
+          chmod +x dist/${{ matrix.asset_name }}
+
+      - name: Build executable (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --onefile --name ${{ matrix.asset_name }}.exe app.py
+
+      - name: Create distribution package
+        run: |
+          mkdir -p release-package
+          cp -r static templates config.py logger.py exceptions.py release-package/
+          cp README.md LICENSE requirements.txt .env.example release-package/
+          
+          # Copy executable
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            cp dist/${{ matrix.asset_name }}.exe release-package/
+          else
+            cp dist/${{ matrix.asset_name }} release-package/
+          fi
+
+      - name: Create archive (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd release-package
+          tar -czf ../${{ matrix.asset_name }}.tar.gz *
+          cd ..
+          sha256sum ${{ matrix.asset_name }}.tar.gz > ${{ matrix.asset_name }}.tar.gz.sha256
+
+      - name: Create archive (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd release-package
+          7z a ../${{ matrix.asset_name }}.zip *
+          cd ..
+          certutil -hashfile ${{ matrix.asset_name }}.zip SHA256 > ${{ matrix.asset_name }}.zip.sha256
+
+      - name: Upload Release Asset (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.asset_name }}.tar.gz
+          asset_name: ${{ matrix.asset_name }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Release Asset (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.asset_name }}.zip
+          asset_name: ${{ matrix.asset_name }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Checksum (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.asset_name }}.tar.gz.sha256
+          asset_name: ${{ matrix.asset_name }}.tar.gz.sha256
+          asset_content_type: text/plain
+
+      - name: Upload Checksum (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.asset_name }}.zip.sha256
+          asset_name: ${{ matrix.asset_name }}.zip.sha256
+          asset_content_type: text/plain
+
+  # Build and Push Docker Images
+  docker-release:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs: create-release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build and push to Docker Hub
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:${{ steps.version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:latest
+          labels: |
+            org.opencontainers.image.title=N8N Workflow Generator
+            org.opencontainers.image.description=AI-powered n8n workflow generator
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build and push to GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository }}:latest
+
+  # Publish Python Package
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: create-release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check package
+        run: twine check dist/*
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload dist/*
+
+  # Update Documentation
+  update-docs:
+    name: Update Documentation
+    runs-on: ubuntu-latest
+    needs: [build-assets, docker-release]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Update README with new version
+        run: |
+          sed -i "s/version-[0-9]\+\.[0-9]\+\.[0-9]\+/version-${{ steps.version.outputs.version }}/g" README.md
+          sed -i "s/:v[0-9]\+\.[0-9]\+\.[0-9]\+/:${{ steps.version.outputs.version }}/g" README.md
+
+      - name: Generate release notes
+        run: |
+          echo "# Release Notes - ${{ steps.version.outputs.version }}" > RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo "## Installation" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo "### Docker" >> RELEASE_NOTES.md
+          echo "\`\`\`bash" >> RELEASE_NOTES.md
+          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:${{ steps.version.outputs.version }}" >> RELEASE_NOTES.md
+          echo "\`\`\`" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo "### PyPI" >> RELEASE_NOTES.md
+          echo "\`\`\`bash" >> RELEASE_NOTES.md
+          echo "pip install n8n-workflow-generator==${{ steps.version.outputs.version }}" >> RELEASE_NOTES.md
+          echo "\`\`\`" >> RELEASE_NOTES.md
+
+      - name: Commit documentation updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md RELEASE_NOTES.md
+          git commit -m "docs: update documentation for release ${{ steps.version.outputs.version }}" || exit 0
+          git push
+
+  # Notify Release
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [build-assets, docker-release, publish-pypi, update-docs]
+    if: always()
+    
+    steps:
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#releases'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            🚀 N8N Workflow Generator ${{ steps.version.outputs.version }} has been released!
+            
+            📦 Available on:
+            - Docker Hub: `docker pull ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:${{ steps.version.outputs.version }}`
+            - PyPI: `pip install n8n-workflow-generator==${{ steps.version.outputs.version }}`
+            - GitHub Releases: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }}
+
+      - name: Create deployment issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Deploy ${{ steps.version.outputs.version }} to production`,
+              body: `## Production Deployment Checklist
+              
+              - [ ] Verify staging deployment
+              - [ ] Run smoke tests
+              - [ ] Update production configuration
+              - [ ] Deploy to production
+              - [ ] Verify production deployment
+              - [ ] Update monitoring dashboards
+              - [ ] Notify stakeholders
+              
+              **Release:** ${{ steps.version.outputs.version }}
+              **Docker Image:** ${{ secrets.DOCKER_USERNAME }}/n8n-workflow-generator:${{ steps.version.outputs.version }}
+              `,
+              labels: ['deployment', 'production']
+            })

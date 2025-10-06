@@ -4,12 +4,19 @@
   "description": "A powerful web-based application that generates production-ready n8n workflow JSON configurations using AI assistance",
   "main": "index.html",
   "scripts": {
-    "start": "python run.py",
-    "start-simple": "python -m http.server 8000 --bind 127.0.0.1",
+    "start": "python app.py",
+    "dev": "python app.py --debug",
     "serve": "npx serve . --listen 127.0.0.1:8000",
-    "build": "tsc",
-    "test": "node -e \"console.log('✅ All tests passed')\"",
-    "validate": "node -e \"require('./script.js'); console.log('✅ JavaScript validation passed')\""
+    "build": "tsc && python scripts/build.py",
+    "test": "python -m pytest tests/ -v",
+    "test:js": "node tests/test-frontend.js",
+    "lint": "python -m flake8 src/ --max-line-length=100",
+    "format": "python -m black src/ tests/",
+    "setup": "python scripts/setup.py",
+    "clean": "python scripts/cleanup_debug_files.py",
+    "validate": "python -m pytest tests/test_validation.py",
+    "docker:build": "docker build -t n8n-generator .",
+    "docker:run": "docker run -p 5000:5000 n8n-generator"
   },
   "keywords": [
     "n8n",

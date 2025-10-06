@@ -1,0 +1,558 @@
+name: Performance Testing
+
+on:
+  schedule:
+    - cron: '0 4 * * *'  # Run daily at 4 AM
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Test duration in seconds'
+        required: false
+        default: '300'
+      users:
+        description: 'Number of concurrent users'
+        required: false
+        default: '10'
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Load Testing
+  load-test:
+    name: Load Testing
+    runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install locust pytest-benchmark
+
+      - name: Create test environment
+        run: |
+          cp .env.example .env
+          echo "SECRET_KEY=test-secret-key-for-performance" >> .env
+          echo "FLASK_ENV=testing" >> .env
+          echo "REDIS_URL=redis://localhost:6379" >> .env
+          echo "ENABLE_CACHING=true" >> .env
+
+      - name: Start application
+        run: |
+          python app.py &
+          sleep 10
+        env:
+          FLASK_ENV: testing
+
+      - name: Wait for application
+        run: |
+          timeout 30 bash -c 'until curl -f http://localhost:5000/health; do sleep 1; done'
+
+      - name: Create Locust test file
+        run: |
+          cat > locustfile.py << 'EOF'
+          from locust import HttpUser, task, between
+          import json
+          import random
+
+          class WorkflowGeneratorUser(HttpUser):
+              wait_time = between(1, 3)
+              
+              def on_start(self):
+                  """Setup user session"""
+                  self.client.verify = False
+                  
+              @task(3)
+              def generate_simple_workflow(self):
+                  """Generate simple workflow"""
+                  payload = {
+                      "description": f"Process customer data {random.randint(1, 1000)}",
+                      "trigger": "webhook",
+                      "complexity": "simple"
+                  }
+                  with self.client.post("/generate", 
+                                      json=payload,
+                                      headers={"Content-Type": "application/json"},
+                                      catch_response=True) as response:
+                      if response.status_code == 200:
+                          response.success()
+                      elif response.status_code == 429:
+                          response.success()  # Rate limiting is expected
+                      else:
+                          response.failure(f"Unexpected status code: {response.status_code}")
+              
+              @task(2)
+              def generate_medium_workflow(self):
+                  """Generate medium complexity workflow"""
+                  payload = {
+                      "description": f"Complex data processing with multiple steps {random.randint(1, 1000)}",
+                      "trigger": "webhook",
+                      "complexity": "medium"
+                  }
+                  with self.client.post("/generate", 
+                                      json=payload,
+                                      headers={"Content-Type": "application/json"},
+                                      catch_response=True) as response:
+                      if response.status_code == 200:
+                          response.success()
+                      elif response.status_code == 429:
+                          response.success()  # Rate limiting is expected
+                      else:
+                          response.failure(f"Unexpected status code: {response.status_code}")
+              
+              @task(1)
+              def generate_complex_workflow(self):
+                  """Generate complex workflow"""
+                  payload = {
+                      "description": f"Enterprise workflow with multiple integrations and complex logic {random.randint(1, 1000)}",
+                      "trigger": "webhook",
+                      "complexity": "complex"
+                  }
+                  with self.client.post("/generate", 
+                                      json=payload,
+                                      headers={"Content-Type": "application/json"},
+                                      catch_response=True) as response:
+                      if response.status_code == 200:
+                          response.success()
+                      elif response.status_code == 429:
+                          response.success()  # Rate limiting is expected
+                      else:
+                          response.failure(f"Unexpected status code: {response.status_code}")
+              
+              @task(2)
+              def get_prompt_help(self):
+                  """Test prompt help endpoint"""
+                  payload = {
+                      "description": f"Help me create workflow {random.randint(1, 1000)}"
+                  }
+                  with self.client.post("/prompt-help", 
+                                      json=payload,
+                                      headers={"Content-Type": "application/json"},
+                                      catch_response=True) as response:
+                      if response.status_code == 200:
+                          response.success()
+                      elif response.status_code == 429:
+                          response.success()  # Rate limiting is expected
+                      else:
+                          response.failure(f"Unexpected status code: {response.status_code}")
+              
+              @task(5)
+              def health_check(self):
+                  """Test health endpoint"""
+                  with self.client.get("/health", catch_response=True) as response:
+                      if response.status_code == 200:
+                          response.success()
+                      else:
+                          response.failure(f"Health check failed: {response.status_code}")
+          EOF
+
+      - name: Run load test
+        run: |
+          DURATION=${{ github.event.inputs.duration || '300' }}
+          USERS=${{ github.event.inputs.users || '10' }}
+          
+          locust -f locustfile.py \
+            --host=http://localhost:5000 \
+            --users=$USERS \
+            --spawn-rate=2 \
+            --run-time=${DURATION}s \
+            --html=performance-report.html \
+            --csv=performance-results \
+            --headless
+
+      - name: Generate performance summary
+        run: |
+          echo "# Performance Test Results" > performance-summary.md
+          echo "" >> performance-summary.md
+          echo "**Test Configuration:**" >> performance-summary.md
+          echo "- Duration: ${{ github.event.inputs.duration || '300' }} seconds" >> performance-summary.md
+          echo "- Concurrent Users: ${{ github.event.inputs.users || '10' }}" >> performance-summary.md
+          echo "- Test Date: $(date)" >> performance-summary.md
+          echo "" >> performance-summary.md
+          
+          if [ -f performance-results_stats.csv ]; then
+            echo "## Request Statistics" >> performance-summary.md
+            echo "\`\`\`" >> performance-summary.md
+            cat performance-results_stats.csv >> performance-summary.md
+            echo "\`\`\`" >> performance-summary.md
+          fi
+          
+          if [ -f performance-results_failures.csv ]; then
+            echo "## Failures" >> performance-summary.md
+            echo "\`\`\`" >> performance-summary.md
+            cat performance-results_failures.csv >> performance-summary.md
+            echo "\`\`\`" >> performance-summary.md
+          fi
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: performance-results
+          path: |
+            performance-report.html
+            performance-results*.csv
+            performance-summary.md
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('performance-summary.md')) {
+              const summary = fs.readFileSync('performance-summary.md', 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 📊 Performance Test Results\n\n${summary}`
+              });
+            }
+
+  # Benchmark Testing
+  benchmark:
+    name: Benchmark Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-benchmark memory-profiler
+
+      - name: Run benchmark tests
+        run: |
+          python -m pytest tests/ -k "benchmark" --benchmark-json=benchmark-results.json
+        continue-on-error: true
+
+      - name: Create benchmark test file
+        run: |
+          cat > benchmark_tests.py << 'EOF'
+          import pytest
+          import time
+          from app import create_basic_workflow
+
+          class TestBenchmarks:
+              def test_simple_workflow_generation_benchmark(self, benchmark):
+                  """Benchmark simple workflow generation"""
+                  result = benchmark(
+                      create_basic_workflow,
+                      "Process customer data",
+                      "webhook",
+                      "simple"
+                  )
+                  assert result is not None
+                  assert 'nodes' in result
+              
+              def test_medium_workflow_generation_benchmark(self, benchmark):
+                  """Benchmark medium workflow generation"""
+                  result = benchmark(
+                      create_basic_workflow,
+                      "Complex data processing with multiple integrations",
+                      "webhook",
+                      "medium"
+                  )
+                  assert result is not None
+                  assert 'nodes' in result
+              
+              def test_complex_workflow_generation_benchmark(self, benchmark):
+                  """Benchmark complex workflow generation"""
+                  result = benchmark(
+                      create_basic_workflow,
+                      "Enterprise workflow with multiple integrations, data validation, error handling, and notifications",
+                      "webhook",
+                      "complex"
+                  )
+                  assert result is not None
+                  assert 'nodes' in result
+          EOF
+
+      - name: Run custom benchmarks
+        run: |
+          python -m pytest benchmark_tests.py --benchmark-json=custom-benchmark-results.json
+
+      - name: Generate benchmark report
+        run: |
+          echo "# Benchmark Results" > benchmark-report.md
+          echo "" >> benchmark-report.md
+          echo "Generated on: $(date)" >> benchmark-report.md
+          echo "" >> benchmark-report.md
+          
+          if [ -f benchmark-results.json ]; then
+            echo "## Standard Benchmarks" >> benchmark-report.md
+            python -c "
+            import json
+            with open('benchmark-results.json') as f:
+                data = json.load(f)
+            for benchmark in data.get('benchmarks', []):
+                name = benchmark['name']
+                mean = benchmark['stats']['mean']
+                stddev = benchmark['stats']['stddev']
+                print(f'- **{name}**: {mean:.4f}s ± {stddev:.4f}s')
+            " >> benchmark-report.md
+          fi
+          
+          if [ -f custom-benchmark-results.json ]; then
+            echo "" >> benchmark-report.md
+            echo "## Custom Benchmarks" >> benchmark-report.md
+            python -c "
+            import json
+            with open('custom-benchmark-results.json') as f:
+                data = json.load(f)
+            for benchmark in data.get('benchmarks', []):
+                name = benchmark['name']
+                mean = benchmark['stats']['mean']
+                stddev = benchmark['stats']['stddev']
+                print(f'- **{name}**: {mean:.4f}s ± {stddev:.4f}s')
+            " >> benchmark-report.md
+          fi
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: benchmark-results
+          path: |
+            benchmark-results.json
+            custom-benchmark-results.json
+            benchmark-report.md
+
+  # Memory Profiling
+  memory-profile:
+    name: Memory Profiling
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install memory-profiler psutil matplotlib
+
+      - name: Create memory profiling script
+        run: |
+          cat > memory_profile.py << 'EOF'
+          import psutil
+          import time
+          import json
+          from memory_profiler import profile
+          from app import create_basic_workflow
+
+          @profile
+          def profile_workflow_generation():
+              """Profile memory usage during workflow generation"""
+              workflows = []
+              
+              # Generate multiple workflows to test memory usage
+              descriptions = [
+                  "Simple email notification workflow",
+                  "Complex data processing with multiple steps",
+                  "Enterprise integration workflow with error handling",
+                  "Multi-step customer onboarding process",
+                  "Automated reporting and analytics workflow"
+              ]
+              
+              for desc in descriptions:
+                  for complexity in ['simple', 'medium', 'complex']:
+                      workflow = create_basic_workflow(desc, 'webhook', complexity)
+                      workflows.append(workflow)
+              
+              return workflows
+
+          def monitor_memory_usage():
+              """Monitor memory usage over time"""
+              process = psutil.Process()
+              memory_usage = []
+              
+              # Baseline memory
+              baseline = process.memory_info().rss / 1024 / 1024  # MB
+              memory_usage.append(('baseline', baseline))
+              
+              # Generate workflows and monitor memory
+              workflows = profile_workflow_generation()
+              
+              # Peak memory
+              peak = process.memory_info().rss / 1024 / 1024  # MB
+              memory_usage.append(('peak', peak))
+              
+              # Memory after cleanup
+              del workflows
+              time.sleep(1)  # Allow garbage collection
+              final = process.memory_info().rss / 1024 / 1024  # MB
+              memory_usage.append(('final', final))
+              
+              return memory_usage
+
+          if __name__ == "__main__":
+              memory_data = monitor_memory_usage()
+              
+              print("Memory Usage Report:")
+              for stage, usage in memory_data:
+                  print(f"{stage}: {usage:.2f} MB")
+              
+              # Save results
+              with open('memory-profile-results.json', 'w') as f:
+                  json.dump(dict(memory_data), f, indent=2)
+          EOF
+
+      - name: Run memory profiling
+        run: |
+          python memory_profile.py > memory-profile.txt
+
+      - name: Generate memory report
+        run: |
+          echo "# Memory Profiling Results" > memory-report.md
+          echo "" >> memory-report.md
+          echo "Generated on: $(date)" >> memory-report.md
+          echo "" >> memory-report.md
+          
+          if [ -f memory-profile-results.json ]; then
+            echo "## Memory Usage Summary" >> memory-report.md
+            python -c "
+            import json
+            with open('memory-profile-results.json') as f:
+                data = json.load(f)
+            baseline = data.get('baseline', 0)
+            peak = data.get('peak', 0)
+            final = data.get('final', 0)
+            print(f'- **Baseline Memory**: {baseline:.2f} MB')
+            print(f'- **Peak Memory**: {peak:.2f} MB')
+            print(f'- **Final Memory**: {final:.2f} MB')
+            print(f'- **Memory Increase**: {peak - baseline:.2f} MB')
+            print(f'- **Memory Retained**: {final - baseline:.2f} MB')
+            " >> memory-report.md
+          fi
+          
+          echo "" >> memory-report.md
+          echo "## Detailed Profile" >> memory-report.md
+          echo "\`\`\`" >> memory-report.md
+          cat memory-profile.txt >> memory-report.md
+          echo "\`\`\`" >> memory-report.md
+
+      - name: Upload memory profiling results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: memory-profile-results
+          path: |
+            memory-profile.txt
+            memory-profile-results.json
+            memory-report.md
+
+  # Performance Summary
+  performance-summary:
+    name: Performance Summary
+    runs-on: ubuntu-latest
+    needs: [load-test, benchmark, memory-profile]
+    if: always()
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate comprehensive performance report
+        run: |
+          echo "# Comprehensive Performance Report" > performance-comprehensive-report.md
+          echo "" >> performance-comprehensive-report.md
+          echo "Generated on: $(date)" >> performance-comprehensive-report.md
+          echo "Commit: ${{ github.sha }}" >> performance-comprehensive-report.md
+          echo "" >> performance-comprehensive-report.md
+          
+          # Load test results
+          if [ -d "performance-results" ]; then
+            echo "## Load Testing Results" >> performance-comprehensive-report.md
+            if [ -f "performance-results/performance-summary.md" ]; then
+              cat performance-results/performance-summary.md >> performance-comprehensive-report.md
+            fi
+            echo "" >> performance-comprehensive-report.md
+          fi
+          
+          # Benchmark results
+          if [ -d "benchmark-results" ]; then
+            echo "## Benchmark Results" >> performance-comprehensive-report.md
+            if [ -f "benchmark-results/benchmark-report.md" ]; then
+              cat benchmark-results/benchmark-report.md >> performance-comprehensive-report.md
+            fi
+            echo "" >> performance-comprehensive-report.md
+          fi
+          
+          # Memory profiling results
+          if [ -d "memory-profile-results" ]; then
+            echo "## Memory Profiling Results" >> performance-comprehensive-report.md
+            if [ -f "memory-profile-results/memory-report.md" ]; then
+              cat memory-profile-results/memory-report.md >> performance-comprehensive-report.md
+            fi
+            echo "" >> performance-comprehensive-report.md
+          fi
+          
+          echo "## Recommendations" >> performance-comprehensive-report.md
+          echo "- Monitor memory usage in production" >> performance-comprehensive-report.md
+          echo "- Consider implementing caching for frequently generated workflows" >> performance-comprehensive-report.md
+          echo "- Review rate limiting settings based on load test results" >> performance-comprehensive-report.md
+          echo "- Optimize workflow generation algorithms if response times exceed thresholds" >> performance-comprehensive-report.md
+
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-comprehensive-report
+          path: performance-comprehensive-report.md
+
+      - name: Comment on PR with performance summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('performance-comprehensive-report.md')) {
+              const report = fs.readFileSync('performance-comprehensive-report.md', 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🚀 Performance Test Summary\n\n${report.substring(0, 5000)}${report.length > 5000 ? '\n\n... (truncated, see artifacts for full report)' : ''}`
+              });
+            }

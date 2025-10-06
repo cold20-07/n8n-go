@@ -715,6 +715,21 @@ class EnhancedWorkflowGenerator:
                 }
             }
         
+        # Code nodes
+        elif 'code' in node_type.lower():
+            return {
+                'jsCode': '''// Process and transform data
+const inputData = $input.all();
+const processedData = inputData.map(item => ({
+  ...item.json,
+  processed: true,
+  processed_at: new Date().toISOString(),
+  workflow_step: 'enhanced_processing'
+}));
+
+return processedData;'''
+            }
+        
         return {}
     
     def create_connections(self, nodes: List[Dict]) -> Dict:
