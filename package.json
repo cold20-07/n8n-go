@@ -7,7 +7,7 @@
     "start": "python app.py",
     "dev": "python app.py --debug",
     "serve": "npx serve . --listen 127.0.0.1:8000",
-    "build": "tsc && python scripts/build.py",
+    "build": "tsc --project config/tsconfig.json && python scripts/build.py",
     "test": "python -m pytest tests/ -v",
     "test:js": "node tests/test-frontend.js",
     "lint": "python -m flake8 src/ --max-line-length=100",

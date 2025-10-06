@@ -88,7 +88,7 @@ class N8nWorkflowGenerator {
     private createNodes(
         triggerType: string, 
         complexity: string, 
-        template?: string
+        _template?: string
     ): N8nNode[] {
         const nodes: N8nNode[] = [];
 
@@ -157,13 +157,13 @@ class N8nWorkflowGenerator {
             }
         };
 
-        const config = triggerConfigs[triggerType] || triggerConfigs.webhook;
+        const config = triggerConfigs[triggerType] || triggerConfigs['webhook'];
 
         return {
-            parameters: config.parameters || {},
+            parameters: config?.parameters || {},
             id: nodeId,
             name: 'Trigger',
-            type: config.type || 'n8n-nodes-base.webhook',
+            type: config?.type || 'n8n-nodes-base.webhook',
             typeVersion: 1,
             position: [0, 300]
         };
@@ -354,8 +354,8 @@ return processedData;`
             }
 
             if (connectionData.main) {
-                connectionData.main.forEach((connectionGroup, groupIndex) => {
-                    connectionGroup.forEach((connection, connIndex) => {
+                connectionData.main.forEach((connectionGroup, _groupIndex) => {
+                    connectionGroup.forEach((connection, _connIndex) => {
                         if (!nodeNames.has(connection.node)) {
                             errors.push(`Connection target '${connection.node}' does not exist`);
                         }
