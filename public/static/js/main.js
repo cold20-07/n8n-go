@@ -1,3 +1,45 @@
+// Utility functions
+function showMessage(text, type) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll('.message');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Create new message
+    const message = document.createElement('div');
+    message.className = `message ${type}`;
+    message.textContent = text;
+    
+    // Insert before form card or at top of page
+    const formCard = document.querySelector('.form-card');
+    const container = document.querySelector('.container');
+    
+    if (formCard && formCard.parentNode) {
+        formCard.parentNode.insertBefore(message, formCard);
+    } else if (container) {
+        container.insertBefore(message, container.firstChild);
+    }
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (message.parentNode) {
+            message.remove();
+        }
+    }, 5000);
+}
+
+function showLoading(text = 'Loading...') {
+    showMessage(text, 'info');
+}
+
+function hideLoading() {
+    const existingMessages = document.querySelectorAll('.message');
+    existingMessages.forEach(msg => {
+        if (msg.textContent.includes('Loading') || msg.textContent.includes('loading')) {
+            msg.remove();
+        }
+    });
+}
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -62,10 +104,14 @@ async function loadTemplate(templateId) {
             const descriptionField = document.getElementById('description');
             descriptionField.value = `${template.description}\n\nUse case: ${template.use_cases[0]}`;
             
-            // Set complexity
-            const complexityField = document.getElementById('complexity');
-            if (complexityField) {
-                complexityField.value = template.complexity;
+            // Set trigger type based on template
+            const triggerField = document.getElementById('triggerType');
+            if (triggerField) {
+                if (template.id === 'rss_to_social' || template.id === 'data_backup') {
+                    triggerField.value = 'schedule';
+                } else {
+                    triggerField.value = 'webhook';
+                }
             }
             
             // Show template info
@@ -292,7 +338,7 @@ Could you tell me what you want to automate? For example:<br>
     }
 }
 
-// Workflow form handling with prompt assistance
+// Enhanced workflow form handling
 document.addEventListener('DOMContentLoaded', function() {
     const workflowForm = document.getElementById('workflowForm');
     const descriptionField = document.getElementById('description');
@@ -302,6 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const description = descriptionField.value.trim();
+            
+            // Basic validation
+            if (!description || description.length < 10) {
+                showMessage('Please provide a detailed description (at least 10 characters)', 'error');
+                return;
+            }
             
             // Check if user needs prompt assistance
             const needsHelp = await checkPromptHelp(description);
@@ -331,6 +383,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Initialize WorkflowGenerator
+    new WorkflowGenerator();
 });
 
 function showQuickHelp() {
@@ -412,77 +467,68 @@ async function generateWorkflow() {
 
 function displayWorkflow(result) {
     const output = document.getElementById('output');
-    const workflowContent = output.querySelector('.workflow-content');
+    const outputPlaceholder = document.getElementById('outputPlaceholder');
+    const jsonOutput = document.getElementById('jsonOutput');
+    const jsonSize = document.getElementById('jsonSize');
     
-    if (workflowContent) {
-        // Create connection validation info if available
-        let validationInfo = '';
-        if (result.validation && result.validation.validation_applied) {
-            const confidence = result.validation.confidence_score || 0;
-            const transformations = result.validation.transformations || [];
-            
-            validationInfo = `
-                <div class="validation-info">
-                    <h5>🔍 Validation Applied</h5>
-                    <p>Confidence Score: ${Math.round(confidence * 100)}%</p>
-                    ${transformations.length > 0 ? `
-                        <p>Improvements: ${transformations.join(', ')}</p>
-                    ` : ''}
-                </div>
-            `;
-        }
-        
-        // Create connection summary
-        const connections = result.workflow.connections || {};
-        const connectionCount = Object.keys(connections).length;
-        const nodeCount = result.workflow.nodes ? result.workflow.nodes.length : 0;
-        
-        let connectionInfo = '';
-        if (connectionCount > 0) {
-            connectionInfo = `
-                <div class="connection-info">
-                    <h5>🔗 Connections</h5>
-                    <p>${connectionCount} connections between ${nodeCount} nodes</p>
-                    <div class="connection-list">
-                        ${Object.entries(connections).map(([source, connData]) => {
-                            if (connData.main && connData.main[0]) {
-                                const targets = connData.main[0].map(conn => conn.node).join(', ');
-                                return `<div class="connection-item">${source} → ${targets}</div>`;
-                            }
-                            return '';
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        }
-        
-        workflowContent.innerHTML = `
-            <div class="workflow-info">
-                <h4>${result.workflow_name || 'Generated Workflow'}</h4>
-                <p>${result.description || 'Custom workflow generated based on your requirements'}</p>
-                ${validationInfo}
-                ${connectionInfo}
-            </div>
-            <pre><code>${JSON.stringify(result.workflow, null, 2)}</code></pre>
-        `;
+    // Format and display JSON
+    const formattedJson = result.formatted_json || JSON.stringify(result.workflow, null, 2);
+    if (jsonOutput) {
+        jsonOutput.textContent = formattedJson;
+    }
+    
+    // Update JSON size
+    if (jsonSize) {
+        const sizeKB = (new Blob([formattedJson]).size / 1024).toFixed(1);
+        jsonSize.textContent = `${sizeKB} KB`;
+    }
+    
+    // Hide placeholder and show output
+    if (outputPlaceholder) {
+        outputPlaceholder.style.display = 'none';
+    }
+    if (output) {
+        output.style.display = 'block';
+        // Scroll to output
+        output.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     // Setup copy button
     const copyBtn = document.getElementById('copyBtn');
     if (copyBtn) {
         copyBtn.onclick = function() {
-            navigator.clipboard.writeText(JSON.stringify(result.workflow, null, 2))
+            navigator.clipboard.writeText(formattedJson)
                 .then(() => {
                     const originalText = copyBtn.innerHTML;
                     copyBtn.innerHTML = '<span class="btn-icon">✅</span>Copied!';
                     setTimeout(() => {
                         copyBtn.innerHTML = originalText;
                     }, 2000);
+                    showMessage('Workflow copied to clipboard!', 'success');
                 })
                 .catch(err => {
                     console.error('Failed to copy:', err);
-                    alert('Failed to copy to clipboard');
+                    showMessage('Failed to copy to clipboard', 'error');
                 });
+        };
+    }
+    
+    // Setup download button
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.onclick = function() {
+            const blob = new Blob([formattedJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.filename || 'workflow.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showMessage('Workflow downloaded!', 'success');
         };
     }
 }
@@ -759,7 +805,5 @@ class WorkflowGenerator {
     }
 }
 
-// Initialize workflow generator when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new WorkflowGenerator();
-});
+// WorkflowGenerator class handles the main workflow generation functionality
+// It's initialized in the main DOMContentLoaded event listener above

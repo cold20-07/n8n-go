@@ -18,6 +18,22 @@
       "destination": "/public/static/$1"
     },
     {
+      "source": "/pricing",
+      "destination": "/public/pricing.html"
+    },
+    {
+      "source": "/pricing.html",
+      "destination": "/public/pricing.html"
+    },
+    {
+      "source": "/documentation",
+      "destination": "/public/documentation.html"
+    },
+    {
+      "source": "/documentation.html",
+      "destination": "/public/documentation.html"
+    },
+    {
       "source": "/",
       "destination": "/public/index.html"
     }

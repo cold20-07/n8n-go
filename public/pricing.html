@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - N8N Go</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/favicon.ico">
+    <style>
+        .pricing-hero {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+        
+        .pricing-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #00d4ff;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+        
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+        
+        .plan-period {
+            color: #cccccc;
+            margin-bottom: 30px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        
+        .plan-features li {
+            padding: 8px 0;
+            color: #cccccc;
+            position: relative;
+            padding-left: 24px;
+        }
+        
+        .plan-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        
+        .plan-button {
+            width: 100%;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        .plan-button.secondary {
+            background: transparent;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+        }
+        
+        .plan-button.secondary:hover {
+            background: #00d4ff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">N8N Go</a>
+                <ul class="nav-links">
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/pricing.html" class="active">Pricing</a></li>
+                    <li><a href="/documentation.html">Documentation</a></li>
+                </ul>
+                <a href="/#json-generator" class="cta-button">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="pricing-hero">
+            <div class="container">
+                <h1>Simple, Transparent Pricing</h1>
+                <p>Choose the plan that fits your workflow needs</p>
+            </div>
+        </section>
+
+        <section class="pricing">
+            <div class="container">
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3 class="plan-name">Starter</h3>
+                        <div class="plan-price">$0</div>
+                        <div class="plan-period">Forever free</div>
+                        <ul class="plan-features">
+                            <li>Up to 5 workflows</li>
+                            <li>Basic JSON validation</li>
+                            <li>Community support</li>
+                            <li>Standard templates</li>
+                        </ul>
+                        <button class="plan-button secondary" onclick="window.location.href='/#json-generator'">Get Started</button>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <h3 class="plan-name">Professional</h3>
+                        <div class="plan-price">$29</div>
+                        <div class="plan-period">per month</div>
+                        <ul class="plan-features">
+                            <li>Unlimited workflows</li>
+                            <li>Advanced validation</li>
+                            <li>Priority support</li>
+                            <li>Custom templates</li>
+                            <li>API integrations</li>
+                            <li>Team collaboration</li>
+                        </ul>
+                        <button class="plan-button" onclick="window.location.href='/#json-generator'">Start Free Trial</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <h3 class="plan-name">Enterprise</h3>
+                        <div class="plan-price">$99</div>
+                        <div class="plan-period">per month</div>
+                        <ul class="plan-features">
+                            <li>Everything in Professional</li>
+                            <li>On-premise deployment</li>
+                            <li>Custom integrations</li>
+                            <li>Dedicated support</li>
+                            <li>SLA guarantee</li>
+                            <li>Advanced security</li>
+                        </ul>
+                        <button class="plan-button secondary" onclick="alert('Contact us at enterprise@n8ngo.com')">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content" style="text-align: center; padding: 20px 0;">
+                <p style="margin: 0;">Made with ❤️ by NXT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

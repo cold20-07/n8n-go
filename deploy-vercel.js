@@ -65,24 +65,27 @@ if (fs.existsSync('api/index.js')) {
     console.log('❌ API endpoint not found');
 }
 
-// Verify main HTML file
-if (fs.existsSync('public/index.html')) {
-    const htmlContent = fs.readFileSync('public/index.html', 'utf8');
-    
-    if (htmlContent.includes('/static/css/style.css')) {
-        console.log('✅ CSS link configured in HTML');
+// Verify HTML files
+const htmlFiles = ['public/index.html', 'public/pricing.html', 'public/documentation.html'];
+htmlFiles.forEach(file => {
+    if (fs.existsSync(file)) {
+        const htmlContent = fs.readFileSync(file, 'utf8');
+        
+        if (htmlContent.includes('/static/css/style.css')) {
+            console.log(`✅ CSS link configured in ${file}`);
+        } else {
+            console.log(`⚠️  CSS link not found in ${file}`);
+        }
+        
+        if (htmlContent.includes('/static/js/main.js')) {
+            console.log(`✅ JS link configured in ${file}`);
+        } else {
+            console.log(`⚠️  JS link not found in ${file}`);
+        }
     } else {
-        console.log('⚠️  CSS link not found in HTML');
+        console.log(`❌ ${file} not found`);
     }
-    
-    if (htmlContent.includes('/static/js/main.js')) {
-        console.log('✅ JS link configured in HTML');
-    } else {
-        console.log('⚠️  JS link not found in HTML');
-    }
-} else {
-    console.log('❌ public/index.html not found');
-}
+});
 
 console.log('\n🎉 Deployment preparation complete!');
 console.log('\nNext steps:');
@@ -92,7 +95,9 @@ console.log('3. Test the deployment to ensure everything works');
 
 console.log('\n📋 Deployment checklist:');
 console.log('✅ Static assets copied to public/static/');
-console.log('✅ HTML file updated with correct asset paths');
+console.log('✅ HTML files updated with correct asset paths');
+console.log('✅ Pricing and Documentation pages created');
 console.log('✅ Vercel configuration includes static file routing');
 console.log('✅ API endpoint configured for workflow generation');
 console.log('✅ Template functionality included');
+console.log('✅ Navigation links updated for static deployment');

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - N8N Go</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/favicon.ico">
+    <style>
+        .docs-hero {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+        
+        .docs-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .docs-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .docs-sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .docs-sidebar h3 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .docs-nav {
+            list-style: none;
+        }
+        
+        .docs-nav li {
+            margin-bottom: 12px;
+        }
+        
+        .docs-nav a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 8px 0;
+        }
+        
+        .docs-nav a:hover,
+        .docs-nav a.active {
+            color: #00d4ff;
+        }
+        
+        .docs-main {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px;
+        }
+        
+        .docs-main h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .docs-main h3 {
+            color: #ffffff;
+            margin: 30px 0 15px;
+            font-size: 1.5rem;
+        }
+        
+        .docs-main h4 {
+            color: #ffffff;
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+        }
+        
+        .docs-main p {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .docs-main code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .docs-main pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .docs-main pre code {
+            background: none;
+            padding: 0;
+            color: #ffffff;
+        }
+        
+        .docs-main ul, .docs-main ol {
+            color: #cccccc;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .docs-main li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .docs-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .docs-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">N8N Go</a>
+                <ul class="nav-links">
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li><a href="/documentation.html" class="active">Documentation</a></li>
+                </ul>
+                <a href="/#json-generator" class="cta-button">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="docs-hero">
+            <div class="container">
+                <h1>Documentation</h1>
+                <p>Everything you need to get started with N8N Go</p>
+            </div>
+        </section>
+
+        <section class="docs">
+            <div class="container">
+                <div class="docs-content">
+                    <aside class="docs-sidebar">
+                        <h3>Getting Started</h3>
+                        <ul class="docs-nav">
+                            <li><a href="#introduction" class="active">Introduction</a></li>
+                            <li><a href="#installation">Installation</a></li>
+                            <li><a href="#quick-start">Quick Start</a></li>
+                        </ul>
+                        
+                        <h3>Features</h3>
+                        <ul class="docs-nav">
+                            <li><a href="#workflow-builder">Workflow Builder</a></li>
+                            <li><a href="#validation">Validation</a></li>
+                            <li><a href="#integrations">Integrations</a></li>
+                        </ul>
+                        
+                        <h3>API Reference</h3>
+                        <ul class="docs-nav">
+                            <li><a href="#api-overview">Overview</a></li>
+                            <li><a href="#authentication">Authentication</a></li>
+                            <li><a href="#endpoints">Endpoints</a></li>
+                        </ul>
+                    </aside>
+                    
+                    <main class="docs-main">
+                        <section id="introduction">
+                            <h2>Introduction</h2>
+                            <p>Welcome to N8N Go, the most intuitive way to create, validate, and manage JSON workflows. Our platform combines the power of visual workflow building with real-time validation and seamless integrations.</p>
+                            
+                            <h3>What is N8N Go?</h3>
+                            <p>N8N Go is a comprehensive JSON workflow automation platform that allows you to:</p>
+                            <ul>
+                                <li>Build complex JSON structures visually</li>
+                                <li>Validate data in real-time</li>
+                                <li>Connect with popular APIs and services</li>
+                                <li>Automate data processing workflows</li>
+                            </ul>
+                        </section>
+                        
+                        <section id="installation">
+                            <h3>Installation</h3>
+                            <p>Getting started with N8N Go is simple. You can use our cloud platform or deploy on-premises.</p>
+                            
+                            <h4>Cloud Platform</h4>
+                            <p>Simply sign up at our website and start building workflows immediately. No installation required.</p>
+                            
+                            <h4>Self-Hosted</h4>
+                            <p>For enterprise users, you can deploy N8N Go on your own infrastructure:</p>
+                            <pre><code>npm install -g @n8n/n8n-go
+n8n-go start</code></pre>
+                        </section>
+                        
+                        <section id="quick-start">
+                            <h3>Quick Start</h3>
+                            <p>Create your first JSON workflow in minutes:</p>
+                            <ol>
+                                <li>Sign up for a free account</li>
+                                <li>Choose a template or start from scratch</li>
+                                <li>Drag and drop nodes to build your workflow</li>
+                                <li>Configure each node with your data</li>
+                                <li>Test and validate your JSON output</li>
+                                <li>Deploy your workflow</li>
+                            </ol>
+                        </section>
+                        
+                        <section id="workflow-builder">
+                            <h3>Visual Workflow Builder</h3>
+                            <p>Our drag-and-drop interface makes it easy to create complex JSON workflows without writing code. Key features include:</p>
+                            <ul>
+                                <li>Pre-built nodes for common operations</li>
+                                <li>Custom node creation</li>
+                                <li>Visual connection mapping</li>
+                                <li>Real-time preview</li>
+                            </ul>
+                            
+                            <h4>Using Templates</h4>
+                            <p>Get started quickly with our pre-built templates:</p>
+                            <ul>
+                                <li><strong>RSS to Social Media:</strong> Monitor RSS feeds and post to social platforms</li>
+                                <li><strong>Email Processing:</strong> Process incoming emails and route to team members</li>
+                                <li><strong>Data Backup:</strong> Automatically backup files between cloud services</li>
+                                <li><strong>E-commerce Orders:</strong> Process orders and manage inventory</li>
+                            </ul>
+                        </section>
+                        
+                        <section id="validation">
+                            <h3>Real-time Validation</h3>
+                            <p>Ensure your JSON is always valid with our built-in validation engine:</p>
+                            <ul>
+                                <li>Schema validation</li>
+                                <li>Data type checking</li>
+                                <li>Custom validation rules</li>
+                                <li>Error highlighting and suggestions</li>
+                            </ul>
+                        </section>
+                        
+                        <section id="integrations">
+                            <h3>Seamless Integrations</h3>
+                            <p>Connect with over 200+ services and APIs:</p>
+                            <ul>
+                                <li><strong>Communication:</strong> Slack, Discord, Telegram, Email</li>
+                                <li><strong>Storage:</strong> Google Drive, Dropbox, OneDrive</li>
+                                <li><strong>Databases:</strong> MySQL, PostgreSQL, MongoDB</li>
+                                <li><strong>E-commerce:</strong> Shopify, WooCommerce</li>
+                                <li><strong>Social Media:</strong> Twitter, Instagram, YouTube</li>
+                                <li><strong>Project Management:</strong> Trello, Asana, Notion</li>
+                                <li><strong>Payment:</strong> Stripe, PayPal</li>
+                                <li><strong>AI Services:</strong> OpenAI, Google AI</li>
+                            </ul>
+                        </section>
+                        
+                        <section id="api-overview">
+                            <h3>API Overview</h3>
+                            <p>N8N Go provides a comprehensive REST API for programmatic access to all features.</p>
+                            
+                            <h4>Base URL</h4>
+                            <pre><code>https://your-vercel-domain.vercel.app/api</code></pre>
+                            
+                            <h4>Generate Workflow</h4>
+                            <p>Create a new workflow programmatically:</p>
+                            <pre><code>POST /generate
+Content-Type: application/json
+
+{
+  "description": "Process customer orders and send notifications",
+  "triggerType": "webhook",
+  "complexity": "medium"
+}</code></pre>
+                        </section>
+                        
+                        <section id="authentication">
+                            <h3>Authentication</h3>
+                            <p>Currently, the API is open for public use. Authentication will be added in future versions for premium features.</p>
+                        </section>
+                        
+                        <section id="endpoints">
+                            <h3>API Endpoints</h3>
+                            <p>Available endpoints:</p>
+                            <ul>
+                                <li><code>GET /health</code> - Check API status</li>
+                                <li><code>POST /generate</code> - Generate a new workflow</li>
+                                <li><code>GET /api/templates/{id}</code> - Get template details</li>
+                                <li><code>POST /api/templates/suggestions</code> - Get template suggestions</li>
+                            </ul>
+                            
+                            <h4>Example Response</h4>
+                            <pre><code>{
+  "success": true,
+  "workflow": {
+    "id": "workflow_123",
+    "name": "Customer Order Processing",
+    "nodes": [...],
+    "connections": {...}
+  },
+  "workflow_name": "Customer Order Processing",
+  "node_count": 5,
+  "formatted_json": "..."
+}</code></pre>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content" style="text-align: center; padding: 20px 0;">
+                <p style="margin: 0;">Made with ❤️ by NXT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        // Smooth scrolling for documentation navigation
+        document.querySelectorAll('.docs-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active link
+                    document.querySelectorAll('.docs-nav a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
