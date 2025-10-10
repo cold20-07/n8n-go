@@ -1,41 +1,51 @@
 {
   "version": 2,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/health",
-      "destination": "/api/index.js"
+      "src": "api/index.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/generate",
-      "destination": "/api/index.js"
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/health",
+      "dest": "/api/index.js"
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "src": "/generate",
+      "dest": "/api/index.js"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "/public/static/$1"
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
     },
     {
-      "source": "/pricing",
-      "destination": "/public/pricing.html"
+      "src": "/static/(.*)",
+      "dest": "/public/static/$1"
     },
     {
-      "source": "/pricing.html",
-      "destination": "/public/pricing.html"
+      "src": "/pricing",
+      "dest": "/public/pricing.html"
     },
     {
-      "source": "/documentation",
-      "destination": "/public/documentation.html"
+      "src": "/pricing.html",
+      "dest": "/public/pricing.html"
     },
     {
-      "source": "/documentation.html",
-      "destination": "/public/documentation.html"
+      "src": "/documentation",
+      "dest": "/public/documentation.html"
     },
     {
-      "source": "/",
-      "destination": "/public/index.html"
+      "src": "/documentation.html",
+      "dest": "/public/documentation.html"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
     }
   ],
   "functions": {
