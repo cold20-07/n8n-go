@@ -237,7 +237,7 @@ def test_config_cli_import():
 
 def main():
     """Run all configuration system tests"""
-    print("🚀 Configuration System Test Suite")
+    print("Configuration System Test Suite")
     print("=" * 60)
     
     tests = [

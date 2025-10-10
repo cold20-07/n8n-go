@@ -100,7 +100,7 @@ class TestConfigManager:
         manager = ConfigManager()
         
         # Mock dotenv availability
-        with patch('config.load_dotenv') as mock_load_dotenv:
+        with patch('dotenv.load_dotenv') as mock_load_dotenv:
             result = manager.load_from_env_file(Path(temp_env_file))
             mock_load_dotenv.assert_called_once()
             assert 'env_file' in [source.value for source in manager.sources_loaded]

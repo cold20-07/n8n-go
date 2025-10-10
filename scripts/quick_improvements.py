@@ -298,11 +298,11 @@ def setup_development():
     # Create .env file if it doesn't exist
     env_file = Path(".env")
     if not env_file.exists():
-        env_content = '''DEBUG=true
+        env_content = """DEBUG=true
 SECRET_KEY=dev-secret-key
 GEMINI_API_KEY=your-api-key-here
 LOG_LEVEL=DEBUG
-'''
+"""
         env_file.write_text(env_content)
         print("📝 Created .env file")
     

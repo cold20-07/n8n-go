@@ -10,15 +10,15 @@ from pathlib import Path
 
 def run_command(command, description):
     """Run a command and return success status"""
-    print(f"🔧 {description}...")
+    print(f"[RUNNING] {description}...")
     try:
         result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
-        print(f"✅ {description} completed")
+        print(f"[SUCCESS] {description} completed")
         if result.stdout:
             print(result.stdout)
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ {description} failed")
+        print(f"[FAILED] {description} failed")
         if e.stdout:
             print(f"stdout: {e.stdout}")
         if e.stderr:
@@ -27,7 +27,7 @@ def run_command(command, description):
 
 def check_dependencies():
     """Check if required dependencies are installed"""
-    print("📦 Checking test dependencies...")
+    print("Checking test dependencies...")
     
     required_packages = ['pytest', 'flask']
     missing_packages = []
@@ -35,13 +35,13 @@ def check_dependencies():
     for package in required_packages:
         try:
             __import__(package.replace('-', '_'))
-            print(f"  ✅ {package}")
+            print(f"  [OK] {package}")
         except ImportError:
             missing_packages.append(package)
-            print(f"  ❌ {package}")
+            print(f"  [MISSING] {package}")
     
     if missing_packages:
-        print(f"\n❌ Missing required packages: {', '.join(missing_packages)}")
+        print(f"\n[ERROR] Missing required packages: {', '.join(missing_packages)}")
         print("Install with: pip install pytest flask")
         return False
     
@@ -140,7 +140,7 @@ def main():
     
     args = parser.parse_args()
     
-    print("🧪 N8N Workflow Generator Test Suite")
+    print("N8N Workflow Generator Test Suite")
     print("=" * 60)
     
     # Check dependencies first
@@ -148,8 +148,8 @@ def main():
         sys.exit(1)
     
     if args.check_deps:
-        print("✅ All dependencies are available")
-        return
+        print("[SUCCESS] All dependencies are available")
+        sys.exit(0)
     
     # Set test environment
     os.environ['FLASK_ENV'] = 'testing'
@@ -184,7 +184,7 @@ def main():
         print("\n⚠️ Tests interrupted by user")
         success = False
     except Exception as e:
-        print(f"\n❌ Test runner error: {e}")
+        print(f"\n[ERROR] Test runner error: {e}")
         success = False
     
     print("\n" + "=" * 60)
@@ -195,8 +195,8 @@ def main():
         print("   - Check coverage report (if generated)")
         print("   - Fix any failing tests")
     else:
-        print("❌ Some tests failed or encountered errors")
-        print("\n🔧 Troubleshooting:")
+        print("[ERROR] Some tests failed or encountered errors")
+        print("\nTroubleshooting:")
         print("   - Check error messages above")
         print("   - Ensure all dependencies are installed")
         print("   - Verify configuration is correct")

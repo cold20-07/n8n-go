@@ -1,0 +1,47 @@
+/*
+ * N8N Workflow Generator 2.0 - Root Style File
+ * 
+ * This file serves as a compatibility layer for users expecting
+ * style.css in the root directory. The actual styles are
+ * located in static/css/style.css
+ */
+
+/* Import the actual styles */
+@import url('static/css/style.css');
+
+/* Compatibility notice for developers */
+body::before {
+    content: "⚠️ style.css has been moved to static/css/style.css - Please update your references";
+    display: none; /* Hidden from users, visible in dev tools */
+}
+
+/* Basic fallback styles in case the import fails */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Notice for developers */
+.dev-notice {
+    background: #ff6b35;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    display: none; /* Only show in development */
+}
+
+/* Show notice in development */
+body[data-env="development"] .dev-notice {
+    display: block;
+}

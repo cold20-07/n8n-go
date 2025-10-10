@@ -31,6 +31,26 @@ except ImportError as e:
     import logging
     logger = logging.getLogger(__name__)
 
+# Initialize caching system
+try:
+    from src.core.cache import init_cache, get_cache, warm_template_cache
+    cache_config = config.get_cache_config() if 'config' in locals() else {}
+    redis_url = cache_config.get('redis', {}).get('url', 'redis://localhost:6379/0')
+    default_ttl = cache_config.get('redis', {}).get('default_ttl', 3600)
+    
+    cache = init_cache(redis_url, default_ttl)
+    CACHING_AVAILABLE = True
+    logger.info("[OK] Caching system initialized successfully")
+    
+    # Warm cache if not in testing mode
+    if not config.is_testing():
+        warm_template_cache()
+        
+except ImportError as e:
+    logger.warning(f"Caching system not available: {e}")
+    CACHING_AVAILABLE = False
+    cache = None
+
 # Import enhancement modules
 try:
     from n8n_workflow_research import N8nWorkflowResearcher
@@ -75,6 +95,24 @@ try:
 except ImportError as e:
     logger.warning(f"Market-leading generator not available: {e}")
     MARKET_LEADING_GENERATOR_AVAILABLE = False
+
+# Import enhanced pattern generator (uses ALL knowledge from 100 workflows)
+try:
+    from src.core.generators.enhanced_pattern_generator import generate_workflow_with_real_knowledge
+    ENHANCED_PATTERN_GENERATOR_AVAILABLE = True
+    logger.info("[OK] Enhanced pattern generator loaded successfully (uses 100 real workflows)")
+except ImportError as e:
+    logger.warning(f"Enhanced pattern generator not available: {e}")
+    ENHANCED_PATTERN_GENERATOR_AVAILABLE = False
+
+# Import Gemini Enhanced Generator (combines Gemini AI + 100 workflows knowledge)
+try:
+    from src.core.generators.gemini_enhanced_generator import generate_gemini_enhanced_workflow
+    GEMINI_ENHANCED_GENERATOR_AVAILABLE = True
+    logger.info("[OK] Gemini Enhanced Generator loaded successfully (AI + 100 real workflows)")
+except ImportError as e:
+    logger.warning(f"Gemini Enhanced Generator not available: {e}")
+    GEMINI_ENHANCED_GENERATOR_AVAILABLE = False
 
 # Import validation modules with new paths
 try:
@@ -158,11 +196,25 @@ try:
          max_age=3600)
     
     # Setup rate limiting with endpoint-specific limits
+    # Use Redis if available and caching is enabled, otherwise use in-memory storage
+    storage_uri = None
+    if config.ENABLE_CACHING:
+        try:
+            import redis
+            # Test Redis connection
+            redis_client = redis.from_url(config.REDIS_URL)
+            redis_client.ping()
+            storage_uri = config.REDIS_URL
+            logger.info("[OK] Using Redis for rate limiting")
+        except Exception as e:
+            logger.warning(f"Redis not available for rate limiting, using in-memory storage: {e}")
+            storage_uri = None
+    
     limiter = Limiter(
         app=app,
         key_func=get_remote_address,
         default_limits=[f"{config.RATE_LIMIT_PER_HOUR} per hour"],
-        storage_uri=config.REDIS_URL if config.ENABLE_CACHING else None,
+        storage_uri=storage_uri,
         strategy="fixed-window"
     )
     
@@ -173,6 +225,14 @@ try:
         logger.info("[OK] Configuration API registered")
     except ImportError as e:
         logger.warning(f"Configuration API not available: {e}")
+    
+    # Register cache API blueprint
+    try:
+        from src.api.cache_api import cache_bp
+        app.register_blueprint(cache_bp)
+        logger.info("[OK] Cache API registered")
+    except ImportError as e:
+        logger.warning(f"Cache API not available: {e}")
     
     logger.info(f"[OK] Flask app configured successfully")
     logger.info(f"   Environment: {config.FLASK_ENV}")
@@ -360,9 +420,9 @@ def generate_workflow():
         if not data:
             return jsonify({'success': False, 'error': 'No data provided'}), 400
         
-        # Check if user needs prompt assistance first
+        # Check if user needs prompt assistance first (but not for completely empty descriptions)
         description = data.get('description', '').strip()
-        if PROMPT_HELPER_AVAILABLE and len(description) < 10:
+        if PROMPT_HELPER_AVAILABLE and 0 < len(description) < 10:
             helper_result = enhance_workflow_generation(description)
             if helper_result['needs_clarification']:
                 return jsonify({
@@ -393,6 +453,10 @@ def generate_workflow():
                 }
                 
             except Exception as e:
+                # Re-raise BadRequest exceptions (they should be handled by Flask)
+                if isinstance(e, BadRequest):
+                    raise
+                
                 print(f"Enhanced validation failed, falling back to legacy: {e}")
                 # Fall back to legacy validation
                 description, trigger_type, complexity, advanced_options, template, validation_metadata = legacy_validation(data)
@@ -404,8 +468,60 @@ def generate_workflow():
         workflow = None
         generation_error = None
         
-        # Try Market-Leading Generator first (best quality)
-        if MARKET_LEADING_GENERATOR_AVAILABLE:
+        # Try Gemini Enhanced Generator first (combines Gemini AI + 100 workflows knowledge)
+        if GEMINI_ENHANCED_GENERATOR_AVAILABLE and config.GEMINI_API_KEY:
+            try:
+                print("🤖 Gemini Enhanced: Combining Gemini AI with 100 real n8n workflows knowledge")
+                workflow = generate_gemini_enhanced_workflow(description, trigger_type, complexity, config.GEMINI_API_KEY)
+                
+                # Validate the generated workflow
+                nodes = workflow.get('nodes', [])
+                connections = workflow.get('connections', {})
+                
+                print(f"🤖 Gemini Enhanced: System succeeded:")
+                print(f"   Nodes: {len(nodes)}")
+                print(f"   Connections: {len(connections)}")
+                print(f"   AI Provider: Gemini + Real Workflows Knowledge")
+                
+                # Log node details
+                for i, node in enumerate(nodes, 1):
+                    print(f"   {i}. {node.get('name')} ({node.get('type')})")
+                
+            except Exception as e:
+                print(f"🤖 Gemini Enhanced: System failed: {e}")
+                import traceback
+                traceback.print_exc()
+                generation_error = str(e)
+                workflow = None
+        
+        # Fallback to Enhanced Pattern Generator (uses ALL knowledge from 100 workflows)
+        if not workflow and ENHANCED_PATTERN_GENERATOR_AVAILABLE:
+            try:
+                print("Enhanced Pattern: Using ALL knowledge from 100 real n8n workflows")
+                workflow = generate_workflow_with_real_knowledge(description, trigger_type, complexity)
+                
+                # Validate the generated workflow
+                nodes = workflow.get('nodes', [])
+                connections = workflow.get('connections', {})
+                
+                print(f"Enhanced Pattern: System succeeded:")
+                print(f"   Nodes: {len(nodes)}")
+                print(f"   Connections: {len(connections)}")
+                print(f"   Based on: {workflow.get('meta', {}).get('based_on_workflows', 'N/A')} real workflows")
+                
+                # Log node details
+                for i, node in enumerate(nodes, 1):
+                    print(f"   {i}. {node.get('name')} ({node.get('type')})")
+                
+            except Exception as e:
+                print(f"Enhanced Pattern: System failed: {e}")
+                import traceback
+                traceback.print_exc()
+                generation_error = str(e)
+                workflow = None
+        
+        # Fallback to Market-Leading Generator
+        if not workflow and MARKET_LEADING_GENERATOR_AVAILABLE:
             try:
                 print("Market-Leading: Using comprehensive training dataset for best-in-market quality")
                 workflow = generate_market_leading_workflow(description, trigger_type, complexity)
@@ -678,6 +794,12 @@ def generate_workflow():
         
         return jsonify(response_data)
         
+    except BadRequest as e:
+        logger.warning(f"Bad request in workflow generation: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 400
     except Exception as e:
         logger.error(f"Workflow generation failed: {e}")
         return jsonify({
@@ -812,11 +934,26 @@ def validate_workflow():
 def ratelimit_handler(e):
     """Handle rate limit exceeded errors"""
     logger.warning(f"Rate limit exceeded for {request.remote_addr}: {e}")
+    
+    # Try to get retry_after from different possible sources
+    retry_after = 60  # Default fallback
+    if hasattr(e, 'retry_after') and e.retry_after:
+        retry_after = int(e.retry_after)
+    elif hasattr(e, 'description') and 'per' in str(e.description):
+        # Parse rate limit from description like "100 per 1 minute"
+        try:
+            import re
+            match = re.search(r'(\d+)\s+per\s+(\d+)\s+minute', str(e.description))
+            if match:
+                retry_after = int(match.group(2)) * 60  # Convert minutes to seconds
+        except Exception as e:
+            pass
+    
     return jsonify({
         'success': False,
         'error': 'RATE_LIMIT_EXCEEDED',
         'message': 'Too many requests. Please try again later.',
-        'retry_after': getattr(e, 'retry_after', 60)
+        'retry_after': retry_after
     }), 429
 
 @app.errorhandler(400)
@@ -871,6 +1008,10 @@ def health_check():
         'version': '2.0.0',
         'timestamp': time.time(),
         'services': {
+            'ai_generator': AI_ENHANCEMENTS_AVAILABLE,
+            'validator': WORKFLOW_VALIDATOR_AVAILABLE,
+            'enhancer': ENHANCER_AVAILABLE,
+            'rate_limiter': limiter is not None,
             'market_leading_generator': MARKET_LEADING_GENERATOR_AVAILABLE,
             'ai_enhancements': AI_ENHANCEMENTS_AVAILABLE,
             'templates': TEMPLATES_AVAILABLE,
@@ -878,9 +1019,7 @@ def health_check():
             'enhanced_generator': ENHANCED_GENERATOR_AVAILABLE,
             'feature_aware_generator': FEATURE_AWARE_GENERATOR_AVAILABLE,
             'trained_generator': TRAINED_GENERATOR_AVAILABLE,
-            'connection_validator': CONNECTION_VALIDATOR_AVAILABLE,
-            'enhancer': ENHANCER_AVAILABLE,
-            'rate_limiter': limiter is not None
+            'connection_validator': CONNECTION_VALIDATOR_AVAILABLE
         },
         'features': {
             'market_leading_quality': MARKET_LEADING_GENERATOR_AVAILABLE,
@@ -1968,6 +2107,17 @@ def generate_node_id():
 
 def generate_workflow_name_from_description(description):
     """Generate a meaningful workflow name from description"""
+    # Check cache first
+    try:
+        from src.core.cache import get_cache
+        cache = get_cache()
+        cache_key = cache._generate_key("workflow_name", description)
+        
+        cached_name = cache.get(cache_key)
+        if cached_name is not None:
+            return cached_name
+    except Exception:
+        pass
     import re
     
     # Extract key action words
@@ -1992,7 +2142,18 @@ def generate_workflow_name_from_description(description):
         elif len(words) >= 1:
             return ' '.join(word.title() for word in words) + ' Workflow'
         else:
-            return 'Custom Workflow'
+            name = 'Custom Workflow'
+    
+    # Cache the result
+    try:
+        from src.core.cache import get_cache
+        cache = get_cache()
+        cache_key = cache._generate_key("workflow_name", description)
+        cache.set(cache_key, name, 1800)  # 30 minutes TTL
+    except Exception:
+        pass
+    
+    return name
 
 def generate_intelligent_workflow_name(description, analysis):
     """Generate intelligent workflow name based on analysis results"""
@@ -3734,8 +3895,6 @@ def get_node_icon(node_type):
     for key, icon in icon_map.items():
         if key in node_type:
             return icon
-    
-    return '⚙️'  # Default icon
 
 def get_node_color(node_type):
     """Get color for node type"""
@@ -3755,8 +3914,24 @@ def get_node_color(node_type):
     for key, color in color_map.items():
         if key in node_type:
             return color
-    
-    return '#757575'  # Default color
+
+# Enhanced UX Routes
+@app.route('/accessibility')
+def accessibility():
+    """Accessibility statement page"""
+    return render_template('accessibility.html')
+
+@app.route('/sw.js')
+def service_worker():
+    """Service worker for offline support"""
+    from flask import send_from_directory
+    return send_from_directory('static', 'sw.js', mimetype='application/javascript')
+
+# Enhanced error handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 errors with enhanced UX"""
+    return render_template('index.html'), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)

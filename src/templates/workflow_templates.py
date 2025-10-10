@@ -379,7 +379,31 @@ class WorkflowTemplateManager:
     
     def get_template(self, template_id: str) -> Optional[WorkflowTemplate]:
         """Get a specific template by ID"""
-        return self.templates.get(template_id)
+        # Check cache first
+        try:
+            from src.core.cache import get_cache
+            cache = get_cache()
+            cache_key = cache._generate_key("template", template_id)
+            
+            cached_template = cache.get(cache_key)
+            if cached_template is not None:
+                return cached_template
+        except Exception:
+            pass
+        
+        template = self.templates.get(template_id)
+        
+        # Cache the result
+        if template:
+            try:
+                from src.core.cache import get_cache
+                cache = get_cache()
+                cache_key = cache._generate_key("template", template_id)
+                cache.set(cache_key, template, 7200)  # 2 hours TTL
+            except Exception:
+                pass
+        
+        return template
     
     def get_templates_by_category(self, category: TemplateCategory) -> List[WorkflowTemplate]:
         """Get all templates in a specific category"""
@@ -400,7 +424,30 @@ class WorkflowTemplateManager:
     
     def get_all_templates(self) -> List[WorkflowTemplate]:
         """Get all available templates"""
-        return list(self.templates.values())
+        # Check cache first
+        try:
+            from src.core.cache import get_cache
+            cache = get_cache()
+            cache_key = cache._generate_key("all_templates")
+            
+            cached_templates = cache.get(cache_key)
+            if cached_templates is not None:
+                return cached_templates
+        except Exception:
+            pass
+        
+        templates = list(self.templates.values())
+        
+        # Cache the result
+        try:
+            from src.core.cache import get_cache
+            cache = get_cache()
+            cache_key = cache._generate_key("all_templates")
+            cache.set(cache_key, templates, 7200)  # 2 hours TTL
+        except Exception:
+            pass
+        
+        return templates
     
     def get_template_suggestions(self, description: str) -> List[WorkflowTemplate]:
         """Get template suggestions based on user description"""
@@ -456,3 +503,20 @@ class WorkflowTemplateManager:
 
 # Global template manager instance
 template_manager = WorkflowTemplateManager()
+
+# Global convenience functions
+def get_all_templates() -> List[WorkflowTemplate]:
+    """Get all available templates"""
+    return template_manager.get_all_templates()
+
+def get_template(template_id: str) -> Optional[WorkflowTemplate]:
+    """Get a specific template by ID"""
+    return template_manager.get_template(template_id)
+
+def get_template_suggestions(description: str) -> List[WorkflowTemplate]:
+    """Get template suggestions based on description"""
+    return template_manager.get_template_suggestions(description)
+
+def customize_template(template_id: str, customizations: Dict[str, Any]) -> Dict[str, Any]:
+    """Customize a template with user-specific parameters"""
+    return template_manager.customize_template(template_id, customizations)

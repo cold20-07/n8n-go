@@ -293,7 +293,7 @@ class TestDocumentationScripts:
             if file_path.exists():
                 assert file_path.is_file()
                 # Check that file has content
-                content = file_path.read_text()
+                content = file_path.read_text(encoding='utf-8')
                 assert len(content) > 100  # Should have substantial content
     
     def test_readme_exists(self):
@@ -301,7 +301,7 @@ class TestDocumentationScripts:
         readme_path = Path('README.md')
         if readme_path.exists():
             assert readme_path.is_file()
-            content = readme_path.read_text()
+            content = readme_path.read_text(encoding='utf-8')
             assert len(content) > 500  # Should have substantial content
             assert 'N8N' in content or 'n8n' in content
 

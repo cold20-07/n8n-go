@@ -68,6 +68,16 @@ def validate_configuration():
             'error': 'Configuration system not available'
         }), 500
     
+    # Check for valid JSON if content-type is application/json
+    if request.content_type == 'application/json':
+        try:
+            request.get_json()
+        except Exception:
+            return jsonify({
+                'success': False,
+                'error': 'Invalid JSON in request body'
+            }), 400
+    
     try:
         # Basic validation - check if required settings exist
         issues = []
@@ -239,7 +249,7 @@ def reload_configuration():
     
     try:
         # Check if this is allowed (only in development)
-        if config.FLASK_ENV == 'production':
+        if config.is_production():
             return jsonify({
                 'success': False,
                 'error': 'Configuration reload not allowed in production'

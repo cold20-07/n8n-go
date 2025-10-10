@@ -10,6 +10,7 @@ import json
 import unicodedata
 from typing import Dict, List, Tuple, Optional, Any
 import logging
+from werkzeug.exceptions import BadRequest
 
 class EnhancedInputValidator:
     """Enhanced input validation with intelligent preprocessing and error recovery"""
@@ -95,8 +96,7 @@ class EnhancedInputValidator:
             
             # Step 3: Handle empty or too short descriptions
             if len(cleaned.strip()) == 0:
-                cleaned = "automated data processing workflow"
-                validation_info['transformations_applied'].append('empty_to_default')
+                raise BadRequest('Description cannot be empty')
             elif len(cleaned.strip()) < 3:
                 cleaned = f"automated {cleaned.strip()} processing workflow"
                 validation_info['transformations_applied'].append('short_expansion')
@@ -129,8 +129,12 @@ class EnhancedInputValidator:
             return cleaned, validation_info
             
         except Exception as e:
+            # Re-raise BadRequest exceptions (they should fail validation)
+            if isinstance(e, BadRequest):
+                raise
+            
             self.logger.error(f"Validation error: {e}")
-            # Fallback to safe default
+            # Fallback to safe default for other errors
             return "general workflow automation", {
                 **validation_info, 
                 'transformations_applied': ['error_fallback'],
@@ -442,6 +446,17 @@ def validate_workflow_request(data: Dict[str, Any]) -> Tuple[Dict[str, Any], Dic
     Validate and enhance a complete workflow generation request
     Returns: (cleaned_data, validation_report)
     """
+    # Check cache first
+    try:
+        from src.core.cache import get_cache
+        cache = get_cache()
+        cache_key = cache._generate_key("validation", data)
+        
+        cached_result = cache.get(cache_key)
+        if cached_result is not None:
+            return cached_result
+    except Exception:
+        pass  # Continue without cache if it fails
     validation_report = {
         'description': {},
         'trigger_type': {},
@@ -488,4 +503,15 @@ def validate_workflow_request(data: Dict[str, Any]) -> Tuple[Dict[str, Any], Dic
     # Calculate overall confidence
     validation_report['overall_confidence'] = desc_info.get('confidence_score', 0.0)
     
-    return cleaned_data, validation_report
+    result = (cleaned_data, validation_report)
+    
+    # Cache the result
+    try:
+        from src.core.cache import get_cache
+        cache = get_cache()
+        cache_key = cache._generate_key("validation", data)
+        cache.set(cache_key, result, 900)  # 15 minutes TTL
+    except Exception:
+        pass  # Continue without cache if it fails
+    
+    return result

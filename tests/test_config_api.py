@@ -238,7 +238,7 @@ class TestConfigurationAPIReload:
     
     def test_config_reload_production_forbidden(self, client):
         """Test that configuration reload is forbidden in production"""
-        with patch('config.config') as mock_config:
+        with patch('config_api.config') as mock_config:
             mock_config.is_production.return_value = True
             
             response = client.post('/api/config/reload')

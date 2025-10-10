@@ -49,7 +49,7 @@ class AIProviderInterface(ABC):
 class GeminiProvider(AIProviderInterface):
     """Google Gemini AI provider"""
     
-    def __init__(self, api_key: str, model: str = "gemini-pro"):
+    def __init__(self, api_key: str, model: str = "gemini-2.5-flash"):
         self.api_key = api_key
         self.model = model
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
@@ -236,7 +236,20 @@ class AIOrchestrator:
     def generate_workflow(self, description: str, context: Dict[str, Any]) -> AIResponse:
         """Generate workflow using best available provider"""
         
-        # Check cache first
+        # Check Redis cache first
+        try:
+            from src.core.cache import get_cache
+            cache = get_cache()
+            cache_key = cache._generate_key("ai_workflow", description, context.get('trigger_type', ''), context.get('complexity', ''))
+            
+            cached_response = cache.get(cache_key)
+            if cached_response is not None:
+                cached_response.cached = True
+                return cached_response
+        except Exception as e:
+            print(f"Cache lookup failed: {e}")
+        
+        # Fallback to in-memory cache
         cache_key = self._get_cache_key(description, context)
         if cache_key in self.cache:
             cached_response = self.cache[cache_key]
@@ -266,7 +279,16 @@ class AIOrchestrator:
                 # Update stats
                 self._update_stats(provider_type, True, estimated_cost, response.response_time)
                 
-                # Cache successful response
+                # Cache successful response in Redis
+                try:
+                    from src.core.cache import get_cache
+                    cache = get_cache()
+                    redis_cache_key = cache._generate_key("ai_workflow", description, context.get('trigger_type', ''), context.get('complexity', ''))
+                    cache.set(redis_cache_key, response, 3600)  # 1 hour TTL
+                except Exception as e:
+                    print(f"Redis cache failed: {e}")
+                
+                # Fallback to in-memory cache
                 self.cache[cache_key] = response
                 
                 return response

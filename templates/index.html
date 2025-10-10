@@ -3,68 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>n8n go - Effortless JSON Generation</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="description" content="Generate production-ready n8n workflow JSON configurations with AI assistance. Enhanced UX with real-time validation and accessibility features.">
+    <meta name="keywords" content="n8n, workflow, automation, generator, ai, json, accessibility, UX">
+    <meta name="author" content="n8n go Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://n8ngo.com/">
+    <meta property="og:title" content="n8n go - Enhanced Workflow Generator">
+    <meta property="og:description" content="Create powerful n8n workflows with our enhanced, accessible interface featuring real-time validation and smart assistance.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.jpg') }}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://n8ngo.com/">
+    <meta property="twitter:title" content="n8n go - Enhanced Workflow Generator">
+    <meta property="twitter:description" content="Create powerful n8n workflows with our enhanced, accessible interface featuring real-time validation and smart assistance.">
+    <meta property="twitter:image" content="{{ url_for('static', filename='images/twitter-image.jpg') }}">
+    
+    <title>n8n go - Enhanced Workflow Generator</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{{ url_for('static', filename='css/enhanced-style.css') }}" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='js/enhanced-main.js') }}" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced-style.css') }}">
+    
+    <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#0066cc">
+    
+    <!-- Prevent FOUC (Flash of Unstyled Content) -->
+    <style>
+        body { opacity: 0; }
+        body.loaded { opacity: 1; transition: opacity 0.3s ease; }
+    </style>
 </head>
 <body>
-    <header>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#json-generator" class="skip-link">Skip to main content</a>
+    
+    <header role="banner">
         <div class="container">
-            <nav>
-                <a href="/" class="logo">n8n go</a>
-                <ul class="nav-links">
-                    <li><a href="#features" class="active">Features</a></li>
-                    <li><a href="/pricing">Pricing</a></li>
-                    <li><a href="/documentation">Documentation</a></li>
+            <nav role="navigation" aria-label="Main navigation">
+                <a href="/" class="logo" aria-label="n8n go homepage">n8n go</a>
+                <ul class="nav-links" role="menubar">
+                    <li role="none">
+                        <a href="#features" class="active" role="menuitem" aria-current="page">Features</a>
+                    </li>
+                    <li role="none">
+                        <a href="/pricing" role="menuitem">Pricing</a>
+                    </li>
+                    <li role="none">
+                        <a href="/documentation" role="menuitem">Documentation</a>
+                    </li>
                 </ul>
-                <a href="#json-generator" class="cta-button">Get Started</a>
+                <a href="#json-generator" class="cta-button" role="button">
+                    <span>Get Started</span>
+                    <span aria-hidden="true">→</span>
+                </a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
+    <main role="main">
+        <section class="hero" aria-labelledby="hero-title">
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-text">
-                        <h1>Effortless JSON Generation with n8n</h1>
-                        <p>Build, preview, and automate your JSON data structures instantly</p>
-                        <a href="#json-generator" class="hero-cta">Start Generating →</a>
+                        <h1 id="hero-title">Enhanced Workflow Generation with n8n</h1>
+                        <p>Build, preview, and automate your JSON data structures with our improved interface featuring real-time validation, accessibility compliance, and smart assistance.</p>
+                        <a href="#json-generator" class="hero-cta" role="button">
+                            <span>Start Generating</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
                     </div>
-                    <div class="network-viz">
-                        <div class="node">Email Client</div>
-                        <div class="node">Repository</div>
-                        <div class="node">Webhook</div>
-                        <div class="node">Validation Unit</div>
-                        <div class="node">Processing System</div>
-                        <div class="node">Output Schema</div>
+                    <div class="network-viz" role="img" aria-label="Interactive workflow visualization showing connected nodes">
+                        <div class="node" tabindex="0" role="button" aria-label="Email Client node">Email Client</div>
+                        <div class="node" tabindex="0" role="button" aria-label="Repository node">Repository</div>
+                        <div class="node" tabindex="0" role="button" aria-label="Webhook node">Webhook</div>
+                        <div class="node" tabindex="0" role="button" aria-label="Validation Unit node">Validation Unit</div>
+                        <div class="node" tabindex="0" role="button" aria-label="Processing System node">Processing System</div>
+                        <div class="node" tabindex="0" role="button" aria-label="Output Schema node">Output Schema</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="json-generator" id="json-generator">
+        <section class="json-generator" id="json-generator" aria-labelledby="generator-title">
             <div class="container">
                 <div class="section-header">
-                    <h2>Generate Your n8n Workflow</h2>
-                    <p>Transform your automation ideas into production-ready JSON workflows</p>
+                    <h2 id="generator-title">Generate Your n8n Workflow</h2>
+                    <p>Transform your automation ideas into production-ready JSON workflows with enhanced validation and accessibility features</p>
                     
-                    <!-- Template Quick Start -->
+                    <!-- Enhanced Template Quick Start -->
                     <div class="template-quick-start">
-                        <h3>🚀 Quick Start with Templates</h3>
-                        <div class="template-buttons">
-                            <button class="template-btn" onclick="loadTemplate('rss_to_social')">
-                                📡 RSS to Social Media
+                        <h3 id="template-title">🚀 Quick Start with Templates</h3>
+                        <div class="template-buttons" role="group" aria-labelledby="template-title">
+                            <button class="template-btn" 
+                                    data-template="rss_to_social"
+                                    aria-describedby="rss-desc">
+                                <span aria-hidden="true">📡</span> RSS to Social Media
                             </button>
-                            <button class="template-btn" onclick="loadTemplate('email_processing')">
-                                📧 Email Processing
+                            <div id="rss-desc" class="sr-only">Load template for RSS feed to social media automation</div>
+                            
+                            <button class="template-btn" 
+                                    data-template="email_processing"
+                                    aria-describedby="email-desc">
+                                <span aria-hidden="true">📧</span> Email Processing
                             </button>
-                            <button class="template-btn" onclick="loadTemplate('data_backup')">
-                                💾 Data Backup
+                            <div id="email-desc" class="sr-only">Load template for email processing automation</div>
+                            
+                            <button class="template-btn" 
+                                    data-template="data_backup"
+                                    aria-describedby="backup-desc">
+                                <span aria-hidden="true">💾</span> Data Backup
                             </button>
-                            <button class="template-btn" onclick="loadTemplate('ecommerce_orders')">
-                                🛒 E-commerce Orders
+                            <div id="backup-desc" class="sr-only">Load template for data backup automation</div>
+                            
+                            <button class="template-btn" 
+                                    data-template="ecommerce_orders"
+                                    aria-describedby="ecommerce-desc">
+                                <span aria-hidden="true">🛒</span> E-commerce Orders
                             </button>
+                            <div id="ecommerce-desc" class="sr-only">Load template for e-commerce order processing</div>
                         </div>
                         <p class="template-hint">Or describe your automation below for a custom workflow</p>
                     </div>
@@ -72,19 +138,27 @@
                 
                 <div class="generator-layout">
                     <div class="generator-form-container">
-                        <div class="form-card">
-                            <form id="workflowForm">
+                        <div class="form-card glass-effect">
+                            <form id="workflowForm" novalidate aria-label="Workflow generation form">
                                 <div class="form-group">
                                     <label for="description">
                                         <span class="label-text">Describe Your Workflow</span>
-                                        <span class="label-hint">What do you want to automate?</span>
+                                        <span class="label-hint">What do you want to automate? Be specific about source, action, and destination.</span>
                                     </label>
                                     <textarea 
                                         id="description" 
                                         name="description" 
                                         placeholder="Example: Process incoming leads from webhook, validate email addresses, send notifications to Slack, and store valid leads in database"
                                         required
+                                        aria-required="true"
+                                        aria-describedby="description-help description-counter"
+                                        minlength="10"
+                                        maxlength="1000"
+                                        rows="6"
                                     ></textarea>
+                                    <div id="description-help" class="sr-only">
+                                        Describe your workflow including what triggers it, what actions to perform, and where to send the results. Minimum 10 characters, maximum 1000 characters.
+                                    </div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -92,23 +166,37 @@
                                         <span class="label-text">Trigger Type</span>
                                         <span class="label-hint">How should your workflow be triggered?</span>
                                     </label>
-                                    <select id="triggerType" name="triggerType">
-                                        <option value="webhook">🔗 Webhook</option>
-                                        <option value="schedule">⏰ Schedule</option>
-                                        <option value="manual">👆 Manual</option>
+                                    <select id="triggerType" 
+                                            name="triggerType" 
+                                            required 
+                                            aria-required="true"
+                                            aria-describedby="trigger-help">
+                                        <option value="">Select a trigger type</option>
+                                        <option value="webhook">🔗 Webhook - Triggered by HTTP requests</option>
+                                        <option value="schedule">⏰ Schedule - Run at specific times</option>
+                                        <option value="manual">👆 Manual - Start manually when needed</option>
                                     </select>
+                                    <div id="trigger-help" class="sr-only">
+                                        Choose how your workflow should be started: webhook for HTTP triggers, schedule for time-based triggers, or manual for on-demand execution.
+                                    </div>
                                 </div>
                                 
-                                <button type="submit" class="generate-button">
+                                <button type="submit" 
+                                        class="generate-button hover-lift" 
+                                        aria-describedby="generate-help"
+                                        disabled>
                                     <span class="btn-content">
-                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-icon" aria-hidden="true">⚡</span>
                                         <span class="btn-text">Generate Workflow</span>
                                     </span>
-                                    <span class="btn-loader" style="display: none;">
+                                    <span class="btn-loader" style="display: none;" aria-hidden="true">
                                         <span class="spinner"></span>
-                                        Generating...
+                                        <span>Generating...</span>
                                     </span>
                                 </button>
+                                <div id="generate-help" class="sr-only">
+                                    Generate your n8n workflow based on the description and trigger type. Keyboard shortcut: Ctrl+Enter or Cmd+Enter.
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -116,41 +204,49 @@
                     <div class="generator-output-container">
                         <div class="output-placeholder" id="outputPlaceholder">
                             <div class="placeholder-content">
-                                <div class="placeholder-icon">📄</div>
+                                <div class="placeholder-icon" aria-hidden="true">📄</div>
                                 <h3>Your Workflow Will Appear Here</h3>
-                                <p>Fill out the form and click generate to see your n8n workflow JSON</p>
+                                <p>Fill out the form and click generate to see your n8n workflow JSON with enhanced validation and accessibility features</p>
                                 <div class="placeholder-features">
                                     <div class="feature-item">✨ Production-ready JSON</div>
-                                    <div class="feature-item">🔧 Customizable nodes</div>
-                                    <div class="feature-item">📋 One-click copy</div>
+                                    <div class="feature-item">🔧 Real-time validation</div>
+                                    <div class="feature-item">📋 Accessible interface</div>
+                                    <div class="feature-item">⌨️ Keyboard shortcuts</div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="output-card" id="output" style="display: none;">
+                        <div class="output-card" id="output" style="display: none;" role="region" aria-labelledby="output-title">
                             <div class="output-header">
                                 <div class="output-title">
-                                    <h3>Generated Workflow</h3>
-                                    <span class="workflow-badge">Ready to Import</span>
+                                    <h3 id="output-title" tabindex="-1">Generated Workflow</h3>
+                                    <span class="workflow-badge" role="status">Ready to Import</span>
                                 </div>
                                 <div class="output-actions">
-                                    <button id="copyBtn" class="action-btn primary">
-                                        <span class="btn-icon">📋</span>
-                                        Copy JSON
+                                    <button id="copyBtn" 
+                                            class="action-btn primary hover-lift" 
+                                            aria-describedby="copy-help">
+                                        <span class="btn-icon" aria-hidden="true">📋</span>
+                                        <span>Copy JSON</span>
                                     </button>
-                                    <button id="downloadBtn" class="action-btn secondary">
-                                        <span class="btn-icon">💾</span>
-                                        Download
+                                    <div id="copy-help" class="sr-only">Copy the generated workflow JSON to clipboard. Keyboard shortcut: Ctrl+C or Cmd+C when output is visible.</div>
+                                    
+                                    <button id="downloadBtn" 
+                                            class="action-btn secondary hover-lift"
+                                            aria-describedby="download-help">
+                                        <span class="btn-icon" aria-hidden="true">💾</span>
+                                        <span>Download</span>
                                     </button>
+                                    <div id="download-help" class="sr-only">Download the workflow as a JSON file to your computer.</div>
                                 </div>
                             </div>
                             <div class="json-container">
                                 <div class="json-header">
                                     <span class="json-label">n8n Workflow JSON</span>
-                                    <span class="json-size" id="jsonSize"></span>
+                                    <span class="json-size" id="jsonSize" aria-label="File size"></span>
                                 </div>
-                                <div class="json-preview">
-                                    <pre><code id="jsonOutput"></code></pre>
+                                <div class="json-preview" role="region" aria-label="JSON code preview">
+                                    <pre><code id="jsonOutput" aria-label="Generated workflow JSON code"></code></pre>
                                 </div>
                             </div>
                         </div>
@@ -159,37 +255,100 @@
             </div>
         </section>
 
-        <section class="features" id="features">
+        <section class="features" id="features" aria-labelledby="features-title">
             <div class="container">
+                <h2 id="features-title" class="sr-only">Enhanced Features</h2>
                 <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">⚙️</div>
-                        <h3>Visual Workflow Builder</h3>
-                        <p>Intuitive drag-and-drop interface for creating complex JSON workflows without coding</p>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">⚙️</div>
+                        <h3>Enhanced Visual Builder</h3>
+                        <p>Intuitive interface with real-time validation, accessibility features, and smart assistance for creating complex JSON workflows</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔍</div>
-                        <h3>Real-time Preview & Validation</h3>
-                        <p>See your JSON output instantly with built-in validation and error detection</p>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">🔍</div>
+                        <h3>Real-time Validation & Feedback</h3>
+                        <p>Instant validation with helpful suggestions, character counting, and progress indicators for a smooth user experience</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">☁️</div>
-                        <h3>Seamless Integration</h3>
-                        <p>Connect with popular APIs, databases, and services with pre-built connectors</p>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">♿</div>
+                        <h3>Accessibility Compliant</h3>
+                        <p>WCAG 2.1 AA compliant interface with screen reader support, keyboard navigation, and high contrast mode compatibility</p>
+                    </div>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">📱</div>
+                        <h3>Mobile Responsive</h3>
+                        <p>Optimized for all devices with touch-friendly controls, adaptive layouts, and performance optimizations for mobile</p>
+                    </div>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">⚡</div>
+                        <h3>Smart Performance</h3>
+                        <p>Intelligent loading states, progress indicators, and performance optimizations that adapt to your device capabilities</p>
+                    </div>
+                    <div class="feature-card hover-lift animate-on-scroll">
+                        <div class="feature-icon" aria-hidden="true">🎨</div>
+                        <h3>Enhanced Micro-interactions</h3>
+                        <p>Smooth animations, hover effects, and visual feedback that guide users through the workflow creation process</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
-            <div class="footer-content" style="text-align: center; padding: 20px 0;">
-                <p style="margin: 0;">Made with ❤️ by NXT</p>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="/privacy" rel="noopener">Privacy Policy</a>
+                    <a href="/terms" rel="noopener">Terms of Service</a>
+                    <a href="/accessibility" rel="noopener">Accessibility Statement</a>
+                    <a href="/contact" rel="noopener">Contact</a>
+                </div>
+                <div class="social-links" role="group" aria-label="Social media links">
+                    <a href="https://github.com/n8ngo" 
+                       aria-label="GitHub repository" 
+                       rel="noopener noreferrer" 
+                       target="_blank">
+                        <span aria-hidden="true">📧</span>
+                    </a>
+                    <a href="https://twitter.com/n8ngo" 
+                       aria-label="Twitter profile" 
+                       rel="noopener noreferrer" 
+                       target="_blank">
+                        <span aria-hidden="true">🐦</span>
+                    </a>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 20px 0; border-top: 1px solid var(--border-primary); margin-top: 20px;">
+                <p style="margin: 0; color: var(--text-muted);">
+                    Made with <span aria-label="love" role="img">❤️</span> by NXT - Enhanced for accessibility and user experience
+                </p>
             </div>
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Live region for screen reader announcements -->
+    <div id="live-region" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/enhanced-main.js') }}" defer></script>
+    
+    <!-- Remove FOUC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+    
+    <!-- Error boundary for JavaScript -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+            // Graceful degradation - ensure basic functionality works
+            const generateBtn = document.querySelector('.generate-button');
+            if (generateBtn && generateBtn.disabled) {
+                generateBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

@@ -121,7 +121,6 @@ class FeatureMap:
             for feature_name, nodes in category.items():
                 if feature_lower in feature_name.lower():
                     return nodes
-        return []
     
     @classmethod
     def detect_features_in_text(cls, text: str) -> Dict[str, List[str]]:
@@ -278,6 +277,14 @@ class FeatureAwareGenerator:
         
         # Step 4: Customize template
         workflow = self.customize_template(template, required_features, description, trigger_type)
+        # Validate generated workflow
+        if not workflow or 'nodes' not in workflow:
+            raise ValueError("Failed to generate valid workflow")
+        
+        nodes = workflow.get('nodes', [])
+        if len(nodes) == 0:
+            raise ValueError("Generated workflow has no nodes")
+            
         
         return workflow
     
@@ -313,6 +320,14 @@ class FeatureAwareGenerator:
                         'main': [[{'node': node['name'], 'type': 'main', 'index': 0}]]
                     }
                 last_node = node
+        # Validate generated workflow
+        if not workflow or 'nodes' not in workflow:
+            raise ValueError("Failed to generate valid workflow")
+        
+        nodes = workflow.get('nodes', [])
+        if len(nodes) == 0:
+            raise ValueError("Generated workflow has no nodes")
+            
         
         return workflow
     
@@ -342,6 +357,14 @@ class FeatureAwareGenerator:
                     workflow['connections'][last_node['name']] = {
                         'main': [[{'node': node['name'], 'type': 'main', 'index': 0}]]
                     }
+        # Validate generated workflow
+        if not workflow or 'nodes' not in workflow:
+            raise ValueError("Failed to generate valid workflow")
+        
+        nodes = workflow.get('nodes', [])
+        if len(nodes) == 0:
+            raise ValueError("Generated workflow has no nodes")
+            
         
         return workflow
     
@@ -376,7 +399,6 @@ class FeatureAwareGenerator:
             return {'operation': 'append'}
         elif 'http' in node_type.lower():
             return {'url': '', 'options': {}}
-        return {}
     
     def generate_name(self, description: str) -> str:
         """Generate workflow name from description"""

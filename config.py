@@ -184,7 +184,7 @@ class Config:
         """Get trusted proxy IPs as a list"""
         if isinstance(self.TRUSTED_PROXIES, str):
             return [ip.strip() for ip in self.TRUSTED_PROXIES.split(',') if ip.strip()]
-        return self.TRUSTED_PROXIES
+        return self.TRUSTED_PROXIES if isinstance(self.TRUSTED_PROXIES, list) else []
     
     def is_production(self) -> bool:
         """Check if running in production mode"""
@@ -197,6 +197,24 @@ class Config:
     def is_testing(self) -> bool:
         """Check if running in testing mode"""
         return self.FLASK_ENV.lower() == 'testing'
+    
+    def get_redis_config(self) -> Dict[str, Any]:
+        """Get Redis configuration"""
+        return {
+            'url': self.REDIS_URL,
+            'timeout': self.CACHE_TIMEOUT,
+            'enabled': self.ENABLE_CACHING,
+            'default_ttl': self.CACHE_TIMEOUT
+        }
+    
+    def get_cache_config(self) -> Dict[str, Any]:
+        """Get comprehensive cache configuration"""
+        return {
+            'redis': self.get_redis_config(),
+            'fallback_enabled': True,
+            'cache_warming': not self.is_testing(),
+            'stats_enabled': True
+        }
     
     def get_database_config(self) -> Dict[str, Any]:
         """Get database configuration dictionary"""

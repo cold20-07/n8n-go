@@ -51,20 +51,38 @@ This project has been optimized to stay under 100MB by:
 
 ## Quick Start
 
+### Option 1: Frontend Only (Simple)
 1. **Clone or download** this repository
-2. **Install dependencies** (if using Node.js features):
+2. **Open `index.html`** in your web browser (automatically redirects to `public/index.html`)
+3. **Start using** the workflow generator immediately with fallback generation
+
+### Option 2: Full Stack (Recommended)
+1. **Clone the repository**
+2. **Install dependencies**:
    ```bash
+   # Python dependencies
+   pip install -r requirements.txt
+   
+   # Node.js dependencies (optional)
    npm install
    ```
-3. **Regenerate models** (optional, for enhanced AI features):
+3. **Configure environment**:
    ```bash
-   python regenerate_models.py
+   cp .env.example .env
+   # Edit .env with your API keys
    ```
-4. **Open `index.html`** in your web browser
-5. **Configure API Key** (optional):
-   - Edit `script.js`
-   - Replace `YOUR_GEMINI_API_KEY` with your actual Gemini API key
-   - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+4. **Start the server**:
+   ```bash
+   python app.py
+   ```
+5. **Open** http://localhost:5000 in your browser
+
+### API Key Configuration (Optional)
+- **Gemini**: Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+- **OpenAI**: Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+- **Claude**: Get your API key from [Anthropic Console](https://console.anthropic.com/)
+
+**Note**: The application works without API keys using the fallback generator.
 
 ## Usage
 
@@ -116,51 +134,126 @@ Complexity: Complex
 
 ### API Key Setup (Optional)
 
-For AI-powered generation, you need a Gemini API key:
+For enhanced AI-powered generation, configure your API keys:
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Replace `YOUR_GEMINI_API_KEY` in `script.js`
+1. **Copy environment template**:
+   ```bash
+   cp .env.example .env
+   ```
 
-**Note**: The application works without an API key using the fallback generator.
+2. **Edit `.env` file** with your API keys:
+   ```bash
+   GEMINI_API_KEY=your-gemini-api-key
+   OPENAI_API_KEY=your-openai-api-key
+   CLAUDE_API_KEY=your-claude-api-key
+   ```
+
+3. **Get API keys**:
+   - [Google AI Studio](https://makersuite.google.com/app/apikey) for Gemini
+   - [OpenAI Platform](https://platform.openai.com/api-keys) for GPT
+   - [Anthropic Console](https://console.anthropic.com/) for Claude
+
+**Note**: The application works without API keys using the fallback generator.
 
 ### Customization
 
 #### Adding New Templates
 
-Edit the `templates` object in `script.js`:
+Edit the templates in `src/templates/workflow_templates.py` or `training_data/workflow_templates.json`:
 
-```javascript
-'your-template': {
-    description: 'Your template description...',
-    complexity: 'medium'
+```python
+# In src/templates/workflow_templates.py
+WORKFLOW_TEMPLATES = {
+    "your-template": {
+        "name": "Your Template Name",
+        "description": "Your template description...",
+        "complexity": "medium",
+        "category": "integration",
+        "nodes": ["webhook", "set", "http-request"]
+    }
+}
+```
+
+Or in JSON format (`training_data/workflow_templates.json`):
+```json
+{
+  "your-template": {
+    "name": "Your Template Name",
+    "description": "Your template description...",
+    "complexity": "medium",
+    "category": "integration",
+    "nodes": ["webhook", "set", "http-request"]
+  }
 }
 ```
 
 #### Adding New Node Types
 
-Extend the node creation methods in the `PerfectN8nGenerator` class:
+Extend the node creation methods in one of the generator files:
+- `src/core/generators/enhanced_workflow_generator.py`
+- `src/core/generators/feature_aware_workflow_generator.py`
+- `src/core/generators/trained_workflow_generator.py`
 
-```javascript
-createYourCustomNode(id, x) {
+```python
+def create_your_custom_node(self, node_id: str, position: List[int]) -> Dict:
     return {
-        parameters: { /* your parameters */ },
-        id: this.generateNodeId(),
-        name: 'Your Node Name',
-        type: 'n8n-nodes-base.yourNodeType',
-        typeVersion: 1,
-        position: [x, 300]
-    };
-}
+        'parameters': {
+            # your parameters
+        },
+        'id': node_id,
+        'name': 'Your Node Name',
+        'type': 'n8n-nodes-base.yourNodeType',
+        'typeVersion': 1,
+        'position': position
+    }
 ```
 
 ## File Structure
 
 ```
-├── index.html          # Main HTML file
-├── style.css           # Styling and responsive design
-├── script.js           # Core application logic
-└── README.md           # This file
+├── index.html                    # Root entry point (redirects)
+├── script.js                     # Compatibility layer
+├── style.css                     # Compatibility layer
+├── app.py                        # Flask application
+├── requirements.txt              # Python dependencies
+├── package.json                  # Node.js dependencies
+├── .env.example                  # Environment template
+├── LICENSE                       # MIT License
+├── CONTRIBUTING.md               # Contribution guidelines
+├── public/                       # Public web files
+│   ├── index.html               # Main HTML application
+│   ├── documentation.html
+│   └── pricing.html
+├── static/                       # Static assets
+│   ├── css/
+│   │   └── style.css           # Main styles
+│   └── js/
+│       ├── main.js             # Core application logic
+│       └── enhanced-main.js    # Enhanced version
+├── src/                          # Python backend modules
+│   ├── core/
+│   │   ├── generators/         # Workflow generators
+│   │   ├── models/             # Data models
+│   │   └── validators/         # Validation logic
+│   ├── api/                    # API endpoints
+│   ├── templates/              # Workflow templates
+│   └── utils/                  # Utility functions
+├── templates/                    # Flask HTML templates
+├── config/                       # Configuration files
+│   └── security.py             # Security settings
+├── docs/                         # Documentation
+│   ├── API.md                  # API documentation
+│   └── DEPLOYMENT.md           # Deployment guide
+├── tests/                        # Test suites
+│   ├── unit/                   # Unit tests
+│   └── integration/            # Integration tests
+├── training_data/                # AI training data
+│   └── workflow_templates.json # Template definitions
+├── scripts/                      # Utility scripts
+├── api/                          # API configuration
+└── .github/                      # GitHub templates
+    ├── ISSUE_TEMPLATE/
+    └── pull_request_template.md
 ```
 
 ## Browser Compatibility
@@ -175,44 +268,155 @@ createYourCustomNode(id, x) {
 ### Local Development
 
 1. **Clone the repository**
-2. **Open in your preferred editor**
-3. **Use a local server** for development:
+2. **Install dependencies**:
    ```bash
-   # Python
-   python -m http.server 8000
+   pip install -r requirements.txt
+   npm install
+   ```
+3. **Set up environment**:
+   ```bash
+   cp .env.example .env
+   # Configure your API keys in .env
+   ```
+4. **Start development server**:
+   ```bash
+   # Full stack development (recommended)
+   npm run dev
+   # or
+   python app.py --debug
    
-   # Node.js
-   npx serve .
+   # Frontend only (limited functionality)
+   npm run serve
+   # or
+   npx serve . --listen 127.0.0.1:8000
+   ```
+5. **Run tests**:
+   ```bash
+   # All tests (Python + JS)
+   npm test
    
-   # PHP
-   php -S localhost:8000
+   # Python tests only
+   python -m pytest tests/ -v
+   
+   # JavaScript tests only
+   npm run test:js
+   
+   # Validation tests
+   npm run validate
    ```
 
 ### Testing
 
-The application includes built-in validation for:
+The application includes comprehensive testing:
+
+```bash
+# Run all tests
+python -m pytest tests/ -v
+
+# Run specific test categories
+python -m pytest tests/unit/ -v          # Unit tests
+python -m pytest tests/integration/ -v   # Integration tests
+
+# Run with coverage
+python -m pytest tests/ --cov=src/ --cov-report=html
+
+# Frontend tests
+npm run test:js
+```
+
+**Test Coverage**:
 - Workflow structure compliance
 - Required field validation
 - Node connection integrity
 - n8n compatibility checks
+- API endpoint testing
+- Rate limiting validation
 
 ## Contributing
 
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+**Quick Steps**:
 1. **Fork the repository**
-2. **Create a feature branch**
-3. **Make your changes**
-4. **Test thoroughly**
-5. **Submit a pull request**
+2. **Create a feature branch**: `git checkout -b feature/your-feature-name`
+3. **Make your changes** with tests
+4. **Run the test suite**: 
+   ```bash
+   npm test                    # All tests
+   npm run lint               # Code linting
+   npm run format             # Code formatting
+   ```
+5. **Submit a pull request** with a clear description
+
+**Development Setup**:
+```bash
+# Clone your fork
+git clone https://github.com/your-username/perfect-n8n-workflow-generator.git
+
+# Install dependencies
+pip install -r requirements.txt
+npm install
+
+# Run tests
+python -m pytest tests/ -v
+```
+
+## Architecture
+
+### Frontend
+- **HTML/CSS/JavaScript**: Modern, responsive web interface
+- **Progressive Enhancement**: Works without JavaScript
+- **Accessibility**: WCAG 2.1 AA compliant
+- **Mobile-First**: Optimized for all devices
+
+### Backend
+- **Flask**: Python web framework
+- **Multi-AI Integration**: Gemini, OpenAI, Claude, Ollama
+- **Redis**: Caching and rate limiting
+- **Validation Engine**: Comprehensive workflow validation
+- **RESTful API**: Clean, documented endpoints
+
+### Deployment
+- **Docker**: Containerized deployment
+- **Vercel**: Serverless deployment option
+- **Traditional**: VPS/dedicated server support
+- **CI/CD**: GitHub Actions pipeline
+
+## API Documentation
+
+See [API Documentation](docs/API.md) for detailed endpoint information.
+
+**Quick Example**:
+```bash
+curl -X POST http://localhost:5000/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "Send daily reports via email",
+    "trigger_type": "schedule",
+    "complexity": "simple"
+  }'
+```
+
+## Deployment
+
+See [Deployment Guide](docs/DEPLOYMENT.md) for detailed deployment instructions.
+
+**Quick Deploy Options**:
+- **Vercel**: `vercel --prod`
+- **Docker**: `docker-compose up -d`
+- **Traditional**: `gunicorn -w 4 -b 0.0.0.0:5000 app:app`
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](LICENSE) file for details
 
 ## Support
 
-- **Issues**: Report bugs and request features via GitHub Issues
-- **Documentation**: Check the n8n documentation for node-specific details
-- **Community**: Join the n8n community for workflow automation discussions
+- **🐛 Bug Reports**: [Create an issue](https://github.com/your-username/perfect-n8n-workflow-generator/issues/new?template=bug_report.md)
+- **✨ Feature Requests**: [Request a feature](https://github.com/your-username/perfect-n8n-workflow-generator/issues/new?template=feature_request.md)
+- **📚 Documentation**: Check our [docs](docs/) and [n8n documentation](https://docs.n8n.io/)
+- **💬 Community**: Join the [n8n community](https://community.n8n.io/) for workflow automation discussions
+- **🚀 Deployment Help**: See our [Deployment Guide](docs/DEPLOYMENT.md)
 
 ## Roadmap
 
