@@ -1,39 +1,26 @@
 {
-  "name": "perfect-n8n-workflow-generator",
+  "name": "n8n-workflow-generator",
   "version": "1.0.0",
-  "description": "A powerful web-based application that generates production-ready n8n workflow JSON configurations using AI assistance",
+  "description": "Node.js serverless n8n workflow generator",
   "main": "api/index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node api/index.js",
-    "dev": "node api/index.js",
-    "build": "echo 'Build completed for Vercel deployment'",
-    "test": "echo 'Tests completed'",
-    "vercel-build": "echo 'Vercel build completed'"
+    "build": "echo 'Node.js build complete'",
+    "vercel-build": "echo 'Vercel Node.js build complete'"
   },
   "keywords": [
+    "nodejs",
+    "serverless",
     "n8n",
     "workflow",
-    "automation",
-    "generator",
-    "ai",
-    "json",
-    "no-code",
-    "serverless",
     "vercel"
   ],
-  "author": "Perfect n8n Generator Team",
+  "author": "N8N Generator Team",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/your-username/perfect-n8n-workflow-generator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/your-username/perfect-n8n-workflow-generator/issues"
-  },
-  "homepage": "https://github.com/your-username/perfect-n8n-workflow-generator#readme",
-  "dependencies": {},
-  "devDependencies": {},
   "engines": {
-    "node": ">=18.0.0"
-  }
+    "node": "20"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

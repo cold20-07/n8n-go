@@ -1,92 +1,87 @@
-# Python files and dependencies
+# FORCE NODE.JS DEPLOYMENT - BLOCK ALL PYTHON
+# This file ensures Vercel ONLY sees Node.js
+
+# Block ALL Python files and directories
 *.py
 *.pyc
-__pycache__/
 *.pyo
 *.pyd
+__pycache__/
 .Python
 env/
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
 .tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git
-.mypy_cache
-.pytest_cache
-.hypothesis
+.coverage*
+*.egg-info/
 
-# Python specific files
-requirements.txt
+# Block ALL Python configuration
+requirements*.txt
+setup.py
+setup.cfg
+pyproject.toml
 pytest.ini
+tox.ini
+Pipfile*
+poetry.lock
+conda.yml
+environment.yml
+
+# Block Python application files
 app.py
 config.py
 logger.py
 exceptions.py
-*.py
+main.py
+run.py
+wsgi.py
+gunicorn*.py
+manage.py
 
-# Development files
-.env
-.env.local
-.env.development
-.env.production
-node_modules/
+# Block Python directories
+src/
+tests/
+migrations/
+alembic/
+scripts/
+training_data/
+backups/
+logs/
+
+# Block documentation that might reference Python
+docs/
+*.md
+!README.md
+
+# Block development files
+.env*
 .DS_Store
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# Build artifacts
-dist/
-build/
-*.egg-info/
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Testing
-tests/
-.pytest_cache/
-coverage/
-
-# Documentation source (keep built docs)
-docs/
-*.md
-!README.md
-
-# Backup files
-backups/
-*.bak
-*.backup
-
-# Training data
-training_data/
+# Block all JSON except essential
 *.json
 !package.json
+!package-lock.json
 !vercel.json
 
-# Scripts
-scripts/
-deploy/
-.github/
-.git/
-.kiro/
+# Block everything else that's not Node.js
+*.txt
+!.nvmrc
+*.ini
+*.cfg
+*.toml
+*.lock
+*.log
+*.db
+*.sqlite*
 
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.temp
+# Keep only essential Node.js files
+!api/
+!public/
+!node_modules/
+!.vercel/
