@@ -1,5 +1,6 @@
 // Advanced N8N Workflow Generator for Vercel
 const crypto = require('crypto');
+const { ProactiveErrorPrevention } = require('../proactive-error-prevention.js');
 
 // Helper function to safely parse request body
 function getRequestBody(req) {
@@ -660,7 +661,65 @@ return processedData;`
   };
 }
 
-function generateAdvancedWorkflow(description, triggerType, complexity) {
+function validateWorkflowConnections(workflow) {
+  const issues = [];
+  const { nodes, connections } = workflow;
+  
+  // Check for triggers
+  const triggerTypes = ['n8n-nodes-base.webhook', 'n8n-nodes-base.scheduleTrigger', 'n8n-nodes-base.manualTrigger'];
+  const triggers = nodes.filter(node => triggerTypes.includes(node.type));
+  
+  if (triggers.length === 0) {
+    issues.push('Workflow must have at least one trigger node');
+  }
+  
+  // Check all connections reference existing nodes
+  const nodeNames = nodes.map(n => n.name);
+  for (const [sourceName, nodeConnections] of Object.entries(connections)) {
+    if (!nodeNames.includes(sourceName)) {
+      issues.push(`Connection source '${sourceName}' does not exist`);
+      continue;
+    }
+    
+    if (nodeConnections.main) {
+      for (const connectionGroup of nodeConnections.main) {
+        for (const connection of connectionGroup) {
+          if (!nodeNames.includes(connection.node)) {
+            issues.push(`Connection target '${connection.node}' does not exist`);
+          }
+        }
+      }
+    }
+  }
+  
+  // Check for unconnected non-trigger nodes
+  const connectedNodes = new Set(Object.keys(connections));
+  Object.values(connections).forEach(nodeConnections => {
+    if (nodeConnections.main) {
+      nodeConnections.main.forEach(connectionGroup => {
+        connectionGroup.forEach(connection => {
+          connectedNodes.add(connection.node);
+        });
+      });
+    }
+  });
+  
+  const unconnectedNodes = nodes.filter(node => {
+    const isTrigger = triggerTypes.includes(node.type);
+    return !isTrigger && !connectedNodes.has(node.name);
+  });
+  
+  if (unconnectedNodes.length > 0) {
+    issues.push(`Unconnected nodes: ${unconnectedNodes.map(n => n.name).join(', ')}`);
+  }
+  
+  return {
+    isValid: issues.length === 0,
+    issues
+  };
+}
+
+async function generateAdvancedWorkflow(description, triggerType, complexity) {
   const analysis = analyzeDescription(description);
   const workflowId = `workflow_${Date.now()}`;
   const nodes = [];
@@ -798,7 +857,7 @@ return [{ json: errorLog }];`
     }
   }
   
-  return {
+  const workflow = {
     id: workflowId,
     name: workflowName,
     active: true,
@@ -817,6 +876,39 @@ return [{ json: errorLog }];`
       created_at: new Date().toISOString()
     }
   };
+  
+  // Validate connections before returning
+  const validation = validateWorkflowConnections(workflow);
+  workflow.meta.validation = validation;
+  
+  // Apply proactive error prevention
+  try {
+    const prevention = new ProactiveErrorPrevention();
+    const proactiveResult = await prevention.validateAndFixAnyWorkflow(workflow, {
+      source: 'api_generation',
+      prompt: description,
+      complexity: complexity
+    });
+    
+    if (proactiveResult.fixes.length > 0) {
+      workflow.meta.proactive_fixes = proactiveResult.fixes;
+      workflow.meta.auto_fixed = true;
+      console.log(`🔧 Applied ${proactiveResult.fixes.length} proactive fixes`);
+    }
+    
+    workflow.meta.proactive_validation = {
+      isValid: proactiveResult.isValid,
+      issues: proactiveResult.issues,
+      warnings: proactiveResult.warnings,
+      timestamp: proactiveResult.metadata.validationTimestamp
+    };
+    
+    return proactiveResult.workflow;
+  } catch (error) {
+    console.error('Proactive validation error:', error);
+    // Fallback to original workflow if proactive validation fails
+    return workflow;
+  }
 }
 
 // Template definitions
@@ -935,7 +1027,7 @@ module.exports = async (req, res) => {
       }
       
       // Generate advanced workflow
-      const workflow = generateAdvancedWorkflow(description, triggerType, complexity);
+      const workflow = await generateAdvancedWorkflow(description, triggerType, complexity);
       
       res.status(200).json({
         success: true,
