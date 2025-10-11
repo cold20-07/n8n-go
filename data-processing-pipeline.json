@@ -1,0 +1,127 @@
+{
+  "id": "workflow_1760160822361",
+  "name": "Data Processing Pipeline",
+  "active": false,
+  "nodes": [
+    {
+      "id": "node_4ot5jx9cn",
+      "name": "Data Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "id": "node_3ve2g4jve",
+      "name": "Validate Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Process the input data\nconst inputData = $input.all();\nreturn inputData;"
+      }
+    },
+    {
+      "id": "node_w7pejs6jz",
+      "name": "Transform Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Process the input data\nconst inputData = $input.all();\nreturn inputData;"
+      }
+    },
+    {
+      "id": "node_1ou8pyo5o",
+      "name": "Save to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "node_3fxy5qwnx",
+      "name": "Notify Completion",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "parameters": {
+        "channel": "#general",
+        "text": "Hello from n8n!"
+      }
+    }
+  ],
+  "connections": {
+    "Data Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Transform Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Data": {
+      "main": [
+        [
+          {
+            "node": "Save to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Notify Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "meta": {
+    "created_at": "2025-10-11T05:33:42.361Z",
+    "description": ""
+  }
+}

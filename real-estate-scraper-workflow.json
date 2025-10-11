@@ -1,0 +1,807 @@
+{
+  "id": "real_estate_scraper_1760161110519",
+  "name": "Real Estate Scraper → Cold Email → Sheets",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "manualTriggerConfiguration": "once"
+      },
+      "id": "63cf1fbbb3042d53",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize Real Estate Scraper Configuration\nconst config = {\n  target_urls: [\n    \"https://example-realestate.com/listings\",\n    \"https://another-site.com/properties\"\n  ],\n  filters: {\n    location: \"San Francisco, CA\",\n    type: \"apartment\",\n    price_min: 500000,\n    price_max: 2000000,\n    bedrooms_min: 2\n  },\n  pagination: {\n    start_page: 1,\n    end_page: 5,\n    page_param: \"page\"\n  },\n  email_config: {\n    from_name: \"Real Estate Investor\",\n    from_email: \"investor@example.com\",\n    subject_tpl: \"Investment Opportunity - {{title}}\",\n    html_tpl: `<h2>Hello {{agent_name}},</h2>\n    <p>I'm interested in your listing: <strong>{{title}}</strong></p>\n    <p>Location: {{location}}</p>\n    <p>Price: {{price}}</p>\n    <p>Please contact me to discuss this opportunity.</p>\n    <p>Best regards,<br>{{from_name}}</p>`,\n    text_tpl: `Hello {{agent_name}},\n    \nI'm interested in your listing: {{title}}\nLocation: {{location}}\nPrice: {{price}}\n\nPlease contact me to discuss this opportunity.\n\nBest regards,\n{{from_name}}`\n  },\n  batching: {\n    size: 10,\n    wait_ms: 2000\n  },\n  sheets: {\n    spreadsheet_id: \"1ABC123DEF456GHI789JKL\",\n    sheet_name: \"Real Estate Leads\"\n  }\n};\n\nreturn [{ json: config }];"
+      },
+      "id": "e929a0cce3cf025f",
+      "name": "Initialize Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate URLs for each page to scrape\nconst config = $input.first().json;\nconst pageUrls = [];\n\nfor (const baseUrl of config.target_urls) {\n  for (let page = config.pagination.start_page; page <= config.pagination.end_page; page++) {\n    const url = new URL(baseUrl);\n    url.searchParams.set(config.pagination.page_param, page);\n    \n    // Add filters to URL\n    if (config.filters.location) url.searchParams.set('location', config.filters.location);\n    if (config.filters.type) url.searchParams.set('type', config.filters.type);\n    if (config.filters.price_min) url.searchParams.set('price_min', config.filters.price_min);\n    if (config.filters.price_max) url.searchParams.set('price_max', config.filters.price_max);\n    if (config.filters.bedrooms_min) url.searchParams.set('bedrooms_min', config.filters.bedrooms_min);\n    \n    pageUrls.push({\n      url: url.toString(),\n      page: page,\n      base_url: baseUrl,\n      config: config\n    });\n  }\n}\n\nreturn pageUrls.map(item => ({ json: item }));"
+      },
+      "id": "a6ed8374d549e1a7",
+      "name": "Generate Page URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "batchSize": "={{ $('Initialize Configuration').first().json.batching.size }}",
+        "options": {}
+      },
+      "id": "a32578c3059598aa",
+      "name": "Split Pages into Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        900,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "enabled": true,
+            "maxTries": 3
+          },
+          "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          }
+        }
+      },
+      "id": "a9e13c5b95833a2f",
+      "name": "HTTP Request - Listings Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtml",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "listings",
+              "cssSelector": ".listing-item, .property-card, .listing",
+              "returnArray": true,
+              "returnValue": "outerHTML"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "543c45497b707643",
+      "name": "HTML Extract - Listings",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process individual listings and extract basic data\nconst pageData = $input.first().json;\nconst config = $('Generate Page URLs').first().json.config;\nconst listings = pageData.listings || [];\n\nconst processedListings = [];\n\nfor (const listingHtml of listings) {\n  try {\n    // Parse HTML to extract listing data\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(listingHtml, 'text/html');\n    \n    // Extract basic listing information\n    const listing = {\n      listing_url: doc.querySelector('a[href*=\"/listing/\"], a[href*=\"/property/\"]')?.href || '',\n      title: doc.querySelector('.title, .property-title, h3, h4')?.textContent?.trim() || '',\n      price: doc.querySelector('.price, .property-price')?.textContent?.trim() || '',\n      location: doc.querySelector('.location, .address')?.textContent?.trim() || '',\n      bedrooms: doc.querySelector('.bedrooms, .beds')?.textContent?.trim() || '',\n      bathrooms: doc.querySelector('.bathrooms, .baths')?.textContent?.trim() || '',\n      area_sqft: doc.querySelector('.area, .sqft')?.textContent?.trim() || '',\n      // Agent info will be extracted from detail page\n      agent_name: '',\n      agent_email: '',\n      agent_phone: '',\n      posted_date: doc.querySelector('.date, .posted')?.textContent?.trim() || '',\n      source_page: pageData.url || $json.url,\n      config: config\n    };\n    \n    // Only include listings with valid URLs\n    if (listing.listing_url && listing.title) {\n      processedListings.push(listing);\n    }\n  } catch (error) {\n    console.error('Error processing listing:', error);\n  }\n}\n\nreturn processedListings.map(listing => ({ json: listing }));"
+      },
+      "id": "317d3be2b64d28c4",
+      "name": "Process Individual Listings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.listing_url }}",
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "enabled": true,
+            "maxTries": 2
+          },
+          "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          }
+        }
+      },
+      "id": "14a405ebd630270a",
+      "name": "HTTP Request - Detail Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1780,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtml",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "agent_name",
+              "cssSelector": ".agent-name, .contact-name, .realtor-name",
+              "returnValue": "text"
+            },
+            {
+              "key": "agent_email",
+              "cssSelector": "a[href^='mailto:'], .agent-email, .contact-email",
+              "returnValue": "text"
+            },
+            {
+              "key": "agent_phone",
+              "cssSelector": ".agent-phone, .contact-phone, .phone",
+              "returnValue": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8e751f6d61be136",
+      "name": "HTML Extract - Agent Contact",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "listing_url": "={{ $('Process Individual Listings').item.json.listing_url }}",
+          "title": "={{ $('Process Individual Listings').item.json.title }}",
+          "price": "={{ $('Process Individual Listings').item.json.price }}",
+          "location": "={{ $('Process Individual Listings').item.json.location }}",
+          "bedrooms": "={{ $('Process Individual Listings').item.json.bedrooms }}",
+          "bathrooms": "={{ $('Process Individual Listings').item.json.bathrooms }}",
+          "area_sqft": "={{ $('Process Individual Listings').item.json.area_sqft }}",
+          "agent_name": "={{ $json.agent_name || 'Unknown Agent' }}",
+          "agent_email": "={{ $json.agent_email }}",
+          "agent_phone": "={{ $json.agent_phone }}",
+          "posted_date": "={{ $('Process Individual Listings').item.json.posted_date }}",
+          "source_page": "={{ $('Process Individual Listings').item.json.source_page }}",
+          "scraped_at": "={{ $now }}",
+          "config": "={{ $('Process Individual Listings').item.json.config }}"
+        },
+        "options": {}
+      },
+      "id": "0ec17f977a44e1ca",
+      "name": "Normalize and Set Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2220,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "valid_url",
+              "leftValue": "={{ $json.listing_url }}",
+              "rightValue": "",
+              "operator": {
+                "operation": "notEmpty",
+                "type": "string"
+              }
+            },
+            {
+              "id": "valid_contact",
+              "leftValue": "={{ $json.agent_email || $json.agent_phone }}",
+              "rightValue": "",
+              "operator": {
+                "operation": "notEmpty",
+                "type": "string"
+              }
+            }
+          ],
+          "combineOperation": "all"
+        },
+        "options": {}
+      },
+      "id": "0fa7fe811129ba6e",
+      "name": "Validate Listing Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2440,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "lookup",
+        "documentId": "={{ $json.config.sheets.spreadsheet_id }}",
+        "sheetName": "={{ $json.config.sheets.sheet_name }}",
+        "lookupColumn": "A",
+        "lookupValue": "={{ $json.listing_url }}",
+        "options": {}
+      },
+      "id": "35ef1b5780de2590",
+      "name": "Check for Duplicates",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        2660,
+        200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "not_duplicate",
+              "leftValue": "={{ $('Check for Duplicates').item.json }}",
+              "rightValue": "",
+              "operator": {
+                "operation": "isEmpty",
+                "type": "object"
+              }
+            }
+          ],
+          "combineOperation": "all"
+        },
+        "options": {}
+      },
+      "id": "8611305ee9623a27",
+      "name": "Filter New Leads",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare personalized email data\nconst listing = $input.first().json;\nconst config = listing.config;\n\n// Clean and format data\nconst cleanPrice = listing.price.replace(/[^0-9,.$]/g, '');\nconst cleanLocation = listing.location.replace(/\\s+/g, ' ').trim();\nconst agentName = listing.agent_name || 'Real Estate Professional';\n\n// Personalize email templates\nconst personalizedSubject = config.email_config.subject_tpl\n  .replace(/{{title}}/g, listing.title)\n  .replace(/{{location}}/g, cleanLocation)\n  .replace(/{{price}}/g, cleanPrice);\n\nconst personalizedHtml = config.email_config.html_tpl\n  .replace(/{{agent_name}}/g, agentName)\n  .replace(/{{title}}/g, listing.title)\n  .replace(/{{location}}/g, cleanLocation)\n  .replace(/{{price}}/g, cleanPrice)\n  .replace(/{{from_name}}/g, config.email_config.from_name);\n\nconst personalizedText = config.email_config.text_tpl\n  .replace(/{{agent_name}}/g, agentName)\n  .replace(/{{title}}/g, listing.title)\n  .replace(/{{location}}/g, cleanLocation)\n  .replace(/{{price}}/g, cleanPrice)\n  .replace(/{{from_name}}/g, config.email_config.from_name);\n\nreturn [{\n  json: {\n    ...listing,\n    email_data: {\n      to_email: listing.agent_email,\n      to_name: agentName,\n      from_email: config.email_config.from_email,\n      from_name: config.email_config.from_name,\n      subject: personalizedSubject,\n      html: personalizedHtml,\n      text: personalizedText\n    }\n  }\n}];"
+      },
+      "id": "f3e559f71c09fa83",
+      "name": "Prepare Email Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3100,
+        100
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "smtp",
+        "fromEmail": "={{ $json.email_data.from_email }}",
+        "fromName": "={{ $json.email_data.from_name }}",
+        "toEmail": "={{ $json.email_data.to_email }}",
+        "subject": "={{ $json.email_data.subject }}",
+        "message": "={{ $json.email_data.html }}",
+        "options": {
+          "allowUnauthorizedCerts": false,
+          "ccEmail": "",
+          "bccEmail": "",
+          "replyTo": "={{ $json.email_data.from_email }}",
+          "priority": "normal",
+          "headers": {}
+        }
+      },
+      "id": "7b18e4daf05d6cca",
+      "name": "Send Cold Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3320,
+        100
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": "={{ $('Normalize and Set Data').item.json.config.batching.wait_ms }}",
+        "unit": "ms"
+      },
+      "id": "44acb2783920c099",
+      "name": "Wait Between Emails",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3540,
+        100
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "listing_url": "={{ $('Prepare Email Data').item.json.listing_url }}",
+          "agent_email": "={{ $('Prepare Email Data').item.json.agent_email }}",
+          "agent_name": "={{ $('Prepare Email Data').item.json.agent_name }}",
+          "title": "={{ $('Prepare Email Data').item.json.title }}",
+          "location": "={{ $('Prepare Email Data').item.json.location }}",
+          "price": "={{ $('Prepare Email Data').item.json.price }}",
+          "bedrooms": "={{ $('Prepare Email Data').item.json.bedrooms }}",
+          "bathrooms": "={{ $('Prepare Email Data').item.json.bathrooms }}",
+          "area_sqft": "={{ $('Prepare Email Data').item.json.area_sqft }}",
+          "agent_phone": "={{ $('Prepare Email Data').item.json.agent_phone }}",
+          "posted_date": "={{ $('Prepare Email Data').item.json.posted_date }}",
+          "source_page": "={{ $('Prepare Email Data').item.json.source_page }}",
+          "status": "email_sent",
+          "timestamp": "={{ $now }}",
+          "error": "",
+          "source": "real_estate_scraper"
+        },
+        "options": {}
+      },
+      "id": "11c476545b777a62",
+      "name": "Record Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3760,
+        100
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "listing_url": "={{ $('Normalize and Set Data').item.json.listing_url }}",
+          "agent_email": "={{ $('Normalize and Set Data').item.json.agent_email }}",
+          "agent_name": "={{ $('Normalize and Set Data').item.json.agent_name }}",
+          "title": "={{ $('Normalize and Set Data').item.json.title }}",
+          "location": "={{ $('Normalize and Set Data').item.json.location }}",
+          "price": "={{ $('Normalize and Set Data').item.json.price }}",
+          "bedrooms": "={{ $('Normalize and Set Data').item.json.bedrooms }}",
+          "bathrooms": "={{ $('Normalize and Set Data').item.json.bathrooms }}",
+          "area_sqft": "={{ $('Normalize and Set Data').item.json.area_sqft }}",
+          "agent_phone": "={{ $('Normalize and Set Data').item.json.agent_phone }}",
+          "posted_date": "={{ $('Normalize and Set Data').item.json.posted_date }}",
+          "source_page": "={{ $('Normalize and Set Data').item.json.source_page }}",
+          "status": "duplicate_skipped",
+          "timestamp": "={{ $now }}",
+          "error": "",
+          "source": "real_estate_scraper"
+        },
+        "options": {}
+      },
+      "id": "0eb151237670f2a7",
+      "name": "Record Duplicate",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3100,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "listing_url": "={{ $('Normalize and Set Data').item.json.listing_url }}",
+          "agent_email": "={{ $('Normalize and Set Data').item.json.agent_email }}",
+          "agent_name": "={{ $('Normalize and Set Data').item.json.agent_name }}",
+          "title": "={{ $('Normalize and Set Data').item.json.title }}",
+          "location": "={{ $('Normalize and Set Data').item.json.location }}",
+          "price": "={{ $('Normalize and Set Data').item.json.price }}",
+          "bedrooms": "={{ $('Normalize and Set Data').item.json.bedrooms }}",
+          "bathrooms": "={{ $('Normalize and Set Data').item.json.bathrooms }}",
+          "area_sqft": "={{ $('Normalize and Set Data').item.json.area_sqft }}",
+          "agent_phone": "={{ $('Normalize and Set Data').item.json.agent_phone }}",
+          "posted_date": "={{ $('Normalize and Set Data').item.json.posted_date }}",
+          "source_page": "={{ $('Normalize and Set Data').item.json.source_page }}",
+          "status": "invalid_data",
+          "timestamp": "={{ $now }}",
+          "error": "Missing required data (URL or contact info)",
+          "source": "real_estate_scraper"
+        },
+        "options": {}
+      },
+      "id": "83aa8b88d9729581",
+      "name": "Record Invalid",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2660,
+        400
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex",
+        "options": {}
+      },
+      "id": "18a8bfd81bd257fb",
+      "name": "Merge All Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3980,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "appendOrUpdate",
+        "documentId": "={{ $('Initialize Configuration').first().json.sheets.spreadsheet_id }}",
+        "sheetName": "={{ $('Initialize Configuration').first().json.sheets.sheet_name }}",
+        "columnToMatchOn": "A",
+        "dataMode": "defineBelow",
+        "valueInputMode": "raw",
+        "values": {
+          "listing_url": "={{ $json.listing_url }}",
+          "agent_email": "={{ $json.agent_email }}",
+          "agent_name": "={{ $json.agent_name }}",
+          "title": "={{ $json.title }}",
+          "location": "={{ $json.location }}",
+          "price": "={{ $json.price }}",
+          "bedrooms": "={{ $json.bedrooms }}",
+          "bathrooms": "={{ $json.bathrooms }}",
+          "area_sqft": "={{ $json.area_sqft }}",
+          "agent_phone": "={{ $json.agent_phone }}",
+          "posted_date": "={{ $json.posted_date }}",
+          "source_page": "={{ $json.source_page }}",
+          "status": "={{ $json.status }}",
+          "timestamp": "={{ $json.timestamp }}",
+          "error": "={{ $json.error }}",
+          "source": "={{ $json.source }}"
+        },
+        "options": {}
+      },
+      "id": "0b8fcc37c6058dd4",
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        4200,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate execution summary\nconst allResults = $input.all();\nconst summary = {\n  total_processed: allResults.length,\n  emails_sent: allResults.filter(item => item.json.status === 'email_sent').length,\n  duplicates_skipped: allResults.filter(item => item.json.status === 'duplicate_skipped').length,\n  invalid_data: allResults.filter(item => item.json.status === 'invalid_data').length,\n  execution_time: new Date().toISOString(),\n  success_rate: 0\n};\n\nsummary.success_rate = summary.total_processed > 0 \n  ? Math.round((summary.emails_sent / summary.total_processed) * 100) \n  : 0;\n\nconsole.log('Real Estate Scraper Summary:', summary);\n\nreturn [{ json: summary }];"
+      },
+      "id": "36006db6a243f0da",
+      "name": "Generate Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4420,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Configuration": {
+      "main": [
+        [
+          {
+            "node": "Generate Page URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Page URLs": {
+      "main": [
+        [
+          {
+            "node": "Split Pages into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Pages into Batches": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Listings Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Listings Page": {
+      "main": [
+        [
+          {
+            "node": "HTML Extract - Listings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract - Listings": {
+      "main": [
+        [
+          {
+            "node": "Process Individual Listings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Individual Listings": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Detail Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Detail Page": {
+      "main": [
+        [
+          {
+            "node": "HTML Extract - Agent Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract - Agent Contact": {
+      "main": [
+        [
+          {
+            "node": "Normalize and Set Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize and Set Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Listing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Listing Data": {
+      "main": [
+        [
+          {
+            "node": "Check for Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Filter New Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter New Leads": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email Data": {
+      "main": [
+        [
+          {
+            "node": "Send Cold Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Cold Email": {
+      "main": [
+        [
+          {
+            "node": "Wait Between Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Between Emails": {
+      "main": [
+        [
+          {
+            "node": "Record Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Success": {
+      "main": [
+        [
+          {
+            "node": "Merge All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Duplicate": {
+      "main": [
+        [
+          {
+            "node": "Merge All Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Record Invalid": {
+      "main": [
+        [
+          {
+            "node": "Merge All Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge All Results": {
+      "main": [
+        [
+          {
+            "node": "Append to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Generate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "real-estate",
+    "scraping",
+    "email",
+    "sheets",
+    "automation"
+  ],
+  "meta": {
+    "generated_by": "n8n-workflow-generator",
+    "complexity": "complex",
+    "created_at": "2025-10-11T05:38:30.520Z",
+    "description": "Scrapes real estate listings, sends cold emails, and tracks results in Google Sheets"
+  }
+}

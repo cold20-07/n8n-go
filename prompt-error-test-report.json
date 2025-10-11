@@ -1,0 +1,150 @@
+{
+  "timestamp": "2025-10-11T06:25:30.022Z",
+  "testSummary": {
+    "totalTests": 10,
+    "passedTests": 10,
+    "failedTests": 0,
+    "successRate": 100
+  },
+  "errorHandlingStats": {
+    "totalErrors": 1,
+    "fixedErrors": 0,
+    "errorTypes": {},
+    "fixRate": "0.00%",
+    "recentFixes": []
+  },
+  "detailedResults": [
+    {
+      "scenario": "Valid Simple Prompt",
+      "success": true,
+      "nodeCount": 8,
+      "fixesApplied": 0,
+      "workflowName": "Send A Slack Message Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Complex Multi-Service Prompt",
+      "success": true,
+      "nodeCount": 5,
+      "fixesApplied": 0,
+      "workflowName": "Monitor Api Every 5 Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Ambiguous Prompt",
+      "success": true,
+      "nodeCount": 2,
+      "fixesApplied": 0,
+      "workflowName": "Do Something With Data Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Very Long Prompt",
+      "success": true,
+      "nodeCount": 4,
+      "fixesApplied": 0,
+      "workflowName": "Create A Comprehensive Workflow Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Empty Prompt",
+      "success": true,
+      "nodeCount": 2,
+      "fixesApplied": 0,
+      "workflowName": "Fallback: ",
+      "isValid": true
+    },
+    {
+      "scenario": "Special Characters Prompt",
+      "success": true,
+      "nodeCount": 7,
+      "fixesApplied": 0,
+      "workflowName": "Send Message With Émojis Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Non-English Prompt",
+      "success": true,
+      "nodeCount": 3,
+      "fixesApplied": 0,
+      "workflowName": "Enviar Mensaje De Slack Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Technical Jargon Prompt",
+      "success": true,
+      "nodeCount": 3,
+      "fixesApplied": 0,
+      "workflowName": "Implement Oauth2 Authentication Flow Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Contradictory Prompt",
+      "success": true,
+      "nodeCount": 2,
+      "fixesApplied": 0,
+      "workflowName": "Create A Manual Trigger Automation",
+      "isValid": true
+    },
+    {
+      "scenario": "Impossible Prompt",
+      "success": true,
+      "nodeCount": 3,
+      "fixesApplied": 0,
+      "workflowName": "Connect To A Service Automation",
+      "isValid": true
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "Valid Simple Prompt",
+      "description": "Send a Slack message when webhook is triggered",
+      "complexity": "simple"
+    },
+    {
+      "name": "Complex Multi-Service Prompt",
+      "description": "Monitor API every 5 minutes, check response time, if over 2 seconds send Slack alert and create GitHub issue",
+      "complexity": "complex"
+    },
+    {
+      "name": "Ambiguous Prompt",
+      "description": "do something with data",
+      "complexity": "simple"
+    },
+    {
+      "name": "Very Long Prompt",
+      "description": "Create a comprehensive workflow that monitors multiple APIs including GitHub, Slack, Gmail, Trello, Shopify, Notion, Airtable, Discord, Telegram, and WhatsApp, processes the data through multiple validation steps, applies complex business logic, sends notifications to various channels, creates tasks in project management tools, updates databases, generates reports, and handles all possible error scenarios with retry logic and fallback mechanisms",
+      "complexity": "complex"
+    },
+    {
+      "name": "Empty Prompt",
+      "description": "",
+      "complexity": "simple"
+    },
+    {
+      "name": "Special Characters Prompt",
+      "description": "Send message with émojis 🚀 and spëcial chars & symbols @#$%^&*()",
+      "complexity": "simple"
+    },
+    {
+      "name": "Non-English Prompt",
+      "description": "Enviar mensaje de Slack cuando se reciba webhook",
+      "complexity": "simple"
+    },
+    {
+      "name": "Technical Jargon Prompt",
+      "description": "Implement OAuth2 authentication flow with JWT tokens, validate CORS headers, process GraphQL mutations, and trigger serverless functions",
+      "complexity": "complex"
+    },
+    {
+      "name": "Contradictory Prompt",
+      "description": "Create a manual trigger that runs automatically every hour without user intervention",
+      "complexity": "medium"
+    },
+    {
+      "name": "Impossible Prompt",
+      "description": "Connect to a service that does not exist and perform operations that are not possible",
+      "complexity": "complex"
+    }
+  ]
+}

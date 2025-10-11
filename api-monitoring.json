@@ -1,0 +1,119 @@
+{
+  "id": "workflow_1760160822358",
+  "name": "API Monitoring",
+  "active": false,
+  "nodes": [
+    {
+      "id": "node_i96fexxn4",
+      "name": "Monitor Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minute",
+              "step": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_sucxeigve",
+      "name": "Check API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.example.com"
+      }
+    },
+    {
+      "id": "node_mdet9ascy",
+      "name": "Check Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.value }}",
+              "operation": "equal",
+              "value2": "expected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_96q4uh8z5",
+      "name": "Send Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "channel": "#general",
+        "text": "Hello from n8n!"
+      }
+    }
+  ],
+  "connections": {
+    "Monitor Schedule": {
+      "main": [
+        [
+          {
+            "node": "Check API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API": {
+      "main": [
+        [
+          {
+            "node": "Check Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Response": {
+      "main": [
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "meta": {
+    "created_at": "2025-10-11T05:33:42.358Z",
+    "description": ""
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "id": "workflow_1760160822335",
+  "name": "Webhook to Slack",
+  "active": false,
+  "nodes": [
+    {
+      "id": "node_7mpiwde1h",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "id": "node_ac6shujfm",
+      "name": "Send Slack Message",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "channel": "#general",
+        "text": "Hello from n8n!"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "meta": {
+    "created_at": "2025-10-11T05:33:42.337Z",
+    "description": ""
+  }
+}
