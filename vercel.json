@@ -1,7 +1,4 @@
 {
-  "version": 2,
-  "framework": null,
-  "buildCommand": "echo 'Node.js build complete'",
   "rewrites": [
     {
       "source": "/health",
@@ -16,28 +13,14 @@
       "destination": "/api/index.js"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "/public/static/$1"
-    },
-    {
       "source": "/pricing",
-      "destination": "/public/pricing.html"
+      "destination": "/pricing.html"
     },
     {
       "source": "/documentation",
-      "destination": "/public/documentation.html"
-    },
-    {
-      "source": "/",
-      "destination": "/public/index.html"
+      "destination": "/documentation.html"
     }
   ],
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs20.x",
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/static/(.*)",
@@ -48,8 +31,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
