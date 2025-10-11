@@ -2,34 +2,34 @@
   "version": 2,
   "framework": null,
   "buildCommand": "echo 'Node.js build complete'",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/health",
-      "dest": "/api/index.js"
+      "source": "/health",
+      "destination": "/api/index.js"
     },
     {
-      "src": "/generate",
-      "dest": "/api/index.js"
+      "source": "/generate",
+      "destination": "/api/index.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
     },
     {
-      "src": "/static/(.*)",
-      "dest": "/public/static/$1"
+      "source": "/static/(.*)",
+      "destination": "/public/static/$1"
     },
     {
-      "src": "/pricing",
-      "dest": "/public/pricing.html"
+      "source": "/pricing",
+      "destination": "/public/pricing.html"
     },
     {
-      "src": "/documentation",
-      "dest": "/public/documentation.html"
+      "source": "/documentation",
+      "destination": "/public/documentation.html"
     },
     {
-      "src": "/",
-      "dest": "/public/index.html"
+      "source": "/",
+      "destination": "/public/index.html"
     }
   ],
   "functions": {
