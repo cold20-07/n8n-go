@@ -1,6 +1,23 @@
 // Advanced N8N Workflow Generator for Vercel
 const crypto = require('crypto');
 
+// Helper function to safely parse request body
+function getRequestBody(req) {
+  try {
+    if (req.body) {
+      if (typeof req.body === 'string') {
+        return JSON.parse(req.body);
+      } else if (typeof req.body === 'object') {
+        return req.body;
+      }
+    }
+    return {};
+  } catch (error) {
+    console.error('Error parsing request body:', error);
+    return {};
+  }
+}
+
 // Workflow generation patterns and templates
 const WORKFLOW_PATTERNS = {
   'http_request': {
@@ -850,12 +867,14 @@ module.exports = async (req, res) => {
   }
 
   try {
+    console.log(`Request: ${req.method} ${req.url}`);
+    
     // Handle template requests
     if (req.url.startsWith('/api/templates/')) {
       const templateId = req.url.split('/').pop();
       
       if (templateId === 'suggestions' && req.method === 'POST') {
-        const body = JSON.parse(req.body || '{}');
+        const body = getRequestBody(req);
         const description = body.description?.toLowerCase() || '';
         
         // Simple template suggestion logic
@@ -904,7 +923,7 @@ module.exports = async (req, res) => {
     }
 
     if (req.url === '/generate' && req.method === 'POST') {
-      const body = JSON.parse(req.body || '{}');
+      const body = getRequestBody(req);
       const { description, triggerType = 'webhook', complexity = 'medium' } = body;
       
       if (!description) {
